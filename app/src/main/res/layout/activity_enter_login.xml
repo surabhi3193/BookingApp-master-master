@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.mind_android.bookingapp.activities.EnterLoginActivity">
+
+
+    <ImageView
+        android:layout_weight="7"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:src="@drawable/second_screen_logo"
+        android:padding="20dp"/>
+
+    <LinearLayout
+        android:layout_marginBottom="20dp"
+        android:gravity="center"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:layout_weight="0.5"
+        android:layout_width="match_parent"
+        android:layout_height="0dp">
+
+        <Button
+            android:fontFamily="@font/mydridpro"
+            android:id="@+id/signup_btn"
+            android:text="Sign Up"
+            android:textColor="@color/white"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/colorPrimaryDark"/>
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.2"/>
+
+        <Button
+            android:fontFamily="@font/mydridpro"
+            android:id="@+id/login_btn"
+            android:text="Login"
+            android:textColor="@color/white"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/colorPrimaryDark"/>
+    </LinearLayout>
+</LinearLayout>

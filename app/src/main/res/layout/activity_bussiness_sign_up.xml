@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:gravity="center_horizontal"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    tools:context="com.example.mind_android.bookingapp.activities.SignupActivity">
+
+
+    <RelativeLayout
+        android:paddingBottom="20dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:gravity="center_horizontal"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/loginbg"
+        android:layout_margin="30dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_centerHorizontal="true"
+            android:id="@+id/logo"
+            android:layout_width="130dp"
+            android:layout_height="110dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="13dp"
+            android:background="@drawable/login_screen_logo" />
+
+        <LinearLayout
+            android:layout_below="@+id/logo"
+            android:layout_centerInParent="true"
+            android:padding="10dp"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:id="@+id/signup_header"
+                android:padding="10dp"
+                android:textSize="25sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorAccent"
+                android:text="Sign Up"
+                android:textStyle="bold"
+                android:fontFamily="@font/mydridpro"
+                android:layout_below="@id/logo"
+                android:layout_centerHorizontal="true"/>
+
+            <EditText
+                android:inputType="text"
+                android:id="@+id/buss_nameET"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:drawableLeft="@drawable/business16"
+                android:textColor="@color/black"
+                android:hint="Bussiness Name "
+                android:textColorHint="@color/black"
+                android:drawablePadding="10dp"/>
+
+            <LinearLayout
+                android:layout_marginTop="10dp"
+                android:gravity="center_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="50dp">
+
+                <ImageView
+                    android:src="@drawable/business16"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
+                <Spinner
+                    android:id="@+id/spinner2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+            <EditText
+                android:layout_marginTop="10dp"
+
+                android:id="@+id/cityEt"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:drawableLeft="@drawable/city16"
+                android:textColor="@color/black"
+                android:hint="City "
+                android:textColorHint="@color/black"
+                android:drawablePadding="10dp"/>
+
+            <TextView
+                android:gravity="center_vertical"
+                android:layout_marginTop="10dp"
+                android:id="@+id/countryEt"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:drawableLeft="@drawable/country16"
+                android:textColor="@color/black"
+                android:hint="Country"
+                android:textColorHint="@color/black"
+                android:drawablePadding="10dp"/>
+
+        </LinearLayout>
+        <RelativeLayout
+            android:id="@+id/signup_btn"
+            android:layout_above="@+id/linkLay"
+            android:layout_marginTop="15dp"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:background="@color/colorPrimaryDark"
+            android:layout_width="match_parent"
+            android:layout_height="50dp" >
+
+            <TextView
+                android:layout_centerInParent="true"
+                android:text="Sign Up"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:id="@+id/textView" />
+
+            <ImageView
+                android:layout_marginLeft="10dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignTop="@+id/textView"
+                android:layout_toEndOf="@+id/textView"
+                android:layout_toRightOf="@+id/textView"
+                android:src="@drawable/login_icon" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/linkLay"
+            android:layout_alignParentBottom="true"
+            android:gravity="center"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:textSize="15sp"
+                android:textColor="@color/black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Already have an account ?"/>
+
+            <TextView
+                android:layout_marginLeft="10dp"
+                android:id="@+id/login_link"
+                android:textSize="15sp"
+                android:textColor="@color/colorAccent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Login"/>
+        </LinearLayout>
+
+    </RelativeLayout>
+</RelativeLayout>
