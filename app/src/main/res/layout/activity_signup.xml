@@ -51,33 +51,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-
-            <EditText
-                android:textSize="15sp"
-                android:inputType="text"
-                android:id="@+id/nameET"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:drawableLeft="@drawable/user16"
-                android:textColor="@color/black"
-                android:hint="Full Name "
-                android:textColorHint="@color/black"
-                android:drawablePadding="10dp"/>
-
-            <EditText
-                android:textSize="15sp"
-
-                android:layout_marginTop="10dp"
-                android:inputType="textEmailAddress"
-                android:id="@+id/emailEt"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:drawableLeft="@drawable/email16"
-                android:textColor="@color/black"
-                android:hint="Email"
-                android:textColorHint="@color/black"
-                android:drawablePadding="10dp"/>
-
             <LinearLayout
                 android:layout_marginTop="10dp"
                 android:gravity="center_vertical"

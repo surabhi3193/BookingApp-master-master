@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:context="com.example.mind_android.bookingapp.activities.dashboard_part.FormActivity">
+
+    <include
+        layout="@layout/toolbar_item"/>
+    <ScrollView
+        android:id="@+id/scrollview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+<RelativeLayout
+    android:gravity="center_horizontal"
+    android:padding="10dp"
+    android:layout_margin="20dp"
+    android:background="@drawable/home_bg"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_marginTop="40dp"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <TextView
+            android:gravity="center_horizontal"
+            android:id="@+id/headTv"
+            android:textAllCaps="true"
+            android:fontFamily="@font/mydridpro"
+            android:layout_marginTop="20dp"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/colorAccent"
+            android:text="ADD STOCK"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:visibility="visible"
+            android:orientation="vertical"
+            android:id="@+id/stockform"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/item_nameTv"
+            android:imeOptions="actionNext"
+            android:singleLine="true"
+            android:textSize="15sp"
+            android:textColor="@color/black"
+            android:hint="Stock name"
+            android:padding="15dp"
+            android:layout_marginTop="50dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <EditText
+            android:id="@+id/itemQuant_TV"
+            android:imeOptions="actionNext"
+            android:singleLine="true"
+            android:textSize="15sp"
+            android:textColor="@color/black"
+            android:hint="Stock quantity"
+            android:inputType="number"
+            android:padding="15dp"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <EditText
+            android:inputType="number|numberDecimal"
+            android:id="@+id/item_price_unit"
+            android:imeOptions="actionDone"
+            android:singleLine="true"
+            android:textSize="15sp"
+            android:textColor="@color/black"
+            android:text=""
+            android:hint="Stock price per unit"
+            android:padding="15dp"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:inputType="number"
+            android:id="@+id/item_price_tv"
+            android:imeOptions="actionDone"
+            android:singleLine="true"
+            android:textSize="15sp"
+            android:textColor="@color/black"
+            android:hint="Stock price"
+            android:padding="15dp"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:visibility="gone"
+            android:orientation="vertical"
+            android:id="@+id/saleForm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/sale_item_name"
+                android:imeOptions="actionNext"
+                android:singleLine="true"
+                android:textSize="15sp"
+                android:textColor="@color/black"
+                android:hint="Stock name"
+                android:padding="15dp"
+                android:layout_marginTop="50dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <EditText
+                android:id="@+id/sale_item_qty"
+                android:imeOptions="actionNext"
+                android:singleLine="true"
+                android:textSize="15sp"
+                android:textColor="@color/black"
+                android:hint="Stock quantity"
+                android:inputType="number"
+                android:padding="15dp"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+
+
+            <EditText
+                android:id="@+id/sale_unit"
+                android:imeOptions="actionNext"
+                android:singleLine="true"
+                android:textSize="15sp"
+                android:textColor="@color/black"
+                android:hint="Stock quantity per Unit"
+                android:inputType="number"
+                android:padding="15dp"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <EditText
+                android:inputType="number"
+                android:id="@+id/sale_item_price"
+                android:imeOptions="actionDone"
+                android:singleLine="true"
+                android:textSize="15sp"
+                android:textColor="@color/black"
+                android:hint="Stock price"
+                android:padding="15dp"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/add_btn"
+            android:textColor="@color/white"
+            android:text="Add Stock"
+            android:textAllCaps="true"
+            android:layout_marginTop="40dp"
+            android:background="@drawable/green_rect_btn"
+            android:layout_width="match_parent"
+            android:layout_height="35dp" />
+
+    </LinearLayout>
+
+</RelativeLayout>
+    </ScrollView>
+</LinearLayout>

@@ -1,18 +1,28 @@
 package com.example.mind_android.bookingapp.activities.dashboard_part;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.mind_android.bookingapp.R;
+import com.example.mind_android.bookingapp.activities.EnterLoginActivity;
 import com.example.mind_android.bookingapp.activities.LoginActivity;
+import com.example.mind_android.bookingapp.activities.MainActivity;
+import com.example.mind_android.bookingapp.adapter.SalesAdapter;
 import com.example.mind_android.bookingapp.adapter.StockAdapter;
 import com.example.mind_android.bookingapp.beans.Stock;
 import com.example.mind_android.bookingapp.storage.DatabaseHandler;
@@ -24,6 +34,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
@@ -35,15 +46,43 @@ import static com.example.mind_android.bookingapp.Constant.NetWorkClass.deleteSt
 import static com.example.mind_android.bookingapp.storage.MySharedPref.getData;
 import static com.example.mind_android.bookingapp.storage.MySharedPref.saveData;
 
-public class StockActivity extends AppCompatActivity {
-    private static ListView stocklist;
-    private static LinearLayout listLayout;
-    private static TextView total_amtTv;
+public class SalesActivity extends AppCompatActivity {
+
+    private LinearLayout listLayout;
+
+    ListView stocklist;
+    SalesAdapter stockListAdapter;
     DatabaseHandler db;
     List<Stock> stocks;
     String user_id;
 
-    private static void showStock(final Activity context, String user_id) {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_sales);
+        db = new DatabaseHandler(SalesActivity.this);
+
+        listLayout =findViewById(R.id.listLayout);
+        stocklist =findViewById(R.id.stocklist);
+
+        TextView signout_btn = findViewById(R.id.signout_btn);
+        
+        signout_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                saveData(getApplicationContext(), "login", "0");
+
+                startActivity(new Intent(SalesActivity.this, LoginActivity.class));
+                finishAffinity();
+            }
+        });
+
+
+showAllStocks();
+    }
+
+
+    private void showStock(final Activity context, String user_id) {
         final AsyncHttpClient client = new AsyncHttpClient();
         final RequestParams params = new RequestParams();
 
@@ -64,11 +103,9 @@ public class StockActivity extends AppCompatActivity {
 
                         listLayout.setVisibility(View.VISIBLE);
 
-                        String total_amt = response.getString("total");
-                        total_amtTv.setText(total_amt);
                         JSONArray jArray = response.getJSONArray("stocks");
-                        StockAdapter stockListAdapter = new StockAdapter(context, jArray, "stocks");
-                        stocklist.setAdapter(stockListAdapter);
+        SalesAdapter stockListAdapter = new SalesAdapter(SalesActivity.this, jArray);
+        stocklist.setAdapter(stockListAdapter);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -88,48 +125,22 @@ public class StockActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_stock);
-        user_id = getData(StockActivity.this, "user_id", "");
+    public void onBackPressed() {
+    finish();
+    }
 
-        db = new DatabaseHandler(StockActivity.this);
-
-        listLayout = findViewById(R.id.listLayout);
-        stocklist = findViewById(R.id.stocklist);
-        total_amtTv = findViewById(R.id.total_amtTv);
-        TextView addTv = findViewById(R.id.addTv);
-        TextView signout_btn = findViewById(R.id.signout_btn);
-
-
-        addTv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(StockActivity.this, FormActivity.class)
-                        .putExtra("Activity", "addStocks")
-                        .putExtra("stock_id", "")
-                );
-
-            }
-        });
-
-        signout_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                saveData(getApplicationContext(), "login", "0");
-
-                startActivity(new Intent(StockActivity.this, LoginActivity.class));
-                finishAffinity();
-            }
-        });
+    @Override
+    protected void onResume() {
+        super.onResume();
+   showAllStocks();
     }
 
     public void showAllStocks() {
-        if (isNetworkAvailable(StockActivity.this)) {
+        if (isNetworkAvailable(SalesActivity.this)) {
 
             addUnregisteredStock();
             deleteStockFromServer();
-            showStock(StockActivity.this, user_id);
+            showStock(SalesActivity.this, user_id);
 
         } else {
             showStockFronLocal();
@@ -151,12 +162,17 @@ public class StockActivity extends AppCompatActivity {
                     " ,price : " + cn.get_price();
             // Writing Contacts to log
             Log.d("Name: ", log);
-            deleteStock(StockActivity.this, cn);
+            deleteStock(SalesActivity.this, cn);
+
+
         }
+
+        showAllStocks();
 
     }
 
     private void addUnregisteredStock() {
+        stocks = new ArrayList<>();
         stocks = db.getAllStocksWith0();
         System.out.println("================ stocks with 0 status ========");
         System.out.println(stocks);
@@ -171,7 +187,7 @@ public class StockActivity extends AppCompatActivity {
                     " ,price : " + cn.get_price();
             // Writing Contacts to log
             Log.d("Name: ", log);
-            addStock(StockActivity.this, user_id, cn.get_name(), cn.get_qty(),
+            addStock(SalesActivity.this, user_id, cn.get_name(), cn.get_qty(),
                     cn.get_price(),
                     "1", cn.get_unit_per_price(), String.valueOf(cn.get_id()), "local");
         }
@@ -179,7 +195,7 @@ public class StockActivity extends AppCompatActivity {
 
     private void showStockFronLocal() {
 
-        DatabaseHandler db = new DatabaseHandler(StockActivity.this);
+        DatabaseHandler db = new DatabaseHandler(SalesActivity.this);
         JSONArray jArray = new JSONArray();
         double total = 0.00;
         // Reading all contacts
@@ -210,11 +226,11 @@ public class StockActivity extends AppCompatActivity {
             }
 
             String amount = String.valueOf(total);
-            total_amtTv.setText(amount);
+
             System.out.println("=============== jArray from local ============");
             System.out.println(jArray);
 
-            StockAdapter stockListAdapter = new StockAdapter(StockActivity.this, jArray, "stocks");
+            SalesAdapter stockListAdapter = new SalesAdapter(SalesActivity.this, jArray);
             stocklist.setAdapter(stockListAdapter);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -222,16 +238,5 @@ public class StockActivity extends AppCompatActivity {
         }
 
     }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        showAllStocks();
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        finish();
-    }
+    
 }

@@ -1,15 +1,20 @@
 package com.example.mind_android.bookingapp.activities;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,6 +31,7 @@ import org.json.JSONObject;
 import cz.msebera.android.httpclient.Header;
 
 import static com.example.mind_android.bookingapp.Constant.NetWorkClass.BASE_URL_NEW;
+import static com.example.mind_android.bookingapp.activities.SignupActivity.isMatch;
 import static com.example.mind_android.bookingapp.storage.MySharedPref.NullData;
 import static com.example.mind_android.bookingapp.storage.MySharedPref.getData;
 import static com.example.mind_android.bookingapp.storage.MySharedPref.saveData;
@@ -33,16 +39,20 @@ import static com.example.mind_android.bookingapp.storage.MySharedPref.saveData;
 public class BussinessSignUpActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, View.OnClickListener {
 
 
-    String[] bussiness = { "Bussiness Type","Services","Retail" , };
-    EditText buss_nameET,cityEt;
+    String[] bussiness = { "Business Type","Services","Retail" , };
+    EditText buss_nameET,cityEt,emailEt,fullnameEt;
     Spinner spin;
     TextView countryEt;
-    String password,name,email,phone,buss_name="",city="",country="",buss_type,code;
+    ScrollView scrollview;
+    String password,name,email,phone,buss_name="",city="",country="",buss_type,code,user_id;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bussiness_sign_up);
 
+        scrollview = findViewById(R.id.scrollview);
+        emailEt = findViewById(R.id.emailEt);
+        fullnameEt = findViewById(R.id.nameET);
          spin =  findViewById(R.id.spinner2);
          buss_nameET =  findViewById(R.id.buss_nameET);
          cityEt =  findViewById(R.id.cityEt);
@@ -66,13 +76,31 @@ public class BussinessSignUpActivity extends AppCompatActivity implements Adapte
         Bundle bundle = getIntent().getExtras();
 
         if (bundle!=null) {
-            name = bundle.getString("name");
+
             phone = bundle.getString("phone");
-            email = bundle.getString("email");
             password = bundle.getString("password");
             code = bundle.getString("code");
+            user_id = bundle.getString("user_id");
 
         }
+
+
+        cityEt.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    System.out.println("=========== action done ==========");
+                    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(countryEt.getWindowToken(), 0);
+                    scrollview.fullScroll(View.FOCUS_DOWN);
+                    cityEt.setCursorVisible(false);
+                    return true;
+                }
+                return false;
+            }
+
+        });
+
 
 
         login_link.setOnClickListener(new View.OnClickListener() {
@@ -103,8 +131,10 @@ public class BussinessSignUpActivity extends AppCompatActivity implements Adapte
 
         if (buss_type!=null && buss_type.length()>0)
         {
-            if (buss_type.equals("Retail"))
+            if (buss_type.equals("Services"))
                 spin.setSelection(1);
+            else if (buss_type.equals("Retail"))
+                spin.setSelection(2);
             else
                 spin.setSelection(0);
         }
@@ -118,15 +148,27 @@ public class BussinessSignUpActivity extends AppCompatActivity implements Adapte
 
     private void nextActivity() {
 
-      NullData(getApplicationContext(),"buss_name");
-        NullData(getApplicationContext(),"buss_type");
-        NullData(getApplicationContext(),"city");
-        NullData(getApplicationContext(),"country");
-        
+
+        email = emailEt.getText().toString();
+        name = fullnameEt.getText().toString();
          buss_name = buss_nameET.getText().toString();
          city = cityEt.getText().toString();
          country = countryEt.getText().toString();
          buss_type = spin.getSelectedItem().toString();
+
+
+        String empatt = "^[a-zA-Z0-9_.]+@[a-zA-Z]+\\.[a-zA-Z]+$";
+
+        if (name.length()==0)
+            fullnameEt.setError("Field Required");
+
+        if (email.length()>0) {
+            boolean b4 = isMatch(email, empatt);
+            if (!b4) {
+                emailEt.setError("Invalid Email ID");
+                return;
+            }
+        }
 
          if (buss_name.length()==0)
              buss_nameET.setError("Field Required");
@@ -143,16 +185,17 @@ public class BussinessSignUpActivity extends AppCompatActivity implements Adapte
 
         else if (buss_type.equals("Retails"))
             buss_type="2";
-        else
-            Toast.makeText(getApplicationContext(),"Select Bussiness Type",Toast.LENGTH_SHORT).show();
+        else {
+            buss_type="0";
+            Toast.makeText(getApplicationContext(), "Select Bussiness Type", Toast.LENGTH_SHORT).show();
+        }
 
-
-        if (buss_name.length()>0&&city.length()>0&&country.length()>0)
-            registerUser(buss_name,city,country,buss_type,name,phone,code,password,email);
+        if (buss_name.length()>0&&city.length()>0&&country.length()>0&& !buss_type.equals("0"))
+            registerUser(buss_name,city,country,buss_type,name,phone,code,password,email,user_id);
     }
 
     private void registerUser(String buss_name, String city, String country, String buss_type, String name,
-                              String phone,String code, String password,String email) {
+                              String phone, String code, String password, String email, String user_id) {
         final AsyncHttpClient client = new AsyncHttpClient();
         final RequestParams params = new RequestParams();
 
@@ -160,6 +203,7 @@ public class BussinessSignUpActivity extends AppCompatActivity implements Adapte
         ringProgressDialog = ProgressDialog.show(BussinessSignUpActivity.this, "Please wait ...",
                 "Signup", true);
         ringProgressDialog.setCancelable(false);
+        params.put("bk_userid", user_id);
         params.put("business_name", buss_name);
         params.put("full_name", name);
         params.put("business_location", city);
@@ -186,7 +230,7 @@ public class BussinessSignUpActivity extends AppCompatActivity implements Adapte
                 try {
 
                     if (response.getString("status").equals("0")) {
-                        Toast.makeText(BussinessSignUpActivity.this, response.getString("message"), Toast.LENGTH_LONG).show();
+                        Toast.makeText(BussinessSignUpActivity.this, response.getString("message"), Toast.LENGTH_SHORT).show();
 
                     } else {
                         Toast.makeText(getApplicationContext(),"Signup Successfully",Toast.LENGTH_SHORT).show();

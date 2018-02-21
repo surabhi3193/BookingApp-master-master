@@ -1,10 +1,12 @@
 package com.example.mind_android.bookingapp.activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -14,17 +16,30 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.mind_android.bookingapp.R;
+import com.example.mind_android.bookingapp.smsPack.Sms;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 import com.mukesh.countrypicker.fragments.CountryPicker;
 import com.mukesh.countrypicker.interfaces.CountryPickerListener;
+
+import org.json.JSONObject;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import cz.msebera.android.httpclient.Header;
+
+import static com.example.mind_android.bookingapp.Constant.NetWorkClass.BASE_URL_NEW;
+
+
 public class SignupActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, View.OnClickListener {
 
-    EditText emailEt, fullnameEt, phoneNoET, passEt, cPasswordEt;
+    EditText  phoneNoET, passEt, cPasswordEt;
     TextView spin;
-    String cpassword,name,phone,email,password,code;
+    String cpassword,phone,password,code;
+    int count =0;
+    private RelativeLayout next_signup;
 
     public static boolean isMatch(String s, String patt) {
         Pattern pat = Pattern.compile(patt);
@@ -36,12 +51,12 @@ public class SignupActivity extends AppCompatActivity implements AdapterView.OnI
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         System.out.println("============== onCreate============");
-        RelativeLayout next_signup = findViewById(R.id.next_signup);
+         next_signup = findViewById(R.id.next_signup);
 
-        emailEt = findViewById(R.id.emailEt);
-        fullnameEt = findViewById(R.id.nameET);
+
         phoneNoET = findViewById(R.id.phoneEt);
         passEt = findViewById(R.id.passEt);
         cPasswordEt = findViewById(R.id.cPassEt);
@@ -62,48 +77,16 @@ public class SignupActivity extends AppCompatActivity implements AdapterView.OnI
 
     }
 
-    private void setData() {
-
-        Bundle bundle = getIntent().getExtras();
-        if (bundle!=null)
-        {
-            name=bundle.getString("name");
-            email=bundle.getString("email");
-            phone=bundle.getString("phone");
-            code=bundle.getString("code");
-            password=bundle.getString("password");
-
-
-            fullnameEt.setText(name);
-            phoneNoET.setText(phone);
-            emailEt.setText(email);
-            passEt.setText(password);
-            cPasswordEt.setText(password);
-            spin.setText(code);
-        }
-    }
-
     private void nextActivity() {
 
-         name = fullnameEt.getText().toString();
+
          phone = phoneNoET.getText().toString();
          code=spin.getText().toString();
          password = passEt.getText().toString();
          cpassword = cPasswordEt.getText().toString();
-        email = emailEt.getText().toString();
 
-        String empatt = "^[a-zA-Z0-9_.]+@[a-zA-Z]+\\.[a-zA-Z]+$";
 
-        if (name.length()==0)
-            fullnameEt.setError("Field Required");
 
-        if (email.length()>0) {
-            boolean b4 = isMatch(email, empatt);
-            if (!b4) {
-                emailEt.setError("Invalid Email ID");
-                return;
-            }
-        }
         if (code.length()==0)
          Toast.makeText(getApplicationContext(),"Select Dial Code",Toast.LENGTH_SHORT).show();
 
@@ -116,16 +99,13 @@ public class SignupActivity extends AppCompatActivity implements AdapterView.OnI
        if (cpassword.length()==0)
             cPasswordEt.setError("Field Required");
 
-     if (password.length()>0 && cpassword.length()>0 && password.equals(cpassword))
-    {
-        startActivity(new Intent(SignupActivity.this, BussinessSignUpActivity.class)
-                .putExtra("name",name)
-                .putExtra("phone",phone)
-                .putExtra("code",code)
-                .putExtra("email",email)
-                .putExtra("password",password));
-        finish();
-        }
+     if (password.length()>0 && cpassword.length()>0 && password.equals(cpassword)) {
+         if (count == 0)
+         {
+
+             sendOtp(phone, code, password);
+         }
+     }
         else
         {
             cPasswordEt.setError("Password Mismatch");
@@ -157,7 +137,7 @@ public class SignupActivity extends AppCompatActivity implements AdapterView.OnI
 
     @Override
     public void onBackPressed() {
-        startActivity(new Intent(SignupActivity.this,EnterLoginActivity.class));
+        startActivity(new Intent(SignupActivity.this,LoginActivity.class));
         finish();
     }
 
@@ -165,7 +145,6 @@ public class SignupActivity extends AppCompatActivity implements AdapterView.OnI
     protected void onResume() {
         super.onResume();
         System.out.println("============== onResume============");
-        setData();
 
     }
 
@@ -184,4 +163,63 @@ public class SignupActivity extends AppCompatActivity implements AdapterView.OnI
             }
         });
     }
+
+
+
+    public  void sendOtp( final  String phone, final  String code, final  String password) {
+        AsyncHttpClient client = new AsyncHttpClient();
+        RequestParams params  = new RequestParams();
+
+        params.put("business_phone",code+phone);
+        params.put("business_pass", password);
+
+        System.out.println(params);
+
+        client.post(BASE_URL_NEW + "send_otp", params, new JsonHttpResponseHandler() {
+
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response)
+            {
+                System.out.println(" ************* signup response ***");
+                System.out.println(response);
+//                ringProgressDialog.dismiss();
+                try {
+
+                    if (response.getString("status").equals("0")) {
+                        Toast.makeText(getApplicationContext(),
+                                response.getString("message"), Toast.LENGTH_SHORT).show();
+
+                    } else
+                    {
+                        System.out.println("======= otp sent successfully ============");
+
+                        count++;
+                        next_signup.setBackground(getResources().getDrawable(R.drawable.grey_rect_btn));
+                        String userid = response.getString("bk_userid");
+                                startActivity(new Intent(SignupActivity.this, Sms.class)
+                                .putExtra("phone",phone)
+                                .putExtra("code",code)
+                                .putExtra("password",password)
+                                .putExtra("user_id",userid));
+
+                        finish();
+
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+//                ringProgressDialog.dismiss();
+                System.out.println(errorResponse);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                System.out.println(responseString);
+            }
+        });
+    }
+
 }

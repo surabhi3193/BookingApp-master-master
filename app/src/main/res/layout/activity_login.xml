@@ -120,15 +120,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/white"
-                    android:id="@+id/textView" />
+                    android:id="@+id/btn_text" />
 
                 <ImageView
                     android:layout_marginLeft="10dp"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:layout_alignTop="@+id/textView"
-                    android:layout_toEndOf="@+id/textView"
-                    android:layout_toRightOf="@+id/textView"
+                    android:layout_alignTop="@+id/btn_text"
+                    android:layout_toEndOf="@+id/btn_text"
+                    android:layout_toRightOf="@+id/btn_text"
                     android:src="@drawable/login_icon" />
             </RelativeLayout>
 
@@ -138,14 +138,16 @@
                 android:layout_height="wrap_content">
 
                 <TextView
+                    android:padding="10dp"
+
                     android:layout_alignParentLeft="true"
                     android:id="@+id/create_account"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/black"
                     android:text="Create Account ?"/>
-
                 <TextView
+                    android:padding="10dp"
                     android:layout_alignParentRight="true"
                     android:id="@+id/forgot_pass"
                     android:layout_width="wrap_content"
@@ -153,9 +155,7 @@
                     android:textColor="@color/black"
                     android:text="Forgot Password ?"/>
             </RelativeLayout>
-
         </LinearLayout>
-
-
     </RelativeLayout>
+
 </RelativeLayout>

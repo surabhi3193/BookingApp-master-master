@@ -1,24 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.example.mind_android.bookingapp.activities.dashboard_part.StockActivity">
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:id="@+id/toolbar"
-        android:layout_alignParentTop="true"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <include layout="@layout/toolbar_item" />
-    </LinearLayout>
+    <include layout="@layout/toolbar_item" />
 
     <LinearLayout
-        android:layout_below="@+id/toolbar"
-        android:layout_above="@+id/bottom_lay"
         android:id="@+id/listLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -36,12 +26,12 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:padding="8dp"
-                android:text="Stock Details"
+                android:text="Expense Details"
                 android:textColor="@color/black"
-                android:textSize="16sp" />
+                android:textSize="18sp" />
 
             <TextView
-                android:visibility="gone"
+android:visibility="gone"
                 android:id="@+id/searchTv"
                 android:layout_width="90dp"
                 android:layout_height="wrap_content"
@@ -57,13 +47,13 @@
 
             <TextView
                 android:id="@+id/addTv"
-                android:layout_width="100dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:background="@drawable/green_rect_btn"
                 android:gravity="center"
                 android:padding="10dp"
-                android:text="Add Stock"
+                android:text="Add Expense"
                 android:textColor="@color/white" />
         </RelativeLayout>
 
@@ -96,7 +86,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="Quantity"
+                android:text="Date"
                 android:textColor="@color/white"
                 android:textSize="12sp" />
 
@@ -130,32 +120,97 @@
 
     </LinearLayout>
 
-    <RelativeLayout
-        android:background="@color/colorAccent"
-        android:id="@+id/bottom_lay"
-        android:layout_alignParentBottom="true"
+    <ScrollView
+        android:id="@+id/scrollview"
         android:layout_width="match_parent"
-        android:layout_height="50dp">
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
-        <TextView
-            android:layout_alignParentLeft="true"
-            android:textStyle="bold"
-            android:padding="10dp"
-            android:gravity="center"
-            android:text="Total Amount : "
-            android:textColor="@color/white"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent" />
 
-        <TextView
-            android:id="@+id/total_amtTv"
-            android:layout_alignParentRight="true"
-            android:textStyle="bold"
+        <LinearLayout
+            android:id="@+id/addLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="20dp"
+            android:background="@drawable/home_bg"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
             android:padding="10dp"
-            android:gravity="center"
-            android:text="0"
-            android:textColor="@color/white"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent" />
-    </RelativeLayout>
-</RelativeLayout>
+            android:visibility="gone">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/mydridpro"
+                android:text="ADD STOCK"
+                android:textAllCaps="true"
+                android:textColor="@color/colorAccent"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/item_nameTv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="50dp"
+                android:hint="Stock name"
+                android:imeOptions="actionNext"
+                android:padding="15dp"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                android:textSize="15sp" />
+
+            <EditText
+                android:id="@+id/itemQuant_TV"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:hint="Stock quantity"
+                android:imeOptions="actionNext"
+                android:inputType="number"
+                android:padding="15dp"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                android:textSize="15sp" />
+
+            <EditText
+                android:id="@+id/item_price_unit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:hint="Stock price per unit"
+                android:imeOptions="actionNext"
+                android:padding="15dp"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                android:textSize="15sp" />
+
+            <EditText
+                android:id="@+id/item_price_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:hint="Stock price"
+                android:imeOptions="actionNext"
+                android:inputType="number"
+                android:padding="15dp"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                android:textSize="15sp" />
+
+
+            <Button
+                android:id="@+id/add_btn"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_marginTop="40dp"
+                android:background="@drawable/green_rect_btn"
+                android:text="Add Stock"
+                android:textAllCaps="true"
+                android:textColor="@color/white" />
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Bookkeeping</string>
+    <string name="otp_text">Check your text messages to enter verification code </string>
+    <string name="edit_stock">Edit Stocks</string>
 </resources>
