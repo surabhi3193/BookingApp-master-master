@@ -146,7 +146,7 @@
                 android:textSize="15sp"
                 android:textColor="@color/black"
                 android:hint="Stock quantity per Unit"
-                android:inputType="number"
+                android:inputType="number|numberDecimal"
                 android:padding="15dp"
                 android:layout_marginTop="10dp"
                 android:layout_width="match_parent"

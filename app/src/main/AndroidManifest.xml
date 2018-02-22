@@ -75,14 +75,17 @@
         <activity
             android:name=".smsPack.Sms"
             android:screenOrientation="portrait" />
-        <activity android:name=".activities.ForgotPasswordActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activities.dashboard_part.ExpenceActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activities.dashboard_part.ExpenseForm_Activity"
-            android:screenOrientation="portrait">
-
-        </activity>
+        <activity
+            android:name=".activities.ForgotPasswordActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.dashboard_part.ExpenceActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.dashboard_part.ExpenseForm_Activity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activities.dashboard_part.ReportActivity" />
+        <activity android:name=".activities.BaseActivity"></activity>
     </application>
 
 </manifest>

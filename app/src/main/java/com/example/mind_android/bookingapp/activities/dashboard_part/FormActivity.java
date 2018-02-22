@@ -1,5 +1,6 @@
 package com.example.mind_android.bookingapp.activities.dashboard_part;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -21,6 +22,7 @@ import android.widget.Toast;
 
 import com.example.mind_android.bookingapp.R;
 import com.example.mind_android.bookingapp.activities.LoginActivity;
+import com.example.mind_android.bookingapp.beans.Sales;
 import com.example.mind_android.bookingapp.beans.Stock;
 import com.example.mind_android.bookingapp.storage.DatabaseHandler;
 import com.loopj.android.http.AsyncHttpClient;
@@ -40,10 +42,10 @@ import static com.example.mind_android.bookingapp.storage.MySharedPref.getData;
 import static com.example.mind_android.bookingapp.storage.MySharedPref.saveData;
 
 public class FormActivity extends AppCompatActivity {
-    private EditText item_nameEt,item_qtEt,itemUnitPriceEt,sale_unit,sale_item_qty,sale_item_price;
-    String total_amt="0",price_unit="0",method_type="0",stock_id="";
-    private TextView headTv,itemPriceEt,sale_item_name;
-    private LinearLayout stockform,saleForm;
+    private EditText item_nameEt, item_qtEt, itemUnitPriceEt, sale_unit, sale_item_qty, sale_item_price;
+    String total_amt = "0", price_unit = "0", method_type = "0", stock_id = "";
+    private TextView headTv, itemPriceEt, sale_item_name;
+    private LinearLayout stockform, saleForm;
     private int count;
 
     @Override
@@ -52,21 +54,21 @@ public class FormActivity extends AppCompatActivity {
         setContentView(R.layout.activity_form);
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-        count=0;
+        count = 0;
         Button add_stock = findViewById(R.id.add_btn);
 
-        saleForm =findViewById(R.id.saleForm);
-        stockform =findViewById(R.id.stockform);
-        headTv =findViewById(R.id.headTv);
-        item_nameEt =findViewById(R.id.item_nameTv);
-        item_qtEt =findViewById(R.id.itemQuant_TV);
-        itemPriceEt =findViewById(R.id.item_price_tv);
-        itemUnitPriceEt =findViewById(R.id.item_price_unit);
+        saleForm = findViewById(R.id.saleForm);
+        stockform = findViewById(R.id.stockform);
+        headTv = findViewById(R.id.headTv);
+        item_nameEt = findViewById(R.id.item_nameTv);
+        item_qtEt = findViewById(R.id.itemQuant_TV);
+        itemPriceEt = findViewById(R.id.item_price_tv);
+        itemUnitPriceEt = findViewById(R.id.item_price_unit);
 
-        sale_unit =findViewById(R.id.sale_unit);
-        sale_item_name =findViewById(R.id.sale_item_name);
-        sale_item_price =findViewById(R.id.sale_item_price);
-        sale_item_qty =findViewById(R.id.sale_item_qty);
+        sale_unit = findViewById(R.id.sale_unit);
+        sale_item_name = findViewById(R.id.sale_item_name);
+        sale_item_price = findViewById(R.id.sale_item_price);
+        sale_item_qty = findViewById(R.id.sale_item_qty);
 
         TextView signout_btn = findViewById(R.id.signout_btn);
 
@@ -82,38 +84,32 @@ public class FormActivity extends AppCompatActivity {
 
         Bundle bundle = getIntent().getExtras();
 
-        if (bundle!=null)
-        {
+        if (bundle != null) {
             String act = bundle.getString("Activity");
-             stock_id = bundle.getString("stock_id");
-          String   stock_name = bundle.getString("stock_name");
+            stock_id = bundle.getString("stock_id");
+            String stock_name = bundle.getString("stock_name");
 
-            if (act.equals("saleStocks"))
-            {
-                count=1;
+            if (act.equals("saleStocks")) {
+                count = 1;
                 headTv.setText("Sale");
                 add_stock.setText("Sale");
                 sale_item_name.setText(stock_name);
                 stockform.setVisibility(View.GONE);
                 saleForm.setVisibility(View.VISIBLE);
 
-            }
-            else if (act.equals("addStocks"))
-            {
-                count=2;
-                method_type="1";
+            } else if (act.equals("addStocks")) {
+                count = 2;
+                method_type = "1";
                 headTv.setText("Add Stocks");
                 add_stock.setText("Add Stocks");
                 stockform.setVisibility(View.VISIBLE);
                 saleForm.setVisibility(View.GONE);
 
-            }
-            else if (act.equals("editStocks"))
-            {
+            } else if (act.equals("editStocks")) {
                 System.out.println("============ in edit stock ========");
                 System.out.println(stock_name);
-                count=3;
-                method_type="2";
+                count = 3;
+                method_type = "2";
                 headTv.setText(R.string.edit_stock);
                 add_stock.setText("SAVE");
                 item_nameEt.setText(stock_name);
@@ -136,16 +132,15 @@ public class FormActivity extends AppCompatActivity {
 
                 String val = itemUnitPriceEt.getText().toString();
 
-                if (val.length()==0)
-                    val="0.00";
+                if (val.length() == 0)
+                    val = "0.00";
 
 
                 String pr = s.toString();
-                double total=0.00;
-                if (pr.length()==0)
-                    pr="0.00";
-                try
-                {
+                double total = 0.00;
+                if (pr.length() == 0)
+                    pr = "0.00";
+                try {
                     double quant = Double.parseDouble(val);
                     int unit = Integer.parseInt(pr);
                     total = (quant * unit);
@@ -154,9 +149,7 @@ public class FormActivity extends AppCompatActivity {
                     System.out.println(quant + " u");
                     System.out.println(unit + " q");
                     System.out.println(total + " t");
-                }
-                catch (Exception e)
-                {
+                } catch (Exception e) {
                     e.printStackTrace();
 //                    Toast.makeText(getApplicationContext(),"invalid price",Toast.LENGTH_SHORT).show();
                 }
@@ -188,16 +181,15 @@ public class FormActivity extends AppCompatActivity {
                 itemUnitPriceEt.setCursorVisible(true);
 
 
-                if (val.length()==0)
-                    val="0.000";
+                if (val.length() == 0)
+                    val = "0.000";
 
 
                 String pr = s.toString();
-                float total=0;
-                if (pr.length()==0)
-                    pr="0.00";
-                try
-                {
+                float total = 0;
+                if (pr.length() == 0)
+                    pr = "0.00";
+                try {
                     int quant = Integer.parseInt(val);
                     double unit = Double.parseDouble(pr);
                     total = (float) (quant * unit);
@@ -206,9 +198,7 @@ public class FormActivity extends AppCompatActivity {
                     System.out.println(quant + " q");
                     System.out.println(unit + " u");
                     System.out.println(total + " t");
-                }
-                catch (Exception e)
-                {
+                } catch (Exception e) {
                     e.printStackTrace();
 //                    Toast.makeText(getApplicationContext(),"invalid price",Toast.LENGTH_SHORT).show();
                 }
@@ -231,7 +221,7 @@ public class FormActivity extends AppCompatActivity {
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     System.out.println("=========== action done ==========");
-                    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(itemPriceEt.getWindowToken(), 0);
                     itemUnitPriceEt.setCursorVisible(false);
                     return true;
@@ -240,10 +230,6 @@ public class FormActivity extends AppCompatActivity {
             }
 
         });
-
-
-
-
 
         sale_item_qty.addTextChangedListener(new TextWatcher() {
             @Override
@@ -256,16 +242,15 @@ public class FormActivity extends AppCompatActivity {
 
                 String val = sale_unit.getText().toString();
 
-                if (val.length()==0)
-                    val="0.00";
+                if (val.length() == 0)
+                    val = "0.00";
 
 
                 String pr = s.toString();
-                double total=0.00;
-                if (pr.length()==0)
-                    pr="0.00";
-                try
-                {
+                double total = 0.00;
+                if (pr.length() == 0)
+                    pr = "0.00";
+                try {
                     double quant = Double.parseDouble(val);
                     int unit = Integer.parseInt(pr);
                     total = (quant * unit);
@@ -274,9 +259,7 @@ public class FormActivity extends AppCompatActivity {
                     System.out.println(quant + " u");
                     System.out.println(unit + " q");
                     System.out.println(total + " t");
-                }
-                catch (Exception e)
-                {
+                } catch (Exception e) {
                     e.printStackTrace();
 //                    Toast.makeText(getApplicationContext(),"invalid price",Toast.LENGTH_SHORT).show();
                 }
@@ -308,16 +291,15 @@ public class FormActivity extends AppCompatActivity {
                 itemUnitPriceEt.setCursorVisible(true);
 
 
-                if (val.length()==0)
-                    val="0.000";
+                if (val.length() == 0)
+                    val = "0.000";
 
 
                 String pr = s.toString();
-                float total=0;
-                if (pr.length()==0)
-                    pr="0.00";
-                try
-                {
+                float total = 0;
+                if (pr.length() == 0)
+                    pr = "0.00";
+                try {
                     int quant = Integer.parseInt(val);
                     double unit = Double.parseDouble(pr);
                     total = (float) (quant * unit);
@@ -326,9 +308,7 @@ public class FormActivity extends AppCompatActivity {
                     System.out.println(quant + " q");
                     System.out.println(unit + " u");
                     System.out.println(total + " t");
-                }
-                catch (Exception e)
-                {
+                } catch (Exception e) {
                     e.printStackTrace();
 //                    Toast.makeText(getApplicationContext(),"invalid price",Toast.LENGTH_SHORT).show();
                 }
@@ -351,7 +331,7 @@ public class FormActivity extends AppCompatActivity {
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     System.out.println("=========== action done ==========");
-                    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(sale_item_price.getWindowToken(), 0);
                     sale_unit.setCursorVisible(false);
                     return true;
@@ -366,38 +346,34 @@ public class FormActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-               if (count==2 || count==3)
+                if (count == 2 || count == 3)
                     stock(method_type);
-               else if (count==1)
-                   sale();
+                else if (count == 1)
+                    sale();
 
             }
         });
     }
 
-    private void addStockinLocal(final  String bk_userid, final  String stock_name,
-                                 final  String stock_qty, final
-    String stock_amount, final  String method_type, final  String stock_per_price,
-                                 final  String stock_id)
-    {
+
+    private void addStockinLocal(final String bk_userid, final String stock_name,
+                                 final String stock_qty, final
+                                 String stock_amount, final String method_type, final String stock_per_price,
+                                 final String stock_id) {
         DatabaseHandler db = new DatabaseHandler(FormActivity.this);
 
-        if (method_type.equals("1"))
-        {
+        if (method_type.equals("1")) {
             Log.d("Insert: ", "Inserting .. Stock");
-            Long tsLong = System.currentTimeMillis()/1000;
+            Long tsLong = System.currentTimeMillis() / 1000;
             int id = Integer.parseInt(tsLong.toString());
 
-            db.addStock(new Stock(id,stock_name,stock_qty,stock_per_price,stock_amount,0));
-                   onBackPressed();
-        }
-
-        else if (method_type.equals("2"))
-        {
+            db.addStock(new Stock(id, stock_name, stock_qty, stock_per_price, stock_amount, 0));
+            onBackPressed();
+        } else if (method_type.equals("2")) {
             int id = Integer.parseInt(stock_id);
             Log.d("Update: ", "Updating .. Stock");
-            db.updateStock(new Stock(id,stock_name,stock_qty,stock_per_price,stock_amount,0), stock_id);
-             onBackPressed();
+            db.updateStock(new Stock(id, stock_name, stock_qty, stock_per_price, stock_amount, 0), stock_id);
+            onBackPressed();
         }
     }
 
@@ -407,28 +383,32 @@ public class FormActivity extends AppCompatActivity {
         String qty = sale_item_qty.getText().toString();
         String price = sale_item_price.getText().toString();
 
-        if (name.length()==0)
+        if (name.length() == 0)
             sale_item_name.setError("Stock name required");
 
-        if (qty.length()==0 || qty.equals("0"))
+        if (qty.length() == 0 || qty.equals("0"))
             sale_item_qty.setError("Stock required");
 
-        if (unit.length()==0 || unit.equalsIgnoreCase("0"))
+        if (unit.length() == 0 || unit.equalsIgnoreCase("0"))
             sale_unit.setError("Stock unit  required");
-        if (price.length()==0 || price.equals("0"))
+        if (price.length() == 0 || price.equals("0"))
             sale_item_price.setError("Price required");
 
-        else
-        {
-            if (name.length()>0 && qty.length()>0 && price.length()>0 && unit.length()<0);
+        else {
+            if (name.length() > 0 && qty.length() > 0 && price.length() > 0 && unit.length() < 0) ;
             {
-                String user_id = getData(FormActivity.this,"user_id","");
-                qty= sale_item_qty.getText().toString();
-                name= sale_item_name.getText().toString();
-                price= sale_item_price.getText().toString();
-                unit= sale_unit.getText().toString();
+                String user_id = getData(FormActivity.this, "user_id", "");
+                qty = sale_item_qty.getText().toString();
+                name = sale_item_name.getText().toString();
+                price = sale_item_price.getText().toString();
+                unit = sale_unit.getText().toString();
 
-                addsale(user_id,unit,qty,price,stock_id);
+                if (isNetworkAvailable(FormActivity.this))
+                    addsale(FormActivity.this,user_id, unit, qty, price, stock_id,"","2");
+                else
+                    {
+
+                }
             }
         }
 
@@ -439,68 +419,62 @@ public class FormActivity extends AppCompatActivity {
         String qty = item_qtEt.getText().toString();
         String price = itemPriceEt.getText().toString();
 
-        if (name.length()==0)
+        if (name.length() == 0)
             item_nameEt.setError("Stock name required");
 
-        if (qty.length()==0 || qty.equals("0"))
+        if (qty.length() == 0 || qty.equals("0"))
             item_qtEt.setError("Stock required");
 
-        if (price.length()==0 || price.equals("0.0"))
+        if (price.length() == 0 || price.equals("0.0"))
             itemUnitPriceEt.setError("Price required");
 
-        else
-        {
-            if (name.length()>0 && qty.length()>0);
+        else {
+            if (name.length() > 0 && qty.length() > 0) ;
             {
-                String user_id = getData(FormActivity.this,"user_id","");
-                total_amt= itemPriceEt.getText().toString();
-                qty= item_qtEt.getText().toString();
-                name= item_nameEt.getText().toString();
-                price_unit= itemUnitPriceEt.getText().toString();
+                String user_id = getData(FormActivity.this, "user_id", "");
+                total_amt = itemPriceEt.getText().toString();
+                qty = item_qtEt.getText().toString();
+                name = item_nameEt.getText().toString();
+                price_unit = itemUnitPriceEt.getText().toString();
 
-                if (!isNetworkAvailable(FormActivity.this))
-                {
-                    addStockinLocal(user_id,name, qty,total_amt, method_type,price_unit,stock_id);
+                if (!isNetworkAvailable(FormActivity.this)) {
+                    addStockinLocal(user_id, name, qty, total_amt, method_type, price_unit, stock_id);
 
-                }
-                else
-                {
-                    addStock(FormActivity.this,user_id,name, qty,total_amt, method_type,price_unit,stock_id, "");
+                } else {
+                    addStock(FormActivity.this, user_id, name, qty, total_amt, method_type, price_unit, stock_id, "");
                 }
 
             }
         }
     }
 
-
-
-
-
-
-    private void addsale(final  String bk_userid, final  String unit, final  String stock_qty, final
-    String stock_amount, final  String stock_id)
-    {
+    public static void addsale(final Activity context, final String bk_userid, final String unit, final String stock_qty, final
+    String stock_amount, final String stock_id, final String
+            stock_name, final String sale_type) {
         final AsyncHttpClient client = new AsyncHttpClient();
         final RequestParams params = new RequestParams();
 
         final ProgressDialog ringProgressDialog;
-        ringProgressDialog = ProgressDialog.show(FormActivity.this, "Please wait ...",
+        ringProgressDialog = ProgressDialog.show(context, "Please wait ...",
                 "", true);
         ringProgressDialog.setCancelable(false);
 
         params.put("bk_userid", bk_userid);
-        params.put("stock_id", stock_id);
         params.put("sell_quantity", stock_qty);
         params.put("sell_unit_price", unit);
         params.put("sell_price", stock_amount);
         params.put("method_type", 1);
+        params.put("sale_type", sale_type);
+        if (sale_type.equals("1"))
+            params.put("stock_name", stock_name);
+        else if (sale_type.equals("2"))
+            params.put("stock_id", stock_id);
 
         System.out.println(params);
 
         client.post(BASE_URL_NEW + "add_sales", params, new JsonHttpResponseHandler() {
 
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response)
-            {
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
 
                 System.out.println(" ************* add response ***");
                 System.out.println(response);
@@ -508,18 +482,40 @@ public class FormActivity extends AppCompatActivity {
                 try {
 
                     if (response.getString("status").equals("0")) {
-                        Toast.makeText(FormActivity.this, response.getString("message"), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, response.getString("message"), Toast.LENGTH_SHORT).show();
 
-                    } else
-                    {
-                        Toast.makeText(getApplicationContext(),"Added Successfully",Toast.LENGTH_SHORT).show();
-                        onBackPressed();
+                    } else {
+
+                        if (sale_type.equals("2")) {
+                            String id = response.getString("stock_id");
+                            String name = response.getString("stock_name");
+                            String qty = response.getString("sell_quantity");
+                            String per_price = response.getString("sell_unit_price");
+                            String price = response.getString("sell_price");
+
+                            Sales sales = new Sales();
+                            sales.set_id(Integer.parseInt(id));
+                            sales.set_name(name);
+                            sales.set_qty(qty);
+                            sales.set_unit_per_price(per_price);
+                            sales.set_price(price);
+                            sales.set_status(1);
+                            DatabaseHandler db = new DatabaseHandler(context);
+
+                            db.addSales(sales);
+                            db.updateStock(new Stock((Integer.parseInt(id)), name, qty,
+                                    per_price, price, 1), id);
+
+                        }
+
+                        Toast.makeText(context, "Added Successfully", Toast.LENGTH_SHORT).show();
+                        context.onBackPressed();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
+
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 ringProgressDialog.dismiss();
                 System.out.println(errorResponse);
@@ -528,8 +524,8 @@ public class FormActivity extends AppCompatActivity {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 ringProgressDialog.dismiss();
-                System.out.println(responseString);            }
+                System.out.println(responseString);
+            }
         });
     }
-
 }

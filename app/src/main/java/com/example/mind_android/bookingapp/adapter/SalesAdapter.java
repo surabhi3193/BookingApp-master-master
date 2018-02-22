@@ -59,7 +59,6 @@ public class SalesAdapter extends BaseAdapter {
         try {
             responseobj = jobj.getJSONObject(position);
 
-
             String stock_name = responseobj.getString("stock_name");
             String stock_qty = responseobj.getString("stock_qty");
             String stock_price = responseobj.getString("stock_price");

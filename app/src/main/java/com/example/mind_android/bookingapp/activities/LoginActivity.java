@@ -236,6 +236,8 @@ client.setConnectTimeout(30000);
                                 ,bus_name,bus_loc,bus_type,bus_email));
 
                         db.deleteAllStocks();
+                        db.deleteAllSales();
+                        db.deleteAllexpense();
 
                         startActivity(new Intent(getApplicationContext(), MainActivity.class));
                         finish();

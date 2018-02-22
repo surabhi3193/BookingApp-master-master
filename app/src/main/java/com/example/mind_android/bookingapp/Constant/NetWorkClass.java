@@ -6,8 +6,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.mind_android.bookingapp.activities.dashboard_part.ExpenceActivity;
+import com.example.mind_android.bookingapp.activities.dashboard_part.ExpenseForm_Activity;
 import com.example.mind_android.bookingapp.activities.dashboard_part.SalesActivity;
 import com.example.mind_android.bookingapp.activities.dashboard_part.StockActivity;
+import com.example.mind_android.bookingapp.beans.Expense;
 import com.example.mind_android.bookingapp.beans.Stock;
 import com.example.mind_android.bookingapp.storage.DatabaseHandler;
 import com.loopj.android.http.AsyncHttpClient;
@@ -125,7 +128,87 @@ public class NetWorkClass extends AppCompatActivity {
     }
 
 
+    public static void addExpense(final Activity context,final  String bk_userid, final  String stock_name, final
+    String stock_price,final String method_type,final String expense_id,final String local)
+    {
+        final AsyncHttpClient client = new AsyncHttpClient();
+        final RequestParams params = new RequestParams();
 
+        final ProgressDialog ringProgressDialog;
+        ringProgressDialog = ProgressDialog.show(context, "Please wait ...",
+                "", true);
+        ringProgressDialog.setCancelable(false);
+
+        params.put("bk_userid", bk_userid);
+        params.put("expanse_name", stock_name);
+        params.put("expanse_amout", stock_price);
+        params.put("expanse_id", expense_id);
+        params.put("method_type", method_type);
+
+        System.out.println(params);
+
+        client.post(BASE_URL_NEW + "add_expanse", params, new JsonHttpResponseHandler() {
+
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response)
+            {
+                System.out.println(" ************* add response ***");
+                System.out.println(response);
+                ringProgressDialog.dismiss();
+                try {
+                    if (response.getString("status").equals("0"))
+                    {
+                        Toast.makeText(context, response.getString("message"), Toast.LENGTH_SHORT).show();
+
+                    } else
+                    {
+                        DatabaseHandler db = new DatabaseHandler(context);
+                        String id = response.getString("expense_id");
+                        String date =response.getString("expanse_date");
+
+                        if (method_type.equals("1"))
+                        {
+                            Log.d("Updating: ", "Updating .. Stock");
+                            if (local.equals("local"))
+                            {
+                                db.updateExpense(new Expense(Integer.parseInt(id),stock_name,date,stock_price,1),expense_id);
+                                ringProgressDialog.dismiss();
+                            }
+                            else
+                            {
+                                ringProgressDialog.dismiss();
+                                db.addExpense(new Expense(Integer.parseInt(id),stock_name,date,stock_price,1));
+
+                                Toast.makeText(context,"Added Successfully",Toast.LENGTH_SHORT).show();
+                                context.onBackPressed();
+                            }
+                        }
+
+                        else if (method_type.equals("2"))
+                        {
+                            ringProgressDialog.dismiss();
+                            Log.d("Update: ", "Updating .. Stock");
+                            db.updateExpense(new Expense(Integer.parseInt(id),stock_name,date,stock_price,1),expense_id);
+                            context.onBackPressed();
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                ringProgressDialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                ringProgressDialog.dismiss();
+
+                System.err.println(responseString);
+            }
+        });
+    }
 
     public static void deleteStock(final Activity activity, final Stock stock) {
         final AsyncHttpClient client = new AsyncHttpClient();
@@ -151,6 +234,7 @@ public class NetWorkClass extends AppCompatActivity {
                         db.deleteStock(stock);
 //                        Toast.makeText(activity, "Deleted Successfully", Toast.LENGTH_SHORT).show();
                         if (activity instanceof StockActivity) {
+                            System.out.println("=== back to show ");
                             ((StockActivity) activity).showAllStocks();
                         }
                     }
@@ -166,6 +250,43 @@ public class NetWorkClass extends AppCompatActivity {
         });
     }
 
+    public static void deleteExpense(final Activity activity, final Expense expense) {
+        final AsyncHttpClient client = new AsyncHttpClient();
+        final RequestParams params = new RequestParams();
 
+        final String bk_userid = getData(activity, "user_id", "");
+        params.put("bk_userid", bk_userid);
+        params.put("expanse_id", expense.get_id());
+
+        System.out.println(params);
+
+        client.post(BASE_URL_NEW + "delete_expense", params, new JsonHttpResponseHandler() {
+
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                System.out.println(" ************* delete response ***");
+                System.out.println(response);
+                try {
+
+                    if (response.getString("status").equals("0")) {
+
+                    } else {
+                        DatabaseHandler db = new DatabaseHandler(activity);
+                        db.deleteExpense(expense);
+                        Toast.makeText(activity, "Deleted Successfully", Toast.LENGTH_SHORT).show();
+                        if (activity instanceof ExpenceActivity) {
+                            ((ExpenceActivity) activity).showExpense();
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+            }
+
+        });
+    }
 
 }

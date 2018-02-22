@@ -13,8 +13,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.mind_android.bookingapp.R;
+import com.example.mind_android.bookingapp.activities.dashboard_part.ExpenceActivity;
+import com.example.mind_android.bookingapp.activities.dashboard_part.ExpenseForm_Activity;
 import com.example.mind_android.bookingapp.activities.dashboard_part.FormActivity;
 import com.example.mind_android.bookingapp.activities.dashboard_part.StockActivity;
+import com.example.mind_android.bookingapp.beans.Expense;
 import com.example.mind_android.bookingapp.beans.Stock;
 import com.example.mind_android.bookingapp.storage.DatabaseHandler;
 
@@ -23,6 +26,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import static com.example.mind_android.bookingapp.Constant.CheckInternetConnection.isNetworkAvailable;
+import static com.example.mind_android.bookingapp.Constant.NetWorkClass.deleteExpense;
 import static com.example.mind_android.bookingapp.Constant.NetWorkClass.deleteStock;
 
 
@@ -110,18 +114,8 @@ public class StockAdapter extends BaseAdapter {
         holder.delete_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try {
-                    if (act_name.equals("expense")) {
-                    } else {
-                        String stock_id = finalResponseobj1.getString("stock_id");
-                        String stock_name = finalResponseobj1.getString("stock_name");
-                        deleteAlertDialog(context, finalResponseobj1);
-                    }
+                        deleteAlertDialog(context, finalResponseobj1,act_name);
 
-                } catch (JSONException e) {
-
-                    e.printStackTrace();
-                }
             }
         });
 
@@ -130,16 +124,33 @@ public class StockAdapter extends BaseAdapter {
             @Override
             public void onClick(View view) {
                 try {
-                    String stock_id = finalResponseobj1.getString("stock_id");
-                    String stock_name = finalResponseobj1.getString("stock_name");
+
+                    if (act_name.equals("expense"))
+                    {
+
+                        String stock_id = finalResponseobj1.getString("expanse_id");
+                        String stock_name = finalResponseobj1.getString("expanse_name");
+                        context.startActivity(new Intent(context, ExpenseForm_Activity.class)
+                                .putExtra("method_type", "2")
+                                .putExtra("expanse_id", stock_id)
+                                .putExtra("expanse_name", stock_name)
+
+                        );
 
 
-                    context.startActivity(new Intent(context, FormActivity.class)
-                            .putExtra("Activity", "editStocks")
-                            .putExtra("stock_id", stock_id)
-                            .putExtra("stock_name", stock_name)
+                    }
 
-                    );
+
+                    else {
+                        String stock_id = finalResponseobj1.getString("stock_id");
+                        String stock_name = finalResponseobj1.getString("stock_name");
+                        context.startActivity(new Intent(context, FormActivity.class)
+                                .putExtra("Activity", "editStocks")
+                                .putExtra("stock_id", stock_id)
+                                .putExtra("stock_name", stock_name)
+
+                        );
+                    }
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -152,35 +163,89 @@ public class StockAdapter extends BaseAdapter {
         return rowView;
     }
 
-    private void deleteAlertDialog(final Activity activity, final JSONObject jobj) {
+    private void deleteAlertDialog(final Activity activity, final JSONObject jobj, final String act_name) {
         AlertDialog.Builder ab = new AlertDialog.Builder(activity, R.style.MyAlertDialogStyle1);
-        ab.setTitle("Delete Stock ");
+        ab.setTitle("Delete");
         ab.setMessage("Are you sure to delete");
         ab.setNegativeButton("Ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 try {
-                    Stock stock = new Stock();
-                    int id = Integer.parseInt(jobj.getString("stock_id"));
+                    if (!isNetworkAvailable(activity))
+                    {
 
-                    stock.set_id(id);
-                    stock.set_status(2);
-                    stock.set_name(jobj.getString("stock_name"));
-                    stock.set_qty(jobj.getString("stock_qty"));
-                    stock.set_unit_per_price(jobj.getString("stock_per_price"));
-                    stock.set_price(jobj.getString("stock_price"));
+                        if (act_name.equals("expense"))
+                        {
+                            Expense expense = new Expense();
+                            int id = Integer.parseInt(jobj.getString("expanse_id"));
+                            expense.set_id(id);
+                            expense.set_status(2);
+                            expense.set_name(jobj.getString("expanse_name"));
+                            expense.set_date(jobj.getString("expanse_date"));
+                            expense.set_price(jobj.getString("expanse_amount"));
 
-                    if (!isNetworkAvailable(activity)) {
 
-                        DatabaseHandler db = new DatabaseHandler(activity);
-                        db.updateStock(stock, String.valueOf(id));
+                            DatabaseHandler db = new DatabaseHandler(activity);
+                            db.updateExpense(expense, String.valueOf(id));
 
-                        if (activity instanceof StockActivity) {
-                            ((StockActivity) activity).showAllStocks();
+                            if (activity instanceof ExpenceActivity) {
+                                ((ExpenceActivity) activity).showAllExpense();
+                            }
                         }
-                    } else {
 
-                        deleteStock(activity, stock);
+                        else
+                        {
+
+                            Stock stock = new Stock();
+                            int id = Integer.parseInt(jobj.getString("stock_id"));
+                            stock.set_id(id);
+                            stock.set_status(2);
+                            stock.set_name(jobj.getString("stock_name"));
+                            stock.set_qty(jobj.getString("stock_qty"));
+                            stock.set_unit_per_price(jobj.getString("stock_per_price"));
+                            stock.set_price(jobj.getString("stock_price"));
+
+                            DatabaseHandler db = new DatabaseHandler(activity);
+                            db.updateStock(stock, String.valueOf(id));
+
+                            if (activity instanceof StockActivity) {
+                                ((StockActivity) activity).showAllStocks();
+                            }
+
+                        }
+
+
+                    }
+                    else {
+
+                        if (act_name.equals("expense"))
+                        {
+                            Expense expense = new Expense();
+                            int id = Integer.parseInt(jobj.getString("expanse_id"));
+                            expense.set_id(id);
+                            expense.set_status(2);
+                            expense.set_name(jobj.getString("expanse_name"));
+                            expense.set_date(jobj.getString("expanse_date"));
+                            expense.set_price(jobj.getString("expanse_amount"));
+
+                            deleteExpense(activity,expense);
+
+                        }
+                        else {
+
+                            Stock stock = new Stock();
+                            int id = Integer.parseInt(jobj.getString("stock_id"));
+                            stock.set_id(id);
+                            stock.set_status(2);
+                            stock.set_name(jobj.getString("stock_name"));
+                            stock.set_qty(jobj.getString("stock_qty"));
+                            stock.set_unit_per_price(jobj.getString("stock_per_price"));
+                            stock.set_price(jobj.getString("stock_price"));
+                            deleteStock(activity, stock);
+                        }
+
+
+
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -189,7 +254,6 @@ public class StockAdapter extends BaseAdapter {
 
             }
         });
-
         ab.setPositiveButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

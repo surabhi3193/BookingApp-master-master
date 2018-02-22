@@ -1,14 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.example.mind_android.bookingapp.activities.dashboard_part.StockActivity">
-
+<LinearLayout
+    android:id="@+id/toolbar"
+    android:layout_alignParentTop="true"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
     <include layout="@layout/toolbar_item" />
+</LinearLayout>
+
 
     <LinearLayout
+        android:layout_above="@+id/bottom_lay"
+        android:layout_below="@+id/toolbar"
         android:id="@+id/listLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -121,6 +130,8 @@ android:visibility="gone"
     </LinearLayout>
 
     <ScrollView
+        android:visibility="gone"
+        android:background="@color/white"
         android:id="@+id/scrollview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -135,8 +146,7 @@ android:visibility="gone"
             android:background="@drawable/home_bg"
             android:gravity="center_horizontal"
             android:orientation="vertical"
-            android:padding="10dp"
-            android:visibility="gone">
+            android:padding="10dp">
 
 
             <TextView
@@ -213,4 +223,34 @@ android:visibility="gone"
 
         </LinearLayout>
     </ScrollView>
-</LinearLayout>
+
+    <RelativeLayout
+        android:background="@color/colorAccent"
+        android:id="@+id/bottom_lay"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+
+        <TextView
+            android:layout_alignParentLeft="true"
+            android:textStyle="bold"
+            android:padding="10dp"
+            android:gravity="center"
+            android:text="Total Amount : "
+            android:textColor="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:id="@+id/total_amtTv"
+            android:layout_alignParentRight="true"
+            android:textStyle="bold"
+            android:padding="10dp"
+            android:gravity="center"
+            android:text="0"
+            android:textColor="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+    </RelativeLayout>
+
+</RelativeLayout>

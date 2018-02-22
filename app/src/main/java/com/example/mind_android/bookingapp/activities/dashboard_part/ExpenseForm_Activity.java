@@ -3,25 +3,35 @@ package com.example.mind_android.bookingapp.activities.dashboard_part;
 import android.app.ProgressDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.mind_android.bookingapp.R;
+import com.example.mind_android.bookingapp.beans.Expense;
+import com.example.mind_android.bookingapp.beans.Stock;
+import com.example.mind_android.bookingapp.storage.DatabaseHandler;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 import cz.msebera.android.httpclient.Header;
 
+import static com.example.mind_android.bookingapp.Constant.CheckInternetConnection.isNetworkAvailable;
 import static com.example.mind_android.bookingapp.Constant.NetWorkClass.BASE_URL_NEW;
+import static com.example.mind_android.bookingapp.Constant.NetWorkClass.addExpense;
 import static com.example.mind_android.bookingapp.storage.MySharedPref.getData;
 
 public class ExpenseForm_Activity extends AppCompatActivity {
-
+    private String method_type="1";
+String expense_id="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,6 +40,25 @@ public class ExpenseForm_Activity extends AppCompatActivity {
         final EditText expense_nameEt= findViewById(R.id.expense_nameEt);
         final EditText expense_priceEt= findViewById(R.id.expense_priceEt);
         Button add_btn = findViewById(R.id.add_btn);
+
+
+        Bundle bundle = getIntent().getExtras();
+
+        if (bundle!=null)
+        {
+            method_type=bundle.getString("method_type");
+
+            if (method_type.equals("2"))
+            {
+                expense_id=bundle.getString("expanse_id");
+
+                expense_nameEt.setText(bundle.getString("expanse_name"));
+                add_btn.setText("Save");
+            }
+            else
+                add_btn.setText("Add Expense");
+
+        }
 
         add_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -42,65 +71,44 @@ public class ExpenseForm_Activity extends AppCompatActivity {
                 {
                     String user_id = getData(ExpenseForm_Activity.this,"user_id","");
 
-                    addExpense(user_id,name,price,"1","");
+                    if (isNetworkAvailable(ExpenseForm_Activity.this))
+                    addExpense(ExpenseForm_Activity.this,user_id,name,price,method_type,expense_id,"");
+
+                    else
+                    {
+                        String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").
+                                format(Calendar.getInstance().getTime());
+
+                        addExpenseinLocal(user_id,name,date,price,method_type,expense_id);
+
+                    }
                 }
             }
         });
     }
 
-    private void addExpense(final  String bk_userid, final  String stock_name, final
-    String stock_price,final String method_type,final String expense_id)
+    private void addExpenseinLocal(final String bk_userid, final String stock_name,
+                                 final String date, final
+                                 String stock_amount, final String method_type,
+                                 final String stock_id) 
     {
-        final AsyncHttpClient client = new AsyncHttpClient();
-        final RequestParams params = new RequestParams();
+        DatabaseHandler db = new DatabaseHandler(ExpenseForm_Activity.this);
 
-        final ProgressDialog ringProgressDialog;
-        ringProgressDialog = ProgressDialog.show(ExpenseForm_Activity.this, "Please wait ...",
-                "", true);
-        ringProgressDialog.setCancelable(false);
+        if (method_type.equals("1")) {
+            Log.d("Insert: ", "Inserting .. Stock");
+            Long tsLong = System.currentTimeMillis() / 1000;
+            int id = Integer.parseInt(tsLong.toString());
 
-        params.put("bk_userid", bk_userid);
-        params.put("expanse_name", stock_name);
-        params.put("expanse_amout", stock_price);
-        params.put("expanse_id", expense_id);
-        params.put("method_type", method_type);
+            db.addExpense(new Expense(id, stock_name, date, stock_amount, 0));
+            onBackPressed();
+        }
 
-        System.out.println(params);
-
-        client.post(BASE_URL_NEW + "add_expanse", params, new JsonHttpResponseHandler() {
-
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response)
-            {
-                System.out.println(" ************* add response ***");
-                System.out.println(response);
-                ringProgressDialog.dismiss();
-                try {
-
-                    if (response.getString("status").equals("0")) {
-                        Toast.makeText(ExpenseForm_Activity.this, response.getString("message"), Toast.LENGTH_SHORT).show();
-
-                    } else
-                    {
-                        Toast.makeText(getApplicationContext(),"Added Successfully",Toast.LENGTH_SHORT).show();
-                        onBackPressed();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            }
-
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                ringProgressDialog.dismiss();
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                ringProgressDialog.dismiss();
-
-                System.err.println(responseString);
-            }
-        });
+        else if (method_type.equals("2")) {
+            int id = Integer.parseInt(stock_id);
+            Log.d("Update: ", "Updating .. Stock");
+            db.updateExpense(new Expense(id, stock_name, date, stock_amount, 0), stock_id);
+            onBackPressed();
+        }
     }
 
 }

@@ -1,13 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-
+<LinearLayout
+    android:id="@+id/toolbar"
+    android:layout_alignParentTop="true"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
     <include layout="@layout/toolbar_item" />
+
+</LinearLayout>
 
 
     <LinearLayout
+        android:layout_below="@+id/toolbar"
         android:id="@+id/listLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -25,7 +32,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:padding="8dp"
-                android:text="Stock Details"
+                android:text="Sale Details"
                 android:textColor="@color/black"
                 android:textSize="18sp" />
 
@@ -118,4 +125,55 @@
 
     </LinearLayout>
 
-</LinearLayout>
+
+
+    <LinearLayout
+        android:padding="20dp"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:id="@+id/income_formLay"
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/login_screen_logo"/>
+        <EditText
+            android:id="@+id/service_name"
+            android:imeOptions="actionNext"
+            android:singleLine="true"
+            android:paddingLeft="10dp"
+            android:hint="Enter Service Name"
+            android:layout_marginTop="40dp"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:textColor="@color/black"
+            android:textSize="15sp"/>
+
+        <EditText
+            android:inputType="number|numberDecimal"
+            android:id="@+id/service_price"
+            android:imeOptions="actionDone"
+            android:singleLine="true"
+            android:paddingLeft="10dp"
+            android:hint="Enter Service Price"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:textColor="@color/black"
+            android:textSize="15sp"/>
+
+        <Button
+            android:id="@+id/submit_btn"
+            android:textColor="@color/white"
+            android:text="Submit"
+            android:textAllCaps="true"
+            android:layout_marginTop="40dp"
+            android:background="@drawable/green_rect_btn"
+            android:layout_width="match_parent"
+            android:layout_height="35dp" />
+    </LinearLayout>
+</RelativeLayout>

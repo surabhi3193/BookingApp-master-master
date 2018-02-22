@@ -154,7 +154,7 @@ public class BussinessSignUpActivity extends AppCompatActivity implements Adapte
          buss_name = buss_nameET.getText().toString();
          city = cityEt.getText().toString();
          country = countryEt.getText().toString();
-         buss_type = spin.getSelectedItem().toString();
+        buss_type = spin.getSelectedItem().toString();
 
 
         String empatt = "^[a-zA-Z0-9_.]+@[a-zA-Z]+\\.[a-zA-Z]+$";
@@ -179,11 +179,12 @@ public class BussinessSignUpActivity extends AppCompatActivity implements Adapte
          if (country.length()==0)
              countryEt.setError("Field Required");
 
-
+        System.out.println("== buss type=======");
+        System.out.println(buss_type);
         if (buss_type.equals("Services"))
             buss_type="1";
 
-        else if (buss_type.equals("Retails"))
+        else if (buss_type.equals("Retail"))
             buss_type="2";
         else {
             buss_type="0";

@@ -59,10 +59,13 @@ public class StockActivity extends AppCompatActivity {
                 try {
 
                     if (response.getString("status").equals("0")) {
+                        stocklist.setVisibility(View.GONE);
+                        total_amtTv.setText("0.00");
 //                        Toast.makeText(StockActivity.this, response.getString("message"), Toast.LENGTH_SHORT).show();
                     } else {
 
                         listLayout.setVisibility(View.VISIBLE);
+                        stocklist.setVisibility(View.VISIBLE);
 
                         String total_amt = response.getString("total");
                         total_amtTv.setText(total_amt);
@@ -171,9 +174,7 @@ public class StockActivity extends AppCompatActivity {
                     " ,price : " + cn.get_price();
             // Writing Contacts to log
             Log.d("Name: ", log);
-            addStock(StockActivity.this, user_id, cn.get_name(), cn.get_qty(),
-                    cn.get_price(),
-                    "1", cn.get_unit_per_price(), String.valueOf(cn.get_id()), "local");
+            addStock(StockActivity.this, user_id, cn.get_name(), cn.get_qty(), cn.get_price(), "1", cn.get_unit_per_price(), String.valueOf(cn.get_id()), "local");
         }
     }
 
