@@ -130,10 +130,12 @@ public class StockAdapter extends BaseAdapter {
 
                         String stock_id = finalResponseobj1.getString("expanse_id");
                         String stock_name = finalResponseobj1.getString("expanse_name");
+                        String expanse_amount = finalResponseobj1.getString("expanse_amount");
                         context.startActivity(new Intent(context, ExpenseForm_Activity.class)
                                 .putExtra("method_type", "2")
                                 .putExtra("expanse_id", stock_id)
                                 .putExtra("expanse_name", stock_name)
+                                .putExtra("expanse_amount", expanse_amount)
 
                         );
 
@@ -144,10 +146,16 @@ public class StockAdapter extends BaseAdapter {
                     else {
                         String stock_id = finalResponseobj1.getString("stock_id");
                         String stock_name = finalResponseobj1.getString("stock_name");
+                        String stock_qty = finalResponseobj1.getString("stock_qty");
+                        String stock_price = finalResponseobj1.getString("stock_price");
+                        String stock_per_price = finalResponseobj1.getString("stock_per_price");
                         context.startActivity(new Intent(context, FormActivity.class)
                                 .putExtra("Activity", "editStocks")
                                 .putExtra("stock_id", stock_id)
                                 .putExtra("stock_name", stock_name)
+                                .putExtra("stock_qty", stock_qty)
+                                .putExtra("stock_price", stock_price)
+                                .putExtra("stock_per_price", stock_per_price)
 
                         );
                     }
@@ -166,7 +174,7 @@ public class StockAdapter extends BaseAdapter {
     private void deleteAlertDialog(final Activity activity, final JSONObject jobj, final String act_name) {
         AlertDialog.Builder ab = new AlertDialog.Builder(activity, R.style.MyAlertDialogStyle1);
         ab.setTitle("Delete");
-        ab.setMessage("Are you sure to delete");
+        ab.setMessage("Are you sure , you want to delete ");
         ab.setNegativeButton("Ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

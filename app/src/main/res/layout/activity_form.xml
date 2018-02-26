@@ -9,7 +9,7 @@
     tools:context="com.example.mind_android.bookingapp.activities.dashboard_part.FormActivity">
 
     <include
-        layout="@layout/toolbar_item"/>
+        layout="@layout/back_toolbar"/>
     <ScrollView
         android:id="@+id/scrollview"
         android:layout_width="match_parent"
@@ -46,7 +46,7 @@
             android:layout_height="wrap_content" />
 
         <LinearLayout
-            android:visibility="visible"
+            android:visibility="gone"
             android:orientation="vertical"
             android:id="@+id/stockform"
             android:layout_width="match_parent"
@@ -106,13 +106,15 @@
         </LinearLayout>
 
         <LinearLayout
-            android:visibility="gone"
+            android:visibility="visible"
             android:orientation="vertical"
             android:id="@+id/saleForm"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
+                android:drawableRight="@drawable/dropdown_icon10"
+                android:background="@drawable/grey_rect_btn"
                 android:id="@+id/sale_item_name"
                 android:imeOptions="actionNext"
                 android:singleLine="true"
@@ -141,18 +143,18 @@
 
             <EditText
                 android:id="@+id/sale_unit"
-                android:imeOptions="actionNext"
+                android:imeOptions="actionDone"
                 android:singleLine="true"
                 android:textSize="15sp"
                 android:textColor="@color/black"
-                android:hint="Stock quantity per Unit"
+                android:hint="Sale price per Unit"
                 android:inputType="number|numberDecimal"
                 android:padding="15dp"
                 android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-            <EditText
+            <TextView
                 android:inputType="number"
                 android:id="@+id/sale_item_price"
                 android:imeOptions="actionDone"

@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.mind_android.bookingapp.R;
@@ -41,6 +42,16 @@ String expense_id="";
         final EditText expense_priceEt= findViewById(R.id.expense_priceEt);
         Button add_btn = findViewById(R.id.add_btn);
 
+        ImageView back_btn = findViewById(R.id.back_btn);
+
+        back_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+                finish();
+            }
+        });
+
 
         Bundle bundle = getIntent().getExtras();
 
@@ -52,7 +63,9 @@ String expense_id="";
             {
                 expense_id=bundle.getString("expanse_id");
 
+
                 expense_nameEt.setText(bundle.getString("expanse_name"));
+                expense_priceEt.setText(bundle.getString("expanse_amount"));
                 add_btn.setText("Save");
             }
             else
@@ -76,7 +89,7 @@ String expense_id="";
 
                     else
                     {
-                        String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").
+                        String date = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").
                                 format(Calendar.getInstance().getTime());
 
                         addExpenseinLocal(user_id,name,date,price,method_type,expense_id);

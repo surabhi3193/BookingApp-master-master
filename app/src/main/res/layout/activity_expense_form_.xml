@@ -9,7 +9,7 @@
     android:orientation="vertical"
     tools:context="com.example.mind_android.bookingapp.activities.dashboard_part.ExpenseForm_Activity">
     <include
-        layout="@layout/toolbar_item"/>
+        layout="@layout/back_toolbar"/>
     <LinearLayout
         android:layout_marginTop="40dp"
         android:orientation="vertical"

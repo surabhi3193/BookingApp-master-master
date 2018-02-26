@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/home"
+            android:title="Home" />
+        <item
+            android:id="@+id/profile"
+            android:title="Profile" />
+        <item
+            android:id="@+id/inventory"
+            android:title="Inventory" />
+
+        <item
+            android:id="@+id/sales"
+            android:title="Sales" />
+
+        <item
+            android:id="@+id/chat"
+            android:title="Chat" />
+        <item
+            android:id="@+id/sms"
+            android:title="SMS" />
+
+        <item
+            android:id="@+id/about"
+            android:title="About Us" />
+        <item
+            android:id="@+id/terms"
+            android:title="Terms &amp; Conditions" />
+        <item
+            android:id="@+id/privacy"
+            android:title="Privacy Policy" />
+        <item
+            android:id="@+id/rating"
+            android:title="Rate the App" />
+        <item
+            android:id="@+id/sharing"
+            android:title="Share the App" />
+        <item
+            android:id="@+id/feedback"
+            android:title="Feedback" />
+
+    </group>
+</menu>

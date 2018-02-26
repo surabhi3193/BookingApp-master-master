@@ -6,12 +6,15 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.mind_android.bookingapp.R;
+import com.example.mind_android.bookingapp.activities.BaseActivity;
 import com.example.mind_android.bookingapp.activities.LoginActivity;
 import com.example.mind_android.bookingapp.adapter.StockAdapter;
 import com.example.mind_android.bookingapp.beans.Stock;
@@ -35,13 +38,14 @@ import static com.example.mind_android.bookingapp.Constant.NetWorkClass.deleteSt
 import static com.example.mind_android.bookingapp.storage.MySharedPref.getData;
 import static com.example.mind_android.bookingapp.storage.MySharedPref.saveData;
 
-public class StockActivity extends AppCompatActivity {
+public class StockActivity extends BaseActivity {
     private static ListView stocklist;
     private static LinearLayout listLayout;
     private static TextView total_amtTv;
     DatabaseHandler db;
     List<Stock> stocks;
     String user_id;
+
 
     private static void showStock(final Activity context, String user_id) {
         final AsyncHttpClient client = new AsyncHttpClient();
@@ -93,7 +97,7 @@ public class StockActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_stock);
+        getLayoutInflater().inflate(R.layout.activity_stock, frameLayout);
         user_id = getData(StockActivity.this, "user_id", "");
 
         db = new DatabaseHandler(StockActivity.this);
@@ -102,7 +106,16 @@ public class StockActivity extends AppCompatActivity {
         stocklist = findViewById(R.id.stocklist);
         total_amtTv = findViewById(R.id.total_amtTv);
         TextView addTv = findViewById(R.id.addTv);
-        TextView signout_btn = findViewById(R.id.signout_btn);
+
+        Button reset_lay =findViewById(R.id.reset_lay);
+
+        reset_lay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                resetStock();
+            }
+        });
 
 
         addTv.setOnClickListener(new View.OnClickListener() {
@@ -116,13 +129,53 @@ public class StockActivity extends AppCompatActivity {
             }
         });
 
-        signout_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                saveData(getApplicationContext(), "login", "0");
+        ImageView back_btn = findViewById(R.id.back_btn);
 
-                startActivity(new Intent(StockActivity.this, LoginActivity.class));
-                finishAffinity();
+        back_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+                finish();
+            }
+        });
+
+    }
+
+    private void resetStock()
+    {
+        final AsyncHttpClient client = new AsyncHttpClient();
+        final RequestParams params = new RequestParams();
+
+        params.put("bk_userid", user_id);
+
+        System.out.println(params);
+
+        client.post(BASE_URL_NEW + "clear_stocks", params, new JsonHttpResponseHandler() {
+
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                System.out.println(" ************* show stock  response ***");
+                System.out.println(response);
+                try {
+
+                    if (response.getString("status").equals("0")) {
+                        stocklist.setVisibility(View.GONE);
+                        total_amtTv.setText("0.00");
+//                        Toast.makeText(StockActivity.this, response.getString("message"), Toast.LENGTH_SHORT).show();
+                    } else {
+                        stocklist.setVisibility(View.GONE);                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+//                ringProgressDialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+//                ringProgressDialog.dismiss();
+                System.out.println(responseString);
             }
         });
     }
@@ -205,9 +258,9 @@ public class StockActivity extends AppCompatActivity {
                 jobj.put("stock_per_price", cn.get_unit_per_price());
                 jobj.put("stock_price", cn.get_price());
                 jArray.put(jobj);
-                double price = Double.parseDouble(cn.get_price());
+//                double price = Double.parseDouble(cn.get_price());
 
-                total = total + price;
+//                total = total + price;
             }
 
             String amount = String.valueOf(total);

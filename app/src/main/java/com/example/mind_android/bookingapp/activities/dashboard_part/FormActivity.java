@@ -1,6 +1,8 @@
 package com.example.mind_android.bookingapp.activities.dashboard_part;
 
 import android.app.Activity;
+
+import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -10,18 +12,21 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.mind_android.bookingapp.R;
 import com.example.mind_android.bookingapp.activities.LoginActivity;
+import com.example.mind_android.bookingapp.activities.SaletemFragment;
 import com.example.mind_android.bookingapp.beans.Sales;
 import com.example.mind_android.bookingapp.beans.Stock;
 import com.example.mind_android.bookingapp.storage.DatabaseHandler;
@@ -42,12 +47,13 @@ import static com.example.mind_android.bookingapp.storage.MySharedPref.getData;
 import static com.example.mind_android.bookingapp.storage.MySharedPref.saveData;
 
 public class FormActivity extends AppCompatActivity {
-    private EditText item_nameEt, item_qtEt, itemUnitPriceEt, sale_unit, sale_item_qty, sale_item_price;
+    private EditText item_nameEt, item_qtEt, itemUnitPriceEt, sale_unit, sale_item_qty;
     String total_amt = "0", price_unit = "0", method_type = "0", stock_id = "";
-    private TextView headTv, itemPriceEt, sale_item_name;
+    private TextView headTv, itemPriceEt,sale_item_price;
     private LinearLayout stockform, saleForm;
     private int count;
-
+    public static TextView sale_item_name;
+public static String sale_stock="",sale_item_id="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,15 +76,24 @@ public class FormActivity extends AppCompatActivity {
         sale_item_price = findViewById(R.id.sale_item_price);
         sale_item_qty = findViewById(R.id.sale_item_qty);
 
-        TextView signout_btn = findViewById(R.id.signout_btn);
 
-        signout_btn.setOnClickListener(new View.OnClickListener() {
+        final FragmentManager fm=getFragmentManager();
+        final SaletemFragment p=new SaletemFragment();
+
+        sale_item_name.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                saveData(getApplicationContext(), "login", "0");
+                p.show(fm, "sale Item");
+            }
+        });
 
-                startActivity(new Intent(FormActivity.this, LoginActivity.class));
-                finishAffinity();
+        ImageView back_btn = findViewById(R.id.back_btn);
+
+        back_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               onBackPressed();
+               finish();
             }
         });
 
@@ -88,12 +103,14 @@ public class FormActivity extends AppCompatActivity {
             String act = bundle.getString("Activity");
             stock_id = bundle.getString("stock_id");
             String stock_name = bundle.getString("stock_name");
+            String stock_price = bundle.getString("stock_price");
+            String stock_qty = bundle.getString("stock_qty");
+            String stock_per_price = bundle.getString("stock_per_price");
 
             if (act.equals("saleStocks")) {
                 count = 1;
                 headTv.setText("Sale");
                 add_stock.setText("Sale");
-                sale_item_name.setText(stock_name);
                 stockform.setVisibility(View.GONE);
                 saleForm.setVisibility(View.VISIBLE);
 
@@ -108,11 +125,18 @@ public class FormActivity extends AppCompatActivity {
             } else if (act.equals("editStocks")) {
                 System.out.println("============ in edit stock ========");
                 System.out.println(stock_name);
+
+                System.out.println(stock_per_price);
                 count = 3;
                 method_type = "2";
                 headTv.setText(R.string.edit_stock);
                 add_stock.setText("SAVE");
                 item_nameEt.setText(stock_name);
+                itemPriceEt.setText(stock_price);
+                itemUnitPriceEt.setText(stock_per_price);
+                item_qtEt.setText(stock_qty);
+
+
                 item_nameEt.setCursorVisible(false);
                 item_nameEt.setKeyListener(null);
                 item_qtEt.requestFocus();
@@ -368,6 +392,7 @@ public class FormActivity extends AppCompatActivity {
             int id = Integer.parseInt(tsLong.toString());
 
             db.addStock(new Stock(id, stock_name, stock_qty, stock_per_price, stock_amount, 0));
+            db.addSales(new Sales(id, stock_name, "0", "0", "0", 0));
             onBackPressed();
         } else if (method_type.equals("2")) {
             int id = Integer.parseInt(stock_id);
@@ -391,22 +416,31 @@ public class FormActivity extends AppCompatActivity {
 
         if (unit.length() == 0 || unit.equalsIgnoreCase("0"))
             sale_unit.setError("Stock unit  required");
-        if (price.length() == 0 || price.equals("0"))
+        if (price.length() == 0 || price.equalsIgnoreCase("0.0"))
             sale_item_price.setError("Price required");
 
-        else {
-            if (name.length() > 0 && qty.length() > 0 && price.length() > 0 && unit.length() < 0) ;
+        System.out.println(" ========= params  for enter sale =========");
+        System.out.println(name);
+        System.out.println(unit + "unit");
+        System.out.println(qty + "qty");
+        System.out.println(name);
+
+        if (!price.equalsIgnoreCase("0.0")) {
+            if (name.length() > 0 && qty.length() > 0 && price.length() > 0 && unit.length() < 0
+                    && !qty.equalsIgnoreCase("0")
+                    && !unit.equalsIgnoreCase("0") && !price.equalsIgnoreCase("0") && price.equalsIgnoreCase("0.0"))
+                ;
             {
                 String user_id = getData(FormActivity.this, "user_id", "");
-                qty = sale_item_qty.getText().toString();
-                name = sale_item_name.getText().toString();
-                price = sale_item_price.getText().toString();
-                unit = sale_unit.getText().toString();
+//                qty = sale_item_qty.getText().toString();
+//                name = sale_item_name.getText().toString();
+//                price = sale_item_price.getText().toString();
+//                unit = sale_unit.getText().toString();
 
                 if (isNetworkAvailable(FormActivity.this))
-                    addsale(FormActivity.this,user_id, unit, qty, price, stock_id,"","2");
-                else
-                    {
+                    addsale(FormActivity.this, user_id, unit, qty, price, sale_item_id, "", "2");
+
+                else {
 
                 }
             }
@@ -448,7 +482,8 @@ public class FormActivity extends AppCompatActivity {
         }
     }
 
-    public static void addsale(final Activity context, final String bk_userid, final String unit, final String stock_qty, final
+    public static void addsale(final Activity context, final String bk_userid,
+                               final String unit, final String stock_qty, final
     String stock_amount, final String stock_id, final String
             stock_name, final String sale_type) {
         final AsyncHttpClient client = new AsyncHttpClient();
@@ -467,6 +502,7 @@ public class FormActivity extends AppCompatActivity {
         params.put("sale_type", sale_type);
         if (sale_type.equals("1"))
             params.put("stock_name", stock_name);
+
         else if (sale_type.equals("2"))
             params.put("stock_id", stock_id);
 
@@ -505,6 +541,7 @@ public class FormActivity extends AppCompatActivity {
                             db.addSales(sales);
                             db.updateStock(new Stock((Integer.parseInt(id)), name, qty,
                                     per_price, price, 1), id);
+
 
                         }
 

@@ -53,45 +53,29 @@ public class SalesAdapter extends BaseAdapter {
         holder.stock_name = (TextView) rowView.findViewById(R.id.nameTv);
         holder.stock_qty = (TextView) rowView.findViewById(R.id.qtyTv);
         holder.serialno = (TextView) rowView.findViewById(R.id.sr_notv);
-        holder.sell_btn = (Button) rowView.findViewById(R.id.sell_btn);
+        holder.dateTV = (TextView) rowView.findViewById(R.id.datetv);
 
 
         try {
             responseobj = jobj.getJSONObject(position);
 
-            String stock_name = responseobj.getString("stock_name");
-            String stock_qty = responseobj.getString("stock_qty");
-            String stock_price = responseobj.getString("stock_price");
+            String stock_name = responseobj.getString("sale_stock_name");
+            String stock_qty = responseobj.getString("sale_stock_qty");
+            String stock_price = responseobj.getString("sale_price");
+            String sale_type = responseobj.getString("stock_type");
+            String cdate = responseobj.getString("sale_date");
 
             System.out.println("********** item position *******");
-            System.out.println(position);
+            System.out.println(sale_type);
             System.out.println("** item at position *****");
-
 
             int x = position + 1;
             holder.serialno.setText(String.valueOf(x));
             holder.stock_name.setText(stock_name);
             holder.stock_qty.setText(stock_qty);
             holder.stock_amount.setText(stock_price);
-            final JSONObject finalResponseobj = responseobj;
+            holder.dateTV.setText(cdate);
 
-            holder.sell_btn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                    try {
-                        String stock_id = finalResponseobj.getString("stock_id");
-                        String stock_name = finalResponseobj.getString("stock_name");
-
-                        context.startActivity(new Intent(context, FormActivity.class)
-                                .putExtra("Activity", "saleStocks")
-                                .putExtra("stock_id", stock_id)
-                                .putExtra("stock_name", stock_name));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -103,8 +87,8 @@ public class SalesAdapter extends BaseAdapter {
 
 
     class ViewHolder {
-        TextView serialno, stock_name, stock_qty, stock_amount;
-        Button sell_btn;
+        TextView serialno, stock_name, stock_qty, stock_amount,dateTV;
+
 
     }
 }

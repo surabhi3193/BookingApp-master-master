@@ -156,8 +156,8 @@ public class BussinessSignUpActivity extends AppCompatActivity implements Adapte
          country = countryEt.getText().toString();
         buss_type = spin.getSelectedItem().toString();
 
-
-        String empatt = "^[a-zA-Z0-9_.]+@[a-zA-Z]+\\.[a-zA-Z]+$";
+//String pat = "[a-zA-Z0-9._-]+@[a-zA-Z0-9]+\\\\.+[a-z]+";
+        String empatt = "^[a-zA-Z0-9_.]+@[a-zA-Z0-9]+\\.[a-zA-Z]+$";
 
         if (name.length()==0)
             fullnameEt.setError("Field Required");
@@ -196,7 +196,9 @@ public class BussinessSignUpActivity extends AppCompatActivity implements Adapte
     }
 
     private void registerUser(String buss_name, String city, String country, String buss_type, String name,
-                              String phone, String code, String password, String email, String user_id) {
+                              String phone, String code, String password, String email,
+                              String user_id)
+    {
         final AsyncHttpClient client = new AsyncHttpClient();
         final RequestParams params = new RequestParams();
 

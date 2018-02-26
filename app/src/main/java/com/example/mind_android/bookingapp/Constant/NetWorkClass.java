@@ -11,13 +11,18 @@ import com.example.mind_android.bookingapp.activities.dashboard_part.ExpenseForm
 import com.example.mind_android.bookingapp.activities.dashboard_part.SalesActivity;
 import com.example.mind_android.bookingapp.activities.dashboard_part.StockActivity;
 import com.example.mind_android.bookingapp.beans.Expense;
+import com.example.mind_android.bookingapp.beans.Sales;
 import com.example.mind_android.bookingapp.beans.Stock;
 import com.example.mind_android.bookingapp.storage.DatabaseHandler;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -91,6 +96,7 @@ public class NetWorkClass extends AppCompatActivity {
                             {
                                 ringProgressDialog.dismiss();
                                 db.addStock(new Stock(id,name,qty,unit_price,price,status));
+                                db.addSales(new Sales(id, stock_name, "0", "0", "0", 1));
 
                                 Toast.makeText(context,"Added Successfully",Toast.LENGTH_SHORT).show();
                                 context.onBackPressed();
@@ -249,6 +255,12 @@ public class NetWorkClass extends AppCompatActivity {
 
         });
     }
+
+
+
+
+
+
 
     public static void deleteExpense(final Activity activity, final Expense expense) {
         final AsyncHttpClient client = new AsyncHttpClient();

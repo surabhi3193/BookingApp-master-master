@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:padding="10dp"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    
+
+    <TextView
+        android:textAllCaps="true"
+        android:text="lender name"
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:textColor="@color/colorAccent"
+        android:textSize="13sp"
+        android:textStyle="bold" />
+    <TextView
+        android:gravity="center"
+        android:text="interest : 5%"
+        android:id="@+id/interest"
+        android:src="@color/PowderBlue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title"/>
+
+    <TextView
+        android:layout_marginLeft="10dp"
+        android:text="total month : 5"
+        android:layout_toRightOf="@id/interest"
+        android:layout_below="@+id/title"
+        android:id="@+id/monthTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textSize="13sp"
+        android:textStyle="bold" />
+    <TextView
+        android:id="@+id/paidLenderTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="paid to lender  : 5000"
+        android:layout_below="@+id/interest"
+        android:textColor="@color/black"
+        android:textSize="13sp" />
+    <TextView
+        android:id="@+id/remainTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="remains amount "
+        android:layout_below="@+id/paidLenderTV"
+        android:textColor="@color/black"
+        android:textSize="13sp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:id="@+id/total_amtTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="5000"
+        android:layout_below="@+id/title"
+        android:textColor="@color/black"
+        android:textSize="13sp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:id="@+id/typeTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Service"
+        android:textColor="@color/Red"
+        android:textSize="13sp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/dateTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="22/2012/12"
+        android:layout_below="@+id/remainTV"
+        android:textColor="@color/DarkGray"
+        android:textSize="13sp"
+        android:textStyle="bold"/>
+
+
+    <TextView
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:background="@drawable/green_rect_btn"
+        android:id="@+id/payTV"
+        android:layout_width="80dp"
+        android:layout_height="25dp"
+        android:text="Pay"
+        android:layout_below="@+id/dateTV"
+        android:textColor="@color/white"
+        android:textSize="13sp"
+        android:textStyle="bold"/>
+
+</RelativeLayout>

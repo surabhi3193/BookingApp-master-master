@@ -16,7 +16,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.mind_android.bookingapp.R;
+import com.example.mind_android.bookingapp.activities.dashboard_part.BankActivity;
 import com.example.mind_android.bookingapp.activities.dashboard_part.ExpenceActivity;
+import com.example.mind_android.bookingapp.activities.dashboard_part.LoanActivity;
+import com.example.mind_android.bookingapp.activities.dashboard_part.ReportActivity;
 import com.example.mind_android.bookingapp.activities.dashboard_part.SalesActivity;
 import com.example.mind_android.bookingapp.activities.dashboard_part.StockActivity;
 import com.example.mind_android.bookingapp.app.Config;
@@ -26,15 +29,17 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import static com.example.mind_android.bookingapp.storage.MySharedPref.saveData;
 //#if (${PACKAGE_NAME} && ${PACKAGE_NAME} != "")package ${PACKAGE_NAME};#end #parse("File Header.java") public class ${NAME} { }
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     private static final String TAG = "bOOKkEEPING";
     private BroadcastReceiver mRegistrationBroadcastReceiver;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        getLayoutInflater().inflate(R.layout.activity_main, frameLayout);
+
 
         ImageView stockLay = findViewById(R.id.stockLay);
         ImageView salesLay = findViewById(R.id.salesLay);
@@ -51,17 +56,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         reportLay.setOnClickListener(this);
         loanLay.setOnClickListener(this);
         bankLay.setOnClickListener(this);
-        TextView signout_btn = findViewById(R.id.signout_btn);
 
-        signout_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                saveData(getApplicationContext(), "login", "0");
-
-                startActivity(new Intent(MainActivity.this, LoginActivity.class));
-                finishAffinity();
-            }
-        });
 
 
         mRegistrationBroadcastReceiver = new BroadcastReceiver() {
@@ -106,6 +101,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 case R.id.expenseLay:
                 startActivity(new Intent(getApplicationContext(), ExpenceActivity.class));
                 break;
+
+                case R.id.reportLay:
+                startActivity(new Intent(getApplicationContext(), ReportActivity.class));
+                break;
+
+
+                case R.id.bankLay:
+                startActivity(new Intent(getApplicationContext(), BankActivity.class));
+                break;
+
+                case R.id.loanLay:
+                startActivity(new Intent(getApplicationContext(), LoanActivity.class));
+                break;
         }
 
     }
@@ -124,6 +132,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onResume() {
         super.onResume();
+        navigationView.getMenu().getItem(0).setChecked(true);
+
         LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
                 new IntentFilter(Config.REGISTRATION_COMPLETE));
 

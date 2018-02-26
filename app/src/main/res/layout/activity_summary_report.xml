@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:id="@+id/toolbar"
+        android:background="@color/colorPrimaryDark"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+
+        <ImageView
+            android:id="@+id/back_btn"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:padding="15dp"
+            android:src="@drawable/back" />
+
+        <TextView
+            android:layout_centerInParent="true"
+            android:id="@+id/transec_headTv"
+            android:gravity="center_vertical"
+            android:textStyle="bold"
+            android:padding="8dp"
+            android:textSize="18sp"
+            android:textColor="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Detail"/>
+        <ImageView
+            android:layout_alignParentRight="true"
+            android:id="@+id/filter_btn"
+            android:padding="15dp"
+            android:src="@drawable/filter"
+            android:layout_width="50dp"
+            android:layout_height="match_parent" />
+
+    </RelativeLayout>
+    <RelativeLayout
+        android:gravity="center"
+        android:padding="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:paddingLeft="10dp"
+            android:drawableLeft="@drawable/cal"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:text="21/21/2356"
+            android:textColor="@color/white"
+            android:background="@drawable/green_rect_btn"
+            android:id="@+id/fromTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
+
+
+        <TextView
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@id/fromTV"
+            android:paddingLeft="10dp"
+            android:drawableLeft="@drawable/cal"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:text="21/21/2121"
+            android:textColor="@color/white"
+            android:background="@drawable/green_rect_btn"
+            android:id="@+id/toTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
+    </RelativeLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:padding="10dp"
+        android:layout_marginTop="10dp"
+        android:id="@+id/transection_LV"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </android.support.v7.widget.RecyclerView>
+
+</LinearLayout>

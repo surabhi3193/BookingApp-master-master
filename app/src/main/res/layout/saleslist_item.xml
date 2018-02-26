@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:minHeight="80dp"
     android:orientation="horizontal">
 
 
@@ -46,19 +47,14 @@
         android:text="Amount"
         android:textColor="@color/colorAccent"
         android:textSize="12sp" />
-    <LinearLayout
-        android:layout_weight="1"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content">
 
-        <Button
-            android:id="@+id/sell_btn"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:text="Sell"
-            android:layout_margin="15dp"
-            android:layout_width="match_parent"
-            android:layout_height="25dp"
-            android:background="@drawable/red_rect_btn"/>
-    </LinearLayout>
+    <TextView
+        android:id="@+id/datetv"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="Date"
+        android:textColor="@color/colorAccent"
+        android:textSize="12sp" />
 </LinearLayout>

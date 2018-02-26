@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ScrollView;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.mind_android.bookingapp.R;
+import com.example.mind_android.bookingapp.activities.BaseActivity;
 import com.example.mind_android.bookingapp.activities.EnterLoginActivity;
 import com.example.mind_android.bookingapp.activities.LoginActivity;
 import com.example.mind_android.bookingapp.adapter.StockAdapter;
@@ -42,7 +44,7 @@ import static com.example.mind_android.bookingapp.Constant.NetWorkClass.deleteSt
 import static com.example.mind_android.bookingapp.storage.MySharedPref.getData;
 import static com.example.mind_android.bookingapp.storage.MySharedPref.saveData;
 
-public class ExpenceActivity extends AppCompatActivity {
+public class ExpenceActivity extends BaseActivity {
     String total_amt = "0", price_unit = "0";
     ListView stocklist;
     private int count;
@@ -57,7 +59,8 @@ public class ExpenceActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_expence);
+        getLayoutInflater().inflate(R.layout.activity_expence, frameLayout);
+
         db = new DatabaseHandler(ExpenceActivity.this);
         user_id =getData(ExpenceActivity.this,"user_id","");
 
@@ -72,6 +75,18 @@ public class ExpenceActivity extends AppCompatActivity {
         total_amtTv = findViewById(R.id.total_amtTv);
 
         TextView addTv = findViewById(R.id.addTv);
+
+
+
+        Button reset_lay =findViewById(R.id.reset_lay);
+
+        reset_lay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                resetExpanse();
+            }
+        });
 
         addTv.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,6 +106,17 @@ public class ExpenceActivity extends AppCompatActivity {
 
                 startActivity(new Intent(ExpenceActivity.this,LoginActivity.class));
                 finishAffinity();
+            }
+        });
+
+
+        ImageView back_btn = findViewById(R.id.back_btn);
+
+        back_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+
             }
         });
     }
@@ -122,13 +148,14 @@ public class ExpenceActivity extends AppCompatActivity {
                     if (response.getString("status").equals("0"))
                     {
                         scrollview.setVisibility(View.GONE);
-                        listLayout.setVisibility(View.GONE);
+                        stocklist.setVisibility(View.GONE);
                         total_amtTv.setText("0.00");
                         Toast.makeText(ExpenceActivity.this,
                                 response.getString("message"), Toast.LENGTH_SHORT).show();
                     } else {
                         scrollview.setVisibility(View.GONE);
                         listLayout.setVisibility(View.VISIBLE);
+                        stocklist.setVisibility(View.VISIBLE);
 
                         String total_amt = response.getString("total");
                         total_amtTv.setText(total_amt);
@@ -149,6 +176,47 @@ public class ExpenceActivity extends AppCompatActivity {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 ringProgressDialog.dismiss();
+                System.out.println(responseString);
+            }
+        });
+    }
+
+
+    private void resetExpanse()
+    {
+        final AsyncHttpClient client = new AsyncHttpClient();
+        final RequestParams params = new RequestParams();
+
+        params.put("bk_userid", user_id);
+
+        System.out.println(params);
+
+        client.post(BASE_URL_NEW + "clear_expenses", params, new JsonHttpResponseHandler() {
+
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                System.out.println(" ************* show stock  response ***");
+                System.out.println(response);
+                try {
+
+                    if (response.getString("status").equals("0")) {
+                        stocklist.setVisibility(View.GONE);
+                        total_amtTv.setText("0.00");
+//                        Toast.makeText(StockActivity.this, response.getString("message"), Toast.LENGTH_SHORT).show();
+                    } else {
+                        stocklist.setVisibility(View.INVISIBLE);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+//                ringProgressDialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+//                ringProgressDialog.dismiss();
                 System.out.println(responseString);
             }
         });

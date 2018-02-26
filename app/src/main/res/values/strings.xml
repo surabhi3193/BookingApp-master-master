@@ -2,4 +2,13 @@
     <string name="app_name">Bookkeeping</string>
     <string name="otp_text">Check your text messages to enter verification code </string>
     <string name="edit_stock">Edit Stocks</string>
+    <string name="navigation_drawer_open">Open drawer</string>
+    <string name="navigation_drawer_close">Close drawer</string>
+    <string name="srvices">Service</string>
+    <string name="sale">Sale</string>
+    <string name="stock">Stock</string>
+    <string name="expense">Expense</string>
+    <string name="deposit">Deposit</string>
+    <string name="withdraw">Withdraw</string>
+    <string name="transaction">Transaction</string>
 </resources>

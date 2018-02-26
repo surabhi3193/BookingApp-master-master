@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:padding="10dp"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+    <ImageView
+        android:id="@+id/image"
+        android:src="@color/PowderBlue"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentLeft="true"/>
+
+    <TextView
+        android:textAllCaps="true"
+        android:layout_marginLeft="10dp"
+        android:text=""
+        android:layout_toRightOf="@id/image"
+        android:layout_toLeftOf="@id/total_amtTv"
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:textColor="@color/colorAccent"
+        android:textSize="13sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_marginLeft="10dp"
+        android:text="10"
+        android:layout_toRightOf="@id/image"
+        android:layout_below="@+id/title"
+        android:id="@+id/qtyTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textSize="13sp"
+        android:textStyle="bold" />
+<TextView
+    android:id="@+id/multiply"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="X"
+    android:layout_marginLeft="5dp"
+    android:layout_below="@+id/title"
+    android:layout_toRightOf="@id/qtyTv"
+    android:textColor="@color/black"
+    android:textSize="13sp" />
+    <TextView
+        android:layout_marginLeft="5dp"
+        android:id="@+id/per_unitTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="100"
+        android:layout_below="@+id/title"
+        android:layout_toRightOf="@id/multiply"
+        android:textColor="@color/black"
+        android:textSize="13sp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:id="@+id/total_amtTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="5000"
+        android:layout_below="@+id/title"
+        android:textColor="@color/black"
+        android:textSize="13sp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:id="@+id/typeTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Service"
+        android:textColor="@color/Red"
+        android:textSize="13sp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/dateTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="22/2012/12"
+        android:layout_below="@+id/image"
+        android:textColor="@color/DarkGray"
+        android:textSize="13sp"
+        android:textStyle="bold"/>
+
+</RelativeLayout>
