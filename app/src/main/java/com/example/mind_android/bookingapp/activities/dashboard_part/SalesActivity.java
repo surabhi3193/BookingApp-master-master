@@ -2,8 +2,10 @@ package com.example.mind_android.bookingapp.activities.dashboard_part;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -142,8 +144,7 @@ public class SalesActivity extends BaseActivity {
         reset_lay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                resetSale();
+                resetSaleWarning();
             }
         });
 
@@ -170,11 +171,38 @@ public class SalesActivity extends BaseActivity {
 
 
 
+    public void resetSaleWarning() {
+        AlertDialog.Builder ab = new AlertDialog.Builder
+                (SalesActivity.this, R.style.MyAlertDialogStyle1);
+        ab.setTitle("Reset").setIcon(R.drawable.reset);
+        ab.setMessage("Are you sure ? ");
+        ab.setNegativeButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                resetSale();
+                dialog.dismiss();
+            }
+        });
+
+        ab.setPositiveButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        ab.show();
+
+    }
+
     private void resetSale()
     {
         final AsyncHttpClient client = new AsyncHttpClient();
         final RequestParams params = new RequestParams();
 
+        final ProgressDialog ringProgressDialog;
+        ringProgressDialog = ProgressDialog.show(SalesActivity.this, "Please wait ...",
+                "", true);
+        ringProgressDialog.setCancelable(false);
         params.put("bk_userid", user_id);
 
         System.out.println(params);
@@ -190,12 +218,12 @@ public class SalesActivity extends BaseActivity {
             }
 
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-//                ringProgressDialog.dismiss();
+              ringProgressDialog.dismiss();
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-//                ringProgressDialog.dismiss();
+               ringProgressDialog.dismiss();
                 System.out.println(responseString);
             }
         });

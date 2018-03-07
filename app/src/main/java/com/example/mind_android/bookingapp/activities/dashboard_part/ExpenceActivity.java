@@ -1,7 +1,9 @@
 package com.example.mind_android.bookingapp.activities.dashboard_part;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -83,15 +85,16 @@ public class ExpenceActivity extends BaseActivity {
         reset_lay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                resetExpensesWarning();
 
-                resetExpanse();
             }
         });
 
         addTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(ExpenceActivity.this, ExpenseForm_Activity.class).putExtra("method_type","1")
+                startActivity(new Intent(ExpenceActivity.this,
+                        ExpenseForm_Activity.class).putExtra("method_type","1")
                 );
 
             }
@@ -119,6 +122,29 @@ public class ExpenceActivity extends BaseActivity {
 
             }
         });
+    }
+
+    public void resetExpensesWarning() {
+        AlertDialog.Builder ab = new AlertDialog.Builder
+                (ExpenceActivity.this, R.style.MyAlertDialogStyle1);
+        ab.setTitle("Reset").setIcon(R.drawable.reset);
+        ab.setMessage("Are you sure ? ");
+        ab.setNegativeButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+              resetExpanse();
+                dialog.dismiss();
+            }
+        });
+
+        ab.setPositiveButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        ab.show();
+
     }
 
 
@@ -187,6 +213,10 @@ public class ExpenceActivity extends BaseActivity {
         final AsyncHttpClient client = new AsyncHttpClient();
         final RequestParams params = new RequestParams();
 
+        final ProgressDialog ringProgressDialog;
+        ringProgressDialog = ProgressDialog.show(ExpenceActivity.this, "Please wait ...",
+                "", true);
+        ringProgressDialog.setCancelable(false);
         params.put("bk_userid", user_id);
 
         System.out.println(params);
@@ -211,12 +241,12 @@ public class ExpenceActivity extends BaseActivity {
             }
 
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-//                ringProgressDialog.dismiss();
+               ringProgressDialog.dismiss();
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-//                ringProgressDialog.dismiss();
+              ringProgressDialog.dismiss();
                 System.out.println(responseString);
             }
         });
@@ -286,8 +316,8 @@ public class ExpenceActivity extends BaseActivity {
                     " ,price : " + cn.get_price();
             // Writing Contacts to log
             Log.d("Name: ", log);
-            addExpense(ExpenceActivity.this,user_id,cn.get_name(),cn.get_price(),"1",
-                    String.valueOf(cn.get_id()),"local");
+//            addExpense(ExpenceActivity.this,user_id,cn.get_name(),cn.get_price(),"1",
+//                    String.valueOf(cn.get_id()),"local");
         }
     }
 

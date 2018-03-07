@@ -180,7 +180,6 @@ public class ProfileActivity extends AppCompatActivity {
                 ringProgressDialog.dismiss();
                 System.out.println(response);
                 try {
-
                     if (response.getString("status").equals("0")) {
 
                         Toast.makeText(activity,

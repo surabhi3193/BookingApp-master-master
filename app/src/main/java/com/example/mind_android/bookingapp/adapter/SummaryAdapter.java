@@ -63,6 +63,16 @@ public class SummaryAdapter extends RecyclerView.Adapter<SummaryAdapter.MyViewHo
                     holder.type.setText(R.string.expense);
                     holder.image.setImageResource(R.drawable.expense_trans);
                     break;
+
+                    case "5":
+                    holder.type.setText(R.string.loan);
+                    holder.image.setImageResource(R.drawable.loans);
+                    break;
+
+                    case "6":
+                    holder.type.setText(R.string.deposit);
+                    holder.image.setImageResource(R.drawable.bank);
+                    break;
             }
         }
 

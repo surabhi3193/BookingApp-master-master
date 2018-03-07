@@ -25,10 +25,13 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 
 import cz.msebera.android.httpclient.Header;
@@ -39,12 +42,19 @@ import static com.example.mind_android.bookingapp.storage.MySharedPref.getData;
 public class BankFormActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     private String[] bussiness = {"Transaction Type", "Deposit", "Withdrawal",};
     private EditText  bankamountEt;
-    public static  TextView banknameEt;
+
     private TextView dateTv;
     private Spinner spin;
     private LinearLayout bank_form;
     private String trans_type = "0";
     public static  String bank_name= "",bank_id="";
+    Spinner spinner;
+    List<String> categList;
+    static String[]bankArr = {};
+    static String[]bankidArr = {};
+    private LinearLayout addbank_lay;
+    private EditText bank_nameEt;
+    private Button addbankName_Btn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +62,12 @@ public class BankFormActivity extends AppCompatActivity implements AdapterView.O
 
         setContentView(R.layout.activity_bank_form);
         bank_form = findViewById(R.id.bank_form);
+        spinner = findViewById(R.id.spinner);
+        addbank_lay =findViewById(R.id.addbank_lay);
+        addbankName_Btn =findViewById(R.id.addbank_btn);
+        bank_nameEt =findViewById(R.id.bank_nameEt);
+
+
         Bundle bundle = getIntent().getExtras();
 
         if (bundle != null) {
@@ -71,13 +87,13 @@ public class BankFormActivity extends AppCompatActivity implements AdapterView.O
         }
 
         dateTv = findViewById(R.id.dateTV);
-        banknameEt = findViewById(R.id.bank_nameEt);
+
         bankamountEt = findViewById(R.id.bank_amountEt);
         spin = findViewById(R.id.spinner2);
         Button add_btn = findViewById(R.id.add_btn);
 
-        final FragmentManager fm=getFragmentManager();
-        final BanktemFragment p=new BanktemFragment();
+//        final FragmentManager fm=getFragmentManager();
+//        final BanktemFragment p=new BanktemFragment();
 
         ImageView back_btn = findViewById(R.id.back_btn);
 
@@ -89,14 +105,44 @@ public class BankFormActivity extends AppCompatActivity implements AdapterView.O
             }
         });
 
-        banknameEt.setOnClickListener(new View.OnClickListener() {
+        getBankList();
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onClick(View v) {
-                p.show(fm, "bank list");
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+               bank_name=spinner.getSelectedItem().toString();
+
+                System.out.println("= bank name =======");
+                System.out.println(bank_name);
+               if (bank_name.equalsIgnoreCase("Add Bank"))
+               {
+                   addbank_lay.setVisibility(View.VISIBLE);
+                   bank_form.setVisibility(View.GONE);
+                   performaddBankAction();
+               }
+               else
+               {
+                   bank_id=bankidArr[position];
+                   addbank_lay.setVisibility(View.GONE);
+                   bank_form.setVisibility(View.VISIBLE);
+
+               }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                addbank_lay.setVisibility(View.GONE);
+                bank_form.setVisibility(View.VISIBLE);
+
             }
         });
-
-
+//        banknameEt.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                p.show(fm, "bank list");
+//            }
+//        });
 
         spin.setOnItemSelectedListener(this);
         ArrayAdapter aa = new ArrayAdapter(this, R.layout.spinner_items, bussiness);
@@ -135,7 +181,7 @@ public class BankFormActivity extends AppCompatActivity implements AdapterView.O
             @Override
             public void onClick(View v) {
 
-                String name = banknameEt.getText().toString();
+                String name = spinner.getSelectedItem().toString();
                 String amount = bankamountEt.getText().toString();
                 String type = spin.getSelectedItem().toString();
                 String cdate = dateTv.getText().toString();
@@ -156,8 +202,11 @@ public class BankFormActivity extends AppCompatActivity implements AdapterView.O
                 }
 
 
-                if (name.length() == 0) {
-                    banknameEt.setError("Name required");
+                if (name.length() == 0 || name.equalsIgnoreCase("Select Bank")) {
+//                    banknameEt.setError("Name required");
+                    Toast.makeText(BankFormActivity.this,
+                            "Select Bank", Toast.LENGTH_SHORT).show();
+
                 }
                 if (amount.length() == 0) {
                     bankamountEt.setError("Amount required");
@@ -170,14 +219,15 @@ public class BankFormActivity extends AppCompatActivity implements AdapterView.O
                     Toast.makeText(BankFormActivity.this, "Select transaction type ", Toast.LENGTH_SHORT
                     ).show();
                 } else {
-                    addTransection(bank_id, amount, cdate, trans_type);
+                    addTransection(bank_name, amount, cdate, trans_type);
                 }
 
             }
         });
     }
 
-    private void addTransection(String name, String amount, String cdate, String trans_type) {
+    private void addTransection(String name, String amount, String cdate, String trans_type)
+    {
         final AsyncHttpClient client = new AsyncHttpClient();
         final RequestParams params = new RequestParams();
 
@@ -197,7 +247,7 @@ public class BankFormActivity extends AppCompatActivity implements AdapterView.O
         params.put("transaction_date", cdate);
         params.put("method_type", "1");
         params.put("transaction_id", "");
-
+        params.put("new_bank_name", "");
 
         System.err.println(params);
 
@@ -254,6 +304,158 @@ public class BankFormActivity extends AppCompatActivity implements AdapterView.O
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
 
         textEdit.setText(sdf.format(myCalendar.getTime()));
+    }
+
+    private void getBankList() {
+
+        final List<String> banklist = new ArrayList<String>();
+        final List<String> idlist = new ArrayList<String>();
+        final AsyncHttpClient client = new AsyncHttpClient();
+        final RequestParams params = new RequestParams();
+
+        final String bk_userid = getData(BankFormActivity.this, "user_id", "");
+        params.put("bk_userid", bk_userid);
+        System.out.println(params);
+
+        client.post(BASE_URL_NEW + "bank_list", params, new JsonHttpResponseHandler() {
+
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                System.out.println(" ************* all stock response ***");
+                categList = new ArrayList<>();
+                System.out.println(response);
+                try {
+
+                    if (response.getString("status").equals("0")) {
+
+                        categList.add("Add Bank");
+                        categList.add("Select Bank");
+                        final ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(
+                                BankFormActivity.this, R.layout.spinner_item, categList);
+
+                        spinnerArrayAdapter.setDropDownViewResource(R.layout.spinner_item);
+                        spinner.setAdapter(spinnerArrayAdapter);
+
+                    }
+                    else {
+
+
+                            JSONArray jArray = response.getJSONArray("banks");
+                        categList.add("Select Bank");
+
+                            for (int i = 0; i < jArray.length(); i++) {
+                                String expenses_name = jArray.getJSONObject(i)
+                                        .getString("bank_name");
+
+                                String id = jArray.getJSONObject(i)
+                                        .getString("bank_id");
+
+
+                                banklist.add(expenses_name);
+                                idlist.add(id);
+                                categList.add(expenses_name);
+                            }
+                        categList.add("Add Bank");
+
+                        idlist.add("xx");
+
+                        bankArr = banklist.toArray(new String[banklist.size()]);
+                        bankidArr = idlist.toArray(new String[idlist.size()]);
+                        final ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(
+                                BankFormActivity.this, R.layout.spinner_item, categList);
+
+                        spinnerArrayAdapter.setDropDownViewResource(R.layout.spinner_item);
+                        spinner.setAdapter(spinnerArrayAdapter);
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+            }
+
+        });
+
+    }
+
+    private void performaddBankAction() {
+        addbankName_Btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String name = bank_nameEt.getText().toString();
+
+                if (name.length()==0)
+                    bank_nameEt.setError("Name Required");
+
+                else
+                {
+                    bank_nameEt.setError(null);
+                    addBank(name);
+                }
+            }
+        });
+    }
+
+    private void addBank(String name)
+    {
+
+        final AsyncHttpClient client = new AsyncHttpClient();
+        final RequestParams params = new RequestParams();
+
+        final ProgressDialog ringProgressDialog;
+        ringProgressDialog = ProgressDialog.show(BankFormActivity.this,
+                "Please wait ...",
+                "Loading..", true);
+        ringProgressDialog.setCancelable(false);
+
+        String user_id = getData(BankFormActivity.this,"user_id","");
+        params.put("bk_userid", user_id);
+        params.put("bank_name", name);
+
+        System.out.println(params);
+
+        client.post(BASE_URL_NEW + "add_bank", params, new JsonHttpResponseHandler() {
+
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                System.out.println(" ************* summary response ***");
+                System.out.println(response);
+                ringProgressDialog.dismiss();
+                try {
+
+                    if (response.getString("status").equals("1"))
+                    {
+                        Toast.makeText(BankFormActivity.this,"Bank added in your list",
+                                Toast.LENGTH_SHORT).show();
+                        addbank_lay.setVisibility(View.GONE);
+                        bank_form.setVisibility(View.VISIBLE);
+                        getBankList();
+                    }
+                    else
+                    {
+                        Toast.makeText(BankFormActivity.this,response.getString("message"),
+                                Toast.LENGTH_SHORT).show();
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                ringProgressDialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                System.out.println(responseString);
+                ringProgressDialog.dismiss();
+            }
+        });
     }
 
 }

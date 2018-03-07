@@ -91,7 +91,6 @@ public class BanktemFragment extends android.app.DialogFragment {
 
                 System.out.println("=========== item selected ===========");
                BankFormActivity.bank_name=bankArr[position];
-                BankFormActivity.banknameEt.setText(bankArr[position]);
                 BankFormActivity.bank_id=bankidArr[position];
                 dismiss();
             }

@@ -39,9 +39,8 @@ public class BankActivity extends BaseActivity {
 
     private List<TransectionSummary> summaryList = new ArrayList<>();
     private SummaryAdapter mAdapter;
-    private LinearLayout addbank_lay;
-    private EditText bank_nameEt;
-    private Button addbankName_Btn;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,10 +49,6 @@ public class BankActivity extends BaseActivity {
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.transection_LV);
         TextView addTv =findViewById(R.id.addTv);
-        TextView addBank =findViewById(R.id.addBank);
-        addbank_lay =findViewById(R.id.addbank_lay);
-        addbankName_Btn =findViewById(R.id.addbank_btn);
-        bank_nameEt =findViewById(R.id.bank_nameEt);
 
 
         mAdapter = new SummaryAdapter(summaryList, "bank");
@@ -78,93 +73,7 @@ public class BankActivity extends BaseActivity {
         });
 
 
-        addBank.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-          addbank_lay.setVisibility(View.VISIBLE);
-          performaddBankAction();
-
-            }
-        });
-
-
-
-    }
-
-    private void performaddBankAction() {
-        addbankName_Btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String name = bank_nameEt.getText().toString();
-
-                if (name.length()==0)
-                    bank_nameEt.setError("Name Required");
-
-                else
-                {
-                    bank_nameEt.setError(null);
-                    addBank(name);
-                }
-            }
-        });
-    }
-
-    private void addBank(String name)
-    {
-
-        final AsyncHttpClient client = new AsyncHttpClient();
-        final RequestParams params = new RequestParams();
-
-        final ProgressDialog ringProgressDialog;
-        ringProgressDialog = ProgressDialog.show(BankActivity.this,
-                "Please wait ...",
-                "Loading..", true);
-        ringProgressDialog.setCancelable(false);
-
-String user_id = getData(BankActivity.this,"user_id","");
-        params.put("bk_userid", user_id);
-        params.put("bank_name", name);
-
-        System.out.println(params);
-
-        client.post(BASE_URL_NEW + "add_bank", params, new JsonHttpResponseHandler() {
-
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                System.out.println(" ************* summary response ***");
-                System.out.println(response);
-                ringProgressDialog.dismiss();
-                try {
-
-                    if (response.getString("status").equals("1"))
-                    {
-                        Toast.makeText(BankActivity.this,"Bank added in your list",
-                                Toast.LENGTH_SHORT).show();
-                        addbank_lay.setVisibility(View.GONE);
-                    }
-                    else
-                    {
-                        Toast.makeText(BankActivity.this,response.getString("message"),
-                                Toast.LENGTH_SHORT).show();
-                    }
-
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            }
-
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                ringProgressDialog.dismiss();
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                System.out.println(responseString);
-                ringProgressDialog.dismiss();
-            }
-        });
     }
 
     private void getTransections(final String user_id) {
@@ -249,13 +158,7 @@ String user_id = getData(BankActivity.this,"user_id","");
     @Override
     public void onBackPressed() {
 
-        if (addbank_lay.getVisibility()==View.VISIBLE)
-        {
-            addbank_lay.setVisibility(View.GONE);
-        }
-        else
-        {
+
             finish();
-        }
     }
 }

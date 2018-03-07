@@ -42,5 +42,9 @@
             android:id="@+id/feedback"
             android:title="Feedback" />
 
+        <item
+            android:id="@+id/reset"
+            android:title="Reset All" />
+
     </group>
 </menu>

@@ -117,7 +117,7 @@ public class ReportActivity extends BaseActivity {
 
                         goodsTv.setText(response.getString("stock_profit"));
                         expenseTV.setText(response.getString("expenses"));
-                        per_unitTV.setText(response.getString(""));
+                     per_unitTV.setText(response.getString("cost_of_sale"));
                         saleTV.setText(response.getString("total_sale"));
 
                     }

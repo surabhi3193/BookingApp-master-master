@@ -185,8 +185,9 @@ String user_id = getData(LoanActivity.this,"user_id","");
 
             client.post(BASE_URL_NEW + "loan_list", params, new JsonHttpResponseHandler() {
 
-                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                    System.out.println(" ************* summary response ***");
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response)
+                {
+                    System.out.println(" ************* loan list  response ***");
                     System.out.println(response);
                     ringProgressDialog.dismiss();
                     try {

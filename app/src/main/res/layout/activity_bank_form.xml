@@ -9,6 +9,7 @@
     <include layout="@layout/back_toolbar" />
 
     <LinearLayout
+        android:visibility="visible"
         android:id="@+id/bank_form"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -17,57 +18,64 @@
         android:padding="20dp">
 
         <TextView
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:gravity="center"
             android:text="@string/transaction"
-            android:textColor="@color/colorAccent" />
+            android:textColor="@color/colorAccent"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
         <TextView
-            android:paddingRight="20dp"
-            android:drawableRight="@drawable/dropdown_icon10"
-            android:paddingLeft="10dp"
-            android:background="@drawable/grey_rect_btn"
-            android:gravity="center_vertical"
-            android:layout_marginTop="20dp"
-            android:id="@+id/bank_nameEt"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/grey_rect_btn"
+            android:drawableRight="@drawable/dropdown_icon10"
+            android:gravity="center_vertical"
             android:hint="Bank Name"
+            android:paddingLeft="10dp"
+            android:paddingRight="20dp"
             android:textColor="@color/black" />
+        <Spinner
+            android:background="@drawable/grey_rect_btn"
+            android:layout_marginTop="20dp"
+            android:id="@+id/spinner"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            />
 
         <EditText
-            android:inputType="number|numberDecimal"
-            android:paddingLeft="10dp"
-            android:background="@drawable/grey_rect_btn"
             android:id="@+id/bank_amountEt"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginTop="10dp"
+            android:background="@drawable/grey_rect_btn"
             android:hint="Amount"
+            android:inputType="number|numberDecimal"
+            android:paddingLeft="10dp"
             android:textColor="@color/black" />
 
         <TextView
-            android:paddingRight="20dp"
-            android:drawableRight="@drawable/dropdown_icon10"
-            android:paddingLeft="10dp"
-            android:background="@drawable/grey_rect_btn"
             android:id="@+id/dateTV"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginTop="10dp"
+            android:background="@drawable/grey_rect_btn"
+            android:drawableRight="@drawable/dropdown_icon10"
             android:gravity="center_vertical"
             android:hint="Date"
+            android:paddingLeft="10dp"
+            android:paddingRight="20dp"
             android:textColor="@color/black" />
 
         <Spinner
-            android:paddingLeft="10dp"
             android:id="@+id/spinner2"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_marginTop="10dp" />
+            android:layout_marginTop="10dp"
+            android:paddingLeft="10dp" />
 
         <Button
             android:id="@+id/add_btn"
@@ -78,5 +86,61 @@
             android:text="Add"
             android:textAllCaps="true"
             android:textColor="@color/white" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:paddingTop="70dp"
+        android:id="@+id/addbank_lay"
+        android:visibility="gone"
+        android:gravity="center_horizontal"
+        android:background="@color/dark_trans"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:gravity="center_horizontal"
+            android:padding="30dp"
+            android:orientation="vertical"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="80dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/white_rect_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:padding="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorAccent"
+                android:text="Add Bank"
+                android:textAllCaps="true"
+                android:gravity="center"/>
+
+            <EditText
+                android:imeOptions="actionDone"
+                android:id="@+id/bank_nameEt"
+                android:textSize="15sp"
+                android:drawableTint="@color/colorAccent"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:hint="Bank Name"
+                />
+
+            <Button
+                android:id="@+id/addbank_btn"
+                android:text="Add"
+                android:textColor="@color/white"
+                android:layout_marginTop="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:background="@drawable/blue_rect_btn"/>
+
+        </LinearLayout>
+
     </LinearLayout>
 </LinearLayout>

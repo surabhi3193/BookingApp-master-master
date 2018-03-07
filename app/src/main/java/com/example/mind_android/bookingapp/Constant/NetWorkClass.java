@@ -134,8 +134,11 @@ public class NetWorkClass extends AppCompatActivity {
     }
 
 
-    public static void addExpense(final Activity context,final  String bk_userid, final  String stock_name, final
-    String stock_price,final String method_type,final String expense_id,final String local)
+    public static void addExpense(final Activity context,final  String bk_userid,
+                                  final  String stock_name,final String expanse_type,
+                                  final String expense_desc ,final String expense_date
+                                  ,final String stock_price,final String method_type,
+                                  final String expense_id,final String local)
     {
         final AsyncHttpClient client = new AsyncHttpClient();
         final RequestParams params = new RequestParams();
@@ -149,6 +152,9 @@ public class NetWorkClass extends AppCompatActivity {
         params.put("expanse_name", stock_name);
         params.put("expanse_amout", stock_price);
         params.put("expanse_id", expense_id);
+        params.put("expanse_type", expanse_type);
+        params.put("expense_desc", expense_desc);
+        params.put("expense_date", expense_date);
         params.put("method_type", method_type);
 
         System.out.println(params);
@@ -255,12 +261,6 @@ public class NetWorkClass extends AppCompatActivity {
 
         });
     }
-
-
-
-
-
-
 
     public static void deleteExpense(final Activity activity, final Expense expense) {
         final AsyncHttpClient client = new AsyncHttpClient();

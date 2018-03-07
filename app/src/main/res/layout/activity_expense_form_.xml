@@ -31,65 +31,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <LinearLayout
-            android:visibility="gone"
-            android:orientation="vertical"
-            android:id="@+id/stockform"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <EditText
-                android:id="@+id/item_nameTv"
-                android:imeOptions="actionNext"
-                android:singleLine="true"
-                android:textSize="15sp"
-                android:textColor="@color/black"
-                android:hint="Stock name"
-                android:padding="15dp"
-                android:layout_marginTop="50dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <EditText
-                android:id="@+id/itemQuant_TV"
-                android:imeOptions="actionNext"
-                android:singleLine="true"
-                android:textSize="15sp"
-                android:textColor="@color/black"
-                android:hint="Stock quantity"
-                android:inputType="number"
-                android:padding="15dp"
-                android:layout_marginTop="10dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <EditText
-                android:inputType="number"
-
-                android:id="@+id/item_price_unit"
-                android:imeOptions="actionNext"
-                android:singleLine="true"
-                android:textSize="15sp"
-                android:textColor="@color/black"
-                android:hint="Stock price per unit"
-                android:padding="15dp"
-                android:layout_marginTop="10dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <TextView
-                android:inputType="number"
-                android:id="@+id/item_price_tv"
-                android:imeOptions="actionDone"
-                android:singleLine="true"
-                android:textSize="15sp"
-                android:textColor="@color/black"
-                android:hint="Stock price"
-                android:padding="15dp"
-                android:layout_marginTop="10dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
 
         <LinearLayout
             android:visibility="visible"
@@ -98,32 +39,64 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <EditText
-                android:id="@+id/expense_nameEt"
-                android:imeOptions="actionNext"
-                android:singleLine="true"
-                android:textSize="15sp"
-                android:textColor="@color/black"
-                android:hint="Expense name"
-                android:padding="15dp"
-                android:layout_marginTop="50dp"
+            <Spinner
+                android:background="@drawable/grey_rect_btn"
+                android:layout_marginTop="20dp"
+                android:id="@+id/spinner"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-
+                android:layout_height="50dp"
+                />
 
             <EditText
-                android:inputType="number"
-                android:id="@+id/expense_priceEt"
-                android:imeOptions="actionDone"
-                android:singleLine="true"
-                android:textSize="15sp"
-                android:textColor="@color/black"
-                android:hint="Expense Amount"
-                android:padding="15dp"
+                android:background="@drawable/grey_rect_btn"
+                android:visibility="gone"
                 android:layout_marginTop="10dp"
+                android:singleLine="true"
+                android:imeOptions="actionNext"
+                android:id="@+id/otherET"
+                android:paddingLeft="10dp"
+                android:inputType="text"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="50dp"
+                android:hint="Other Expense Category"/>
+
+            <EditText
+                android:layout_marginTop="10dp"
+                android:background="@drawable/grey_rect_btn"
+                android:singleLine="true"
+                android:imeOptions="actionNext"
+                android:id="@+id/descET"
+                android:paddingLeft="10dp"
+                android:inputType="text"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:hint="Expense Descriptions"/>
+
+            <TextView
+                android:id="@+id/dateTV"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/grey_rect_btn"
+                android:drawableRight="@drawable/dropdown_icon10"
+                android:gravity="center_vertical"
+                android:hint="Expense Date"
+                android:paddingLeft="10dp"
+                android:paddingRight="20dp"
+                android:textColor="@color/black" />
+
+            <EditText
+                android:background="@drawable/grey_rect_btn"
+
+                android:layout_marginTop="10dp"
+                android:singleLine="true"
+                android:imeOptions="actionDone"
+                android:id="@+id/priceEt"
+                android:paddingLeft="10dp"
+                android:inputType="text"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:hint="Expense Amount (* Enter Only Number *)"/>
         </LinearLayout>
 
         <Button

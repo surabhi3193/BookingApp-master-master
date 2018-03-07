@@ -1,9 +1,11 @@
 package com.example.mind_android.bookingapp.activities.dashboard_part;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -11,11 +13,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.mind_android.bookingapp.R;
 import com.example.mind_android.bookingapp.activities.BaseActivity;
-import com.example.mind_android.bookingapp.activities.LoginActivity;
 import com.example.mind_android.bookingapp.adapter.StockAdapter;
 import com.example.mind_android.bookingapp.beans.Stock;
 import com.example.mind_android.bookingapp.storage.DatabaseHandler;
@@ -36,7 +36,6 @@ import static com.example.mind_android.bookingapp.Constant.NetWorkClass.BASE_URL
 import static com.example.mind_android.bookingapp.Constant.NetWorkClass.addStock;
 import static com.example.mind_android.bookingapp.Constant.NetWorkClass.deleteStock;
 import static com.example.mind_android.bookingapp.storage.MySharedPref.getData;
-import static com.example.mind_android.bookingapp.storage.MySharedPref.saveData;
 
 public class StockActivity extends BaseActivity {
     private static ListView stocklist;
@@ -107,13 +106,13 @@ public class StockActivity extends BaseActivity {
         total_amtTv = findViewById(R.id.total_amtTv);
         TextView addTv = findViewById(R.id.addTv);
 
-        Button reset_lay =findViewById(R.id.reset_lay);
+        Button reset_lay = findViewById(R.id.reset_lay);
 
         reset_lay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                resetStock();
+                resetStockWarning();
             }
         });
 
@@ -141,11 +140,37 @@ public class StockActivity extends BaseActivity {
 
     }
 
-    private void resetStock()
-    {
+    public void resetStockWarning() {
+        AlertDialog.Builder ab = new AlertDialog.Builder
+                (StockActivity.this, R.style.MyAlertDialogStyle1);
+        ab.setTitle("Reset").setIcon(R.drawable.reset);
+        ab.setMessage("Are you sure ? ");
+        ab.setNegativeButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                resetStock();
+                dialog.dismiss();
+            }
+        });
+
+        ab.setPositiveButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        ab.show();
+
+    }
+
+
+    private void resetStock() {
         final AsyncHttpClient client = new AsyncHttpClient();
         final RequestParams params = new RequestParams();
-
+        final ProgressDialog ringProgressDialog;
+        ringProgressDialog = ProgressDialog.show(StockActivity.this, "Please wait ...",
+                "", true);
+        ringProgressDialog.setCancelable(false);
         params.put("bk_userid", user_id);
 
         System.out.println(params);
@@ -155,6 +180,7 @@ public class StockActivity extends BaseActivity {
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 System.out.println(" ************* show stock  response ***");
                 System.out.println(response);
+                ringProgressDialog.dismiss();
                 try {
 
                     if (response.getString("status").equals("0")) {
@@ -162,19 +188,20 @@ public class StockActivity extends BaseActivity {
                         total_amtTv.setText("0.00");
 //                        Toast.makeText(StockActivity.this, response.getString("message"), Toast.LENGTH_SHORT).show();
                     } else {
-                        stocklist.setVisibility(View.GONE);                    }
+                        stocklist.setVisibility(View.GONE);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
 
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-//                ringProgressDialog.dismiss();
+                ringProgressDialog.dismiss();
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-//                ringProgressDialog.dismiss();
+                ringProgressDialog.dismiss();
                 System.out.println(responseString);
             }
         });

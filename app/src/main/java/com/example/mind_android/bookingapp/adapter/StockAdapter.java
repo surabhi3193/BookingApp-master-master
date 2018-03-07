@@ -131,11 +131,13 @@ public class StockAdapter extends BaseAdapter {
                         String stock_id = finalResponseobj1.getString("expanse_id");
                         String stock_name = finalResponseobj1.getString("expanse_name");
                         String expanse_amount = finalResponseobj1.getString("expanse_amount");
+                        String expanse_date = finalResponseobj1.getString("expanse_date");
                         context.startActivity(new Intent(context, ExpenseForm_Activity.class)
                                 .putExtra("method_type", "2")
                                 .putExtra("expanse_id", stock_id)
                                 .putExtra("expanse_name", stock_name)
                                 .putExtra("expanse_amount", expanse_amount)
+                                .putExtra("expanse_date", expanse_date)
 
                         );
 
