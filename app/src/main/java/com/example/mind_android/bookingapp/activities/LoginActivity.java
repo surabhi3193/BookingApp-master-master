@@ -223,6 +223,7 @@ client.setConnectTimeout(30000);
                         String bus_loc = response.getString("business_location");
                         String bus_type = response.getString("business_type");
                         String bus_email = response.getString("business_email");
+                        String user_image = response.getString("user_pic");
 
                         Toast.makeText(getApplicationContext(), "Login Successfully", Toast.LENGTH_SHORT).show();
 
@@ -232,12 +233,7 @@ client.setConnectTimeout(30000);
                         DatabaseHandler db = new DatabaseHandler(LoginActivity.this);
 
                         Log.d("Insert: ", "Inserting ..");
-                        db.addUser(new User(user_id,name,phone
-                                ,bus_name,bus_loc,bus_type,bus_email));
-
-                        db.deleteAllStocks();
-                        db.deleteAllSales();
-                        db.deleteAllexpense();
+                        db.addUser(new User(user_id,name,phone,user_image,bus_name,bus_loc,bus_type,bus_email));
 
                         startActivity(new Intent(getApplicationContext(), MainActivity.class));
                         finish();

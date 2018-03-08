@@ -226,6 +226,7 @@ public class ExpenceActivity extends BaseActivity {
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 System.out.println(" ************* show stock  response ***");
                 System.out.println(response);
+                ringProgressDialog.dismiss();
                 try {
 
                     if (response.getString("status").equals("0")) {
@@ -366,6 +367,37 @@ public class ExpenceActivity extends BaseActivity {
         }
 
     }
+
+//    LayoutInflater inflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
+//    RelativeLayout root = (RelativeLayout) inflater.inflate
+//            (R.layout.activity_main, null); //RelativeLayout is root view of my UI(xml) file.
+//root.setDrawingCacheEnabled(true);
+//    Bitmap screen= getBitmapFromView(this.getWindow().findViewById
+//            (R.id.relativelayout)); // here give id of our root layout (here its my RelativeLayout's id)
+
+
+
+//try {
+//        Document  document = new Document();
+//
+//        PdfWriter.getInstance(document, new FileOutputStream(file));
+//        document.open();
+//        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+//        screen.compress(Bitmap.CompressFormat.PNG, 100, stream);
+//        byte[] byteArray = stream.toByteArray();
+//        addImage(document,byteArray);
+//        document.close();
+//    }
+//        catch (Exception e){
+//        e.printStackTrace();
+//    }}
+
+
+//    Intent intent = new Intent(Intent.ACTION_VIEW);
+//    Uri uri = Uri.fromFile(new File(pdfDir,  "pdfFileName"));
+// intent.setDataAndType(uri, "application/pdf");
+// intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+//    startActivity(intent);
 
 
 }

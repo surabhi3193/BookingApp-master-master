@@ -93,7 +93,7 @@
                 android:imeOptions="actionDone"
                 android:id="@+id/priceEt"
                 android:paddingLeft="10dp"
-                android:inputType="text"
+                android:inputType="number|numberDecimal"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:hint="Expense Amount (* Enter Only Number *)"/>

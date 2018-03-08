@@ -7,6 +7,7 @@ public class Stock  {
     String _qty;
     String _unit_per_price;
     String _price;
+    String _date;
     int _status;
 
     // Empty constructor
@@ -15,12 +16,13 @@ public class Stock  {
 
     // constructor
     public Stock(int id, String name, String _qty,String _unit_per_price
-            ,String _price,int _status) {
+            ,String _price,String _date,int _status) {
         this._id = id;
         this._name = name;
         this._qty = _qty;
         this._unit_per_price = _unit_per_price;
         this._price = _price;
+        this._date = _date;
         this._status = _status;
     }
 
@@ -28,6 +30,14 @@ public class Stock  {
     public Stock(String name, String _price) {
         this._name = name;
         this._price = _price;
+    }
+
+    public String get_date() {
+        return _date;
+    }
+
+    public void set_date(String _date) {
+        this._date = _date;
     }
 
     public int get_id() {

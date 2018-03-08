@@ -48,6 +48,7 @@
             android:textColor="@color/white" />
 
         <TextView
+            android:visibility="gone"
             android:layout_marginRight="10dp"
             android:id="@+id/addBank"
             android:layout_width="wrap_content"
@@ -79,62 +80,20 @@
         android:layout_height="match_parent">
     </android.support.v7.widget.RecyclerView>
 
-    <LinearLayout
-        android:paddingTop="100dp"
-        android:id="@+id/addbank_lay"
-        android:visibility="gone"
-        android:gravity="center_horizontal"
-        android:background="@color/dark_trans"
+    <RelativeLayout
+        android:background="@color/colorAccent"
+        android:id="@+id/bottom_lay"
+        android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="50dp">
+        <ImageView
+            android:id="@+id/back_btn"
+            android:layout_alignParentLeft="true"
+            android:padding="15dp"
+            android:background="@color/trans"
+            android:src="@drawable/back"
+            android:layout_width="50dp"
+            android:layout_height="match_parent" />
 
-        <LinearLayout
-
-            android:gravity="center_horizontal"
-            android:padding="30dp"
-            android:orientation="vertical"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="80dp"
-            android:layout_marginBottom="80dp"
-            android:layout_gravity="center_horizontal"
-            android:background="@drawable/white_rect_btn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:padding="10dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorAccent"
-                android:text="Add Lender"
-                android:textAllCaps="true"
-                android:gravity="center"/>
-
-            <EditText
-                android:imeOptions="actionDone"
-                android:id="@+id/bank_nameEt"
-                android:textSize="15sp"
-                android:drawableTint="@color/colorAccent"
-                android:layout_marginTop="10dp"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:hint="Lender Name"
-                />
-
-            <Button
-                android:id="@+id/addbank_btn"
-                android:text="Add"
-                android:textColor="@color/white"
-                android:layout_marginTop="20dp"
-                android:layout_width="match_parent"
-                android:layout_height="35dp"
-                android:background="@drawable/blue_rect_btn"/>
-
-        </LinearLayout>
-
-    </LinearLayout>
-
+    </RelativeLayout>
 </RelativeLayout>

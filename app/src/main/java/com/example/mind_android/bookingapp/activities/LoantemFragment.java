@@ -50,7 +50,7 @@ public class LoantemFragment extends android.app.DialogFragment {
         sv=(SearchView) rootView.findViewById(R.id.searchView1);
         btn=(Button) rootView.findViewById(R.id.dismiss);
 
-      getAllBanks(getActivity());
+//      getAllBanks(getActivity());
 
 
 
@@ -90,7 +90,7 @@ public class LoantemFragment extends android.app.DialogFragment {
 
                 System.out.println("=========== item selected ===========");
                 LoanFormActivity.lender_name=loanArr[position];
-                LoanFormActivity.lendernameEt.setText(loanArr[position]);
+//                LoanFormActivity.lendernameEt.setText(loanArr[position]);
                 LoanFormActivity.lender_id=loanidArr[position];
                 dismiss();
             }
@@ -98,76 +98,6 @@ public class LoantemFragment extends android.app.DialogFragment {
 
         return rootView;
     }
-    public  void getAllBanks(final Activity activity) {
-        final List<String> banklist = new ArrayList<String>();
-        final List<String> idlist = new ArrayList<String>();
 
-
-
-        final AsyncHttpClient client = new AsyncHttpClient();
-        final RequestParams params = new RequestParams();
-
-        final String bk_userid = getData(activity, "user_id", "");
-        params.put("bk_userid", bk_userid);
-        System.out.println(params);
-
-        client.post(BASE_URL_NEW + "lender_list", params, new JsonHttpResponseHandler() {
-
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                System.out.println(" ************* all stock response ***");
-                System.out.println(response);
-                try {
-
-                    if (response.getString("status").equals("0")) {
-
-                    }
-
-                    else {
-
-                        JSONArray jArray = response.getJSONArray("lenders");
-                        if (jArray.length()>0)
-                        {
-                            for (int i =0;i<jArray.length();i++)
-                            {
-                                JSONObject obj = jArray.getJSONObject(i);
-
-                                String id = obj.getString("lender_id");
-                                String name = obj.getString("lender_name");
-                                banklist.add(name);
-                                idlist.add(id);
-
-
-                            }
-
-                            loanArr = banklist.toArray(new String[banklist.size()]);
-                            loanidArr = idlist.toArray(new String[idlist.size()]);
-                            //CREATE AND SET ADAPTER TO LISTVIEW
-                            adapter=new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1,loanArr);
-                            lv.setAdapter(adapter);
-
-
-                        }
-
-
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            }
-
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-
-                System.out.println(errorResponse);
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-
-                System.out.println(responseString);
-            }
-        });
-
-    }
 
 }

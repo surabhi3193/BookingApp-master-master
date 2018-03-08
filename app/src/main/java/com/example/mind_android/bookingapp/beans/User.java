@@ -8,6 +8,7 @@ public class User {//private variables
     String _business_loc;
     String _business_type;
     String _business_email;
+    String _user_image;
 
     // Empty constructor
     public User() {
@@ -16,7 +17,7 @@ public class User {//private variables
 
     // constructor
     public User(int id, String name, String _phone_number,String _business_name
-            ,String _business_loc,String _business_type,String _business_email) {
+            ,String _business_loc,String _business_type,String _business_email,String _user_image) {
         this._id = id;
         this._name = name;
         this._phone_number = _phone_number;
@@ -24,12 +25,21 @@ public class User {//private variables
         this._business_loc = _business_loc;
         this._business_type = _business_type;
         this._business_email = _business_email;
+        this._user_image = _user_image;
     }
 
     // constructor
     public User(String name, String _phone_number) {
         this._name = name;
         this._phone_number = _phone_number;
+    }
+
+    public String get_user_image() {
+        return _user_image;
+    }
+
+    public void set_user_image(String _user_image) {
+        this._user_image = _user_image;
     }
 
     // getting ID

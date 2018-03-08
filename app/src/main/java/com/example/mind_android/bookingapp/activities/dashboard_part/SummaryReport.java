@@ -226,8 +226,9 @@ public class SummaryReport extends AppCompatActivity {
                                 String amount = obj.getString("amount");
                                 String date = obj.getString("date");
                                 String type = obj.getString("type");
+                                String trans_type = obj.getString("transaction_type");
 
-                                summary = new TransectionSummary(name, qty, per_price, amount, type, date);
+                                summary = new TransectionSummary(name, qty, per_price, amount, type,trans_type, date);
                                 summaryList.add(summary);
                             }
 

@@ -44,11 +44,11 @@ public class BankFormActivity extends AppCompatActivity implements AdapterView.O
     private EditText  bankamountEt;
 
     private TextView dateTv;
-    private Spinner spin;
+    private Spinner spin,spinner;
     private LinearLayout bank_form;
     private String trans_type = "0";
     public static  String bank_name= "",bank_id="";
-    Spinner spinner;
+
     List<String> categList;
     static String[]bankArr = {};
     static String[]bankidArr = {};

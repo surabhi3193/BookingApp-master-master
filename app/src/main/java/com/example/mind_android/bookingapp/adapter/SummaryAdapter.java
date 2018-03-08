@@ -45,7 +45,8 @@ public class SummaryAdapter extends RecyclerView.Adapter<SummaryAdapter.MyViewHo
 
         if (intent_name.equals("summary")) {
 
-            switch (trans.getType()) {
+            switch (trans.getType())
+            {
                 case "1":
                     holder.type.setText(R.string.srvices);
                     holder.image.setImageResource(R.drawable.service_trans);
@@ -70,26 +71,28 @@ public class SummaryAdapter extends RecyclerView.Adapter<SummaryAdapter.MyViewHo
                     break;
 
                     case "6":
-                    holder.type.setText(R.string.deposit);
-                    holder.image.setImageResource(R.drawable.bank);
+
+                        if (trans.getTrans_type().equals("1")) {
+                            holder.type.setText(R.string.deposit);
+                            holder.image.setImageResource(R.drawable.deposit);
+                        }
+                        else if (trans.getTrans_type().equals("2")) {
+                            holder.type.setText(R.string.withdraw);
+                            holder.image.setImageResource(R.drawable.withdraw);
+                        }
                     break;
             }
         }
 
         else if (intent_name.equals("bank")) {
 
-            switch (trans.getType()) {
-                case "1":
-                    holder.type.setText(R.string.deposit);
-                    holder.image.setImageResource(R.drawable.deposit);
-                    break;
-                case "2":
-
-                    holder.type.setText(R.string.withdraw);
-                    holder.image.setImageResource(R.drawable.withdraw);
-                    break;
-
-            }
+            holder.type.setText("Closing Balance");
+            holder.image.setVisibility(View.INVISIBLE);
+            holder.qty.setVisibility(View.INVISIBLE);
+            holder.per_unit.setVisibility(View.INVISIBLE);
+            holder.date.setVisibility(View.INVISIBLE);
+            holder.multiply.setVisibility(View.INVISIBLE);
+            holder.type.setVisibility(View.INVISIBLE);
         }
     }
 

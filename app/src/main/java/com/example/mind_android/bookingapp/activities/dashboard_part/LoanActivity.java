@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,9 +40,9 @@ public class LoanActivity extends BaseActivity {
 
     private List<LoanSummary> summaryList = new ArrayList<>();
     private LoanAdapter mAdapter;
-    private LinearLayout addbank_lay;
+
     private EditText bank_nameEt;
-    private Button addbankName_Btn;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,8 +52,8 @@ public class LoanActivity extends BaseActivity {
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.transection_LV);
         TextView addTv =findViewById(R.id.addTv);
         TextView addBank =findViewById(R.id.addBank);
-        addbank_lay =findViewById(R.id.addbank_lay);
-        addbankName_Btn =findViewById(R.id.addbank_btn);
+
+
         bank_nameEt =findViewById(R.id.bank_nameEt);
 
 
@@ -65,6 +66,15 @@ public class LoanActivity extends BaseActivity {
         recyclerView.setAdapter(mAdapter);
 
 
+        ImageView back_btn = findViewById(R.id.back_btn);
+
+        back_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+                finish();
+            }
+        });
         addTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -78,94 +88,11 @@ public class LoanActivity extends BaseActivity {
         });
 
 
-        addBank.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-          addbank_lay.setVisibility(View.VISIBLE);
-          performaddBankAction();
-
-            }
-        });
 
 
 
     }
 
-    private void performaddBankAction() {
-        addbankName_Btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String name = bank_nameEt.getText().toString();
-
-                if (name.length()==0)
-                    bank_nameEt.setError("Name Required");
-
-                else
-                {
-                    bank_nameEt.setError(null);
-                    addBank(name);
-                }
-            }
-        });
-    }
-
-    private void addBank(String name)
-    {
-
-        final AsyncHttpClient client = new AsyncHttpClient();
-        final RequestParams params = new RequestParams();
-
-        final ProgressDialog ringProgressDialog;
-        ringProgressDialog = ProgressDialog.show(LoanActivity.this,
-                "Please wait ...",
-                "Loading..", true);
-        ringProgressDialog.setCancelable(false);
-
-String user_id = getData(LoanActivity.this,"user_id","");
-        params.put("bk_userid", user_id);
-        params.put("lender_name", name);
-
-        System.out.println(params);
-
-        client.post(BASE_URL_NEW + "add_lender", params, new JsonHttpResponseHandler() {
-
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                System.out.println(" ************* summary response ***");
-                System.out.println(response);
-                ringProgressDialog.dismiss();
-                try {
-
-                    if (response.getString("status").equals("1"))
-                    {
-                        Toast.makeText(LoanActivity.this,"Lender added in your list",
-                                Toast.LENGTH_SHORT).show();
-                        addbank_lay.setVisibility(View.GONE);
-                    }
-                    else
-                    {
-                        Toast.makeText(LoanActivity.this,response.getString("message"),
-                                Toast.LENGTH_SHORT).show();
-                    }
-
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            }
-
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                ringProgressDialog.dismiss();
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                System.out.println(responseString);
-                ringProgressDialog.dismiss();
-            }
-        });
-    }
 
     private void getLoan(final String user_id) {
 
@@ -218,11 +145,8 @@ String user_id = getData(LoanActivity.this,"user_id","");
                                         String loan_status = obj.getString("loan_status");
 
 
-                                  String  rate= "Interest : "+interest_rate+"%";
-                                    interest_month = "Total Month : " + interest_month ;
-                                    loan_total_amount = "Total Loan Amount : " + loan_total_amount ;
-                                    borrowed_paid_amount = "Total Paid Amount : " + borrowed_paid_amount ;
-                                    total_remains_amount = "Total Remaining Amount : " + total_remains_amount ;
+                                  String  rate= interest_rate+"%";
+
                                     taken_amount = "Total Taken Amount : " + taken_amount ;
 
                                     summary = new LoanSummary(id,name,taken_amount,rate,interest_month
@@ -268,13 +192,8 @@ String user_id = getData(LoanActivity.this,"user_id","");
     @Override
     public void onBackPressed() {
 
-        if (addbank_lay.getVisibility()==View.VISIBLE)
-        {
-            addbank_lay.setVisibility(View.GONE);
-        }
-        else
-        {
+
             finish();
-        }
+
     }
 }

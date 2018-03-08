@@ -37,6 +37,8 @@ import com.loopj.android.http.RequestParams;
 import org.json.JSONObject;
 
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -385,19 +387,21 @@ public static String sale_stock="",sale_item_id="";
                                  String stock_amount, final String method_type, final String stock_per_price,
                                  final String stock_id) {
         DatabaseHandler db = new DatabaseHandler(FormActivity.this);
+        SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyy_HHmmss");
+        String currentDateandTime = sdf.format(new Date());
 
         if (method_type.equals("1")) {
             Log.d("Insert: ", "Inserting .. Stock");
             Long tsLong = System.currentTimeMillis() / 1000;
             int id = Integer.parseInt(tsLong.toString());
 
-            db.addStock(new Stock(id, stock_name, stock_qty, stock_per_price, stock_amount, 0));
+            db.addStock(new Stock(id, stock_name, stock_qty, stock_per_price, stock_amount,currentDateandTime ,0));
             db.addSales(new Sales(id, stock_name, "0", "0", "0", 0));
             onBackPressed();
         } else if (method_type.equals("2")) {
             int id = Integer.parseInt(stock_id);
             Log.d("Update: ", "Updating .. Stock");
-            db.updateStock(new Stock(id, stock_name, stock_qty, stock_per_price, stock_amount, 0), stock_id);
+            db.updateStock(new Stock(id, stock_name, stock_qty, stock_per_price, stock_amount,currentDateandTime, 0), stock_id);
             onBackPressed();
         }
     }
@@ -521,7 +525,8 @@ public static String sale_stock="",sale_item_id="";
                         Toast.makeText(context, response.getString("message"), Toast.LENGTH_SHORT).show();
 
                     } else {
-
+                        SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyy_HHmmss");
+                        String currentDateandTime = sdf.format(new Date());
                         if (sale_type.equals("2")) {
                             String id = response.getString("stock_id");
                             String name = response.getString("stock_name");
@@ -540,7 +545,7 @@ public static String sale_stock="",sale_item_id="";
 
                             db.addSales(sales);
                             db.updateStock(new Stock((Integer.parseInt(id)), name, qty,
-                                    per_price, price, 1), id);
+                                    per_price, price,currentDateandTime, 1), id);
 
 
                         }

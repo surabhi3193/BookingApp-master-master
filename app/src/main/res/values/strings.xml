@@ -12,4 +12,9 @@
     <string name="withdraw">Withdraw</string>
     <string name="transaction">Transaction</string>
     <string name="loan">Loan</string>
+    <string name="dummy">Loren Ipsum Loren Ipsum Loren Ipsum Loren Ipsum Loren IpsumLoren
+        IpsumLoren IpsumLoren IpsumLoren Ipsumv Loren Ipsum IpsumLoren IpsumLoren IpsumLoren Ipsumv Loren Ipsum IpsumLoren IpsumLoren IpsumLoren Ipsumv Loren Ipsum IpsumLoren IpsumLoren IpsumLoren Ipsumv Loren Ipsum IpsumLoren IpsumLoren IpsumLoren Ipsumv Loren Ipsum IpsumLoren IpsumLoren IpsumLoren Ipsumv Loren Ipsum IpsumLoren IpsumLoren IpsumLoren Ipsumv Loren Ipsum</string>
+    <string name="about_us">About Us</string>
+    <string name="terms_amp_conditions"><![CDATA[Terms & Conditions]]></string>
+    <string name="privacy_policy">Privacy Policy</string>
 </resources>

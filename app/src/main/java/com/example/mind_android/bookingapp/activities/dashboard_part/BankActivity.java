@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -59,6 +60,15 @@ public class BankActivity extends BaseActivity {
                 DividerItemDecoration.VERTICAL));
         recyclerView.setAdapter(mAdapter);
 
+        ImageView back_btn = findViewById(R.id.back_btn);
+
+        back_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+                finish();
+            }
+        });
 
         addTv.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,7 +102,7 @@ public class BankActivity extends BaseActivity {
 
             System.out.println(params);
 
-            client.post(BASE_URL_NEW + "bank_transactions", params, new JsonHttpResponseHandler() {
+            client.post(BASE_URL_NEW + "all_bank_list", params, new JsonHttpResponseHandler() {
 
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                     System.out.println(" ************* summary response ***");
@@ -103,7 +113,7 @@ public class BankActivity extends BaseActivity {
                         if (response.getString("status").equals("1")) {
                             JSONArray jArray = new JSONArray();
 
-                            jArray= response.getJSONArray("transactions");
+                            jArray= response.getJSONArray("banks");
 
                             if (jArray.length()>0)
                             {
@@ -111,13 +121,13 @@ public class BankActivity extends BaseActivity {
                                 for (int i=0;i<jArray.length();i++)
                                 {
                                     JSONObject obj = jArray.getJSONObject(i);
-                                    String id = obj.getString("transaction_id");
+                                    String id = obj.getString("bank_id");
                                     String name = obj.getString("bank_name");
-                                    String amount = obj.getString("amount");
-                                    String date = obj.getString("transaction_date");
-                                    String type = obj.getString("transaction_type");
+                                    String amount = obj.getString("closing_balance");
+                                    String date = "";
+                                    String type = "";
 
-                                    summary = new TransectionSummary(name,"","",amount,type,date);
+                                    summary = new TransectionSummary(name,"","",amount,type,"",date);
                                   summaryList.add(summary);
                                 }
                                 mAdapter.notifyDataSetChanged();
@@ -157,8 +167,6 @@ public class BankActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-
-
             finish();
     }
 }

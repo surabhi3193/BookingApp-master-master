@@ -8,20 +8,30 @@ public class TransectionSummary  {
                 per_unit,
                 total_amt,
                 type,
+                trans_type,
                 date;
 
         public TransectionSummary() {
         }
 
         public TransectionSummary(String title, String qty, String per_unit, String total_amt,
-                                  String type, String date) {
+                                  String type, String trans_type,String date) {
             this.title = title;
             this.qty = qty;
             this.per_unit = per_unit;
             this.total_amt = total_amt;
             this.type = type;
+            this.trans_type = trans_type;
             this.date = date;
         }
+
+    public String getTrans_type() {
+        return trans_type;
+    }
+
+    public void setTrans_type(String trans_type) {
+        this.trans_type = trans_type;
+    }
 
     public String getTitle() {
         return title;

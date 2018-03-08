@@ -1,31 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
+    android:id="@+id/rootview"
+
     android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <ScrollView
+        android:id="@+id/scroll"
+
+        android:layout_marginTop="70dp"
         android:fillViewport="true"
-        android:scrollbars="none"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginBottom="20dp"
+        android:scrollbars="vertical"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
         android:orientation="vertical"
         android:layout_above="@id/profile_lay"
         android:background="@drawable/home_bg"
-        android:layout_marginTop="70dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
 
 <LinearLayout
-    android:padding="20sp"
     android:layout_marginLeft="20dp"
     android:layout_marginRight="20dp"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
 
     <TextView
         android:gravity="center"
@@ -38,20 +42,32 @@
         android:textStyle="bold"
         android:textSize="20sp"/>
 
+
+    <TextView
+        android:gravity="left"
+        android:layout_gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Revenue"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:textSize="20sp"/>
     <RelativeLayout
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="50dp">
 
         <TextView
-            android:layout_alignParentLeft="true"
-            android:gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:gravity="center"
+            android:text="Stock Sale"
             android:textColor="@color/colorAccent"
             android:textSize="15sp"
-            android:textStyle="bold"
-            android:text="Total Sale "/>
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/saleTV"
@@ -71,9 +87,85 @@
             android:layout_height="1dp"
             android:background="@color/colorAccent"/>
     </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:gravity="center"
+            android:text="Other Income"
+            android:textColor="@color/colorAccent"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/other_incometv"
+            android:layout_alignParentRight="true"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textColor="@color/Red"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:text="0.00"/>
+
+        <View
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorAccent"/>
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:gravity="center"
+            android:text="Total"
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/total_Saletv"
+            android:layout_alignParentRight="true"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:text="0.00"/>
+
+        <View
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorAccent"/>
+    </RelativeLayout>
+
+    <TextView
+        android:layout_marginTop="30dp"
+        android:gravity="left"
+        android:layout_gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Cost of sale"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:textSize="20sp"/>
 
     <RelativeLayout
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="50dp">
 
@@ -85,10 +177,10 @@
             android:textColor="@color/colorAccent"
             android:textSize="15sp"
             android:textStyle="bold"
-            android:text="Total Cost Of  Sale "/>
+            android:text="Stock"/>
 
         <TextView
-            android:id="@+id/per_unitTV"
+            android:id="@+id/stocktv"
 
             android:layout_alignParentRight="true"
             android:gravity="center"
@@ -107,7 +199,6 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:layout_marginTop="20dp"
         android:layout_width="match_parent"
         android:layout_height="50dp">
 
@@ -119,10 +210,10 @@
             android:textColor="@color/colorAccent"
             android:textSize="15sp"
             android:textStyle="bold"
-            android:text="Total Services Sale "/>
+            android:text="Expenses"/>
 
         <TextView
-            android:id="@+id/goodsoldTv"
+            android:id="@+id/expensetv"
 
             android:layout_alignParentRight="true"
             android:gravity="center"
@@ -139,14 +230,56 @@
             android:layout_height="1dp"
             android:background="@color/colorAccent"/>
     </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:gravity="center"
+            android:text="Total"
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/total_stock"
+            android:layout_alignParentRight="true"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:text="0.00"/>
+
+        <View
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorAccent"/>
+    </RelativeLayout>
+
+    <TextView
+        android:layout_marginTop="30dp"
+        android:gravity="left"
+        android:layout_gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Profit/(Loss)"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:textSize="20sp"/>
 
     <RelativeLayout
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="50dp">
 
         <TextView
-
             android:layout_alignParentLeft="true"
             android:gravity="center"
             android:layout_width="wrap_content"
@@ -154,10 +287,11 @@
             android:textColor="@color/colorAccent"
             android:textSize="15sp"
             android:textStyle="bold"
-            android:text="Total Expenses "/>
+            android:text="Profit/(Loss)"/>
 
         <TextView
-            android:id="@+id/expenseTv"
+            android:id="@+id/proftv"
+
             android:layout_alignParentRight="true"
             android:gravity="center"
             android:layout_width="wrap_content"
@@ -173,8 +307,6 @@
             android:layout_height="1dp"
             android:background="@color/colorAccent"/>
     </RelativeLayout>
-
-
 
     <Button
         android:id="@+id/summary_btn"
@@ -185,6 +317,17 @@
         android:layout_width="match_parent"
         android:layout_height="35dp"
         android:background="@drawable/blue_rect_btn"/>
+
+    <Button
+        android:layout_marginBottom="10dp"
+        android:id="@+id/print_btn"
+        android:textAllCaps="true"
+        android:textColor="@color/black"
+        android:text="Print"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:background="@drawable/grey_rect_btn"/>
 </LinearLayout>
     </ScrollView>
     <RelativeLayout

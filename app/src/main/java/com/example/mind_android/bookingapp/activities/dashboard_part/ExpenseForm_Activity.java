@@ -57,7 +57,6 @@ public class ExpenseForm_Activity extends AppCompatActivity {
         dateTV = findViewById(R.id.dateTV);
         priceEt = findViewById(R.id.priceEt);
 
-
         Button add_btn = findViewById(R.id.add_btn);
         ImageView back_btn = findViewById(R.id.back_btn);
 
@@ -93,8 +92,6 @@ public class ExpenseForm_Activity extends AppCompatActivity {
         if (bundle != null) {
 
             method_type = bundle.getString("method_type");
-
-
             if (method_type.equals("2"))
             {
                 expense_id = bundle.getString("expanse_id");
@@ -110,7 +107,6 @@ public class ExpenseForm_Activity extends AppCompatActivity {
             }
 
         }
-
 
 
         back_btn.setOnClickListener(new View.OnClickListener() {
@@ -155,8 +151,10 @@ public class ExpenseForm_Activity extends AppCompatActivity {
                 if (cat.equalsIgnoreCase("Select Category")) {
                     Toast.makeText(ExpenseForm_Activity.this, " Please select expense category", Toast.LENGTH_SHORT).show();
                 }
-                if (otherET.getVisibility() == View.VISIBLE) {
+                if (otherET.getVisibility() == View.VISIBLE)
+                {
                     expType = otherET.getText().toString();
+                    System.out.println("======== other category name ===== " + expType);
                     if (expType.length()<2)
                     {
                         otherET.setError("Field Required");
@@ -172,26 +170,53 @@ public class ExpenseForm_Activity extends AppCompatActivity {
                 if (price.length()==0)
                 priceEt.setError("Field Required");
 
+if (otherET.getVisibility()==View.VISIBLE)
+{
+    if (desc.length() != 0
+            && price.length() != 0
+            && date.length() != 0
+            && expType.length() != 0
+            && !cat.equalsIgnoreCase("Select Category")
+            )
+    {
+        String user_id = getData(ExpenseForm_Activity.this, "user_id", "");
 
-                if (desc.length() != 0
-                        && price.length() != 0
-                        && date.length() != 0
-                        && !cat.equalsIgnoreCase("Select Category")
-                        )
-                {
-                    String user_id = getData(ExpenseForm_Activity.this, "user_id", "");
+        if (isNetworkAvailable(ExpenseForm_Activity.this))
+            addExpense(ExpenseForm_Activity.this, user_id, cat,expType,desc,date,
+                    price, method_type, expense_id, "");
 
-                    if (isNetworkAvailable(ExpenseForm_Activity.this))
-                        addExpense(ExpenseForm_Activity.this, user_id, cat,expType,desc,date,
-                                price, method_type, expense_id, "");
+        else {
 
-                    else {
+            addExpenseinLocal(user_id, cat, date, price, method_type, expense_id);
+
+        }
+    }
+}
+else
+{
+    if (desc.length() != 0
+            && price.length() != 0
+            && date.length() != 0
+            && !cat.equalsIgnoreCase("Select Category")
+            )
+    {
+        String user_id = getData(ExpenseForm_Activity.this, "user_id", "");
+
+        if (isNetworkAvailable(ExpenseForm_Activity.this))
+            addExpense(ExpenseForm_Activity.this, user_id, cat,expType,desc,date,
+                    price, method_type, expense_id, "");
+
+        else {
+
+            addExpenseinLocal(user_id, cat, date, price, method_type, expense_id);
+
+        }
+    }
+}
 
 
-                        addExpenseinLocal(user_id, cat, date, price, method_type, expense_id);
 
-                    }
-                }
+
             }
         });
     }

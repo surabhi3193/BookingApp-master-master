@@ -21,7 +21,10 @@ import com.loopj.android.http.RequestParams;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.sql.SQLDataException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
@@ -83,20 +86,22 @@ public class NetWorkClass extends AppCompatActivity {
                         String unit_price= obj.getString("stock_per_price");
                         String price= obj.getString("stock_price");
                         int status=1;
+                        SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyy_HHmmss");
+                        String currentDateandTime = sdf.format(new Date());
 
                         if (method_type.equals("1"))
                         {
                             Log.d("Updating: ", "Updating .. Stock");
                             if (local.equals("local"))
                             {
-                                db.updateStock(new Stock(id,name,qty,unit_price,price,status),stock_id);
+                                db.updateStock(new Stock(id,name,qty,unit_price,price,currentDateandTime,status),stock_id);
                                 ringProgressDialog.dismiss();
                             }
                             else
                             {
                                 ringProgressDialog.dismiss();
-                                db.addStock(new Stock(id,name,qty,unit_price,price,status));
-                                db.addSales(new Sales(id, stock_name, "0", "0", "0", 1));
+//                                    db.addStock(new Stock(id, name, qty, unit_price, price, currentDateandTime, status));
+
 
                                 Toast.makeText(context,"Added Successfully",Toast.LENGTH_SHORT).show();
                                 context.onBackPressed();
@@ -107,7 +112,7 @@ public class NetWorkClass extends AppCompatActivity {
                         {
                             ringProgressDialog.dismiss();
                             Log.d("Update: ", "Updating .. Stock");
-                            db.updateStock(new Stock(id,name,qty,unit_price,price,status), stock_id);
+                            db.updateStock(new Stock(id,name,qty,unit_price,price,currentDateandTime,status), stock_id);
                             context.onBackPressed();
                         }
 

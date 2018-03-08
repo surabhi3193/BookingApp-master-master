@@ -17,11 +17,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     // All Static variables
     // Database Version
-    private static final int DATABASE_VERSION = 6;
+    private static final int DATABASE_VERSION = 7;
 
     // Database Name
     private static final String DATABASE_NAME = "usersManager";
-
     // Users table name
     private static final String TABLE_USERS = "users";
     private static final String TABLE_STOCKS = "stocks";
@@ -36,7 +35,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_BUSINESS_LOC = "business_loc";
     private static final String KEY_BUSINESS_TYPE = "business_type";
     private static final String KEY_BUSINESS_EMAIL = "business_email";
-
+    private static final String KEY_USER_IMAGE = "user_image";
 
     // Stocks Table Columns names
     private static final String KEY_STOCK_ID = "stock_id";
@@ -45,7 +44,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_STOCK_PER_PRICE = "stock_per_price";
     private static final String KEY_STOCK_PRICE = "stock_price";
     private static final String KEY_STOCK_STATUS = "stock_status";
-
+    private static final String KEY_STOCK_DATE = "stock_date";
 
     // Sales Table Columns names
     private static final String KEY_SALES_ID = "sales_id";
@@ -54,6 +53,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_SALES_PER_PRICE = "sales_per_price";
     private static final String KEY_SALES_PRICE = "sale_price";
     private static final String KEY_SALES_STATUS = "sale_status";
+    private static final String KEY_SALES_DATE = "sale_date";
 
     // Sales Table Columns names
     private static final String KEY_EXPENSE_ID = "expense_id";
@@ -70,9 +70,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
 //        String CREATE_USERS_TABLE = "CREATE TABLE " + TABLE_USERS + "(" + KEY_ID + " INTEGER PRIMARY KEY," + KEY_NAME + " TEXT," + KEY_PH_NO + " TEXT" + ")";
-        String CREATE_USERS_TABLE = "CREATE TABLE " + TABLE_USERS + "(" + KEY_ID + " INTEGER PRIMARY KEY," + KEY_NAME + " TEXT," + KEY_PH_NO + " TEXT," + KEY_BUSINESS_NAME + " TEXT," + KEY_BUSINESS_LOC + " TEXT," + KEY_BUSINESS_TYPE + " TEXT," + KEY_BUSINESS_EMAIL + " TEXT" + ")";
-        String CREATE_STOCK_TABLE = "CREATE TABLE " + TABLE_STOCKS + "(" + KEY_STOCK_ID + " INTEGER PRIMARY KEY," + KEY_STOCK_NAME + " TEXT," + KEY_STOCK_QTY + " TEXT," + KEY_STOCK_PER_PRICE + " TEXT," + KEY_STOCK_PRICE + " TEXT," + KEY_STOCK_STATUS + " INTEGER" + ")";
-        String CREATE_SALES_TABLE = "CREATE TABLE " + TABLE_SALES + "(" + KEY_SALES_ID + " INTEGER PRIMARY KEY," + KEY_SALES_NAME + " TEXT," + KEY_SALES_QTY + " TEXT," + KEY_SALES_PER_PRICE + " TEXT," + KEY_SALES_PRICE + " TEXT," + KEY_SALES_STATUS + " INTEGER" + ")";
+        String CREATE_USERS_TABLE = "CREATE TABLE " + TABLE_USERS + "(" + KEY_ID + " INTEGER PRIMARY KEY," + KEY_NAME + " TEXT," + KEY_PH_NO + " TEXT," +KEY_USER_IMAGE + " TEXT," + KEY_BUSINESS_NAME + " TEXT," + KEY_BUSINESS_LOC + " TEXT," + KEY_BUSINESS_TYPE + " TEXT," + KEY_BUSINESS_EMAIL + " TEXT" + ")";
+        String CREATE_STOCK_TABLE = "CREATE TABLE " + TABLE_STOCKS + "(" + KEY_STOCK_ID + " INTEGER PRIMARY KEY," + KEY_STOCK_NAME + " TEXT," + KEY_STOCK_QTY + " TEXT," + KEY_STOCK_PER_PRICE + " TEXT," + KEY_STOCK_PRICE + " TEXT," +KEY_STOCK_DATE + " TEXT," + KEY_STOCK_STATUS + " INTEGER" + ")";
+        String CREATE_SALES_TABLE = "CREATE TABLE " + TABLE_SALES + "(" + KEY_SALES_ID + " INTEGER PRIMARY KEY," + KEY_SALES_NAME + " TEXT," + KEY_SALES_QTY + " TEXT," + KEY_SALES_PER_PRICE + " TEXT," + KEY_SALES_PRICE + " TEXT," +KEY_SALES_DATE + " TEXT," + KEY_SALES_STATUS + " INTEGER" + ")";
         String CREATE_EXPENSE_TABLE = "CREATE TABLE " + TABLE_EXPENSE + "(" + KEY_EXPENSE_ID + " INTEGER PRIMARY KEY," + KEY_EXPENSE_NAME + " TEXT," + KEY_EXPENSE_DATE + " TEXT," + KEY_EXPENSE_PRICE + " TEXT," + KEY_EXPENSE_STATUS + " INTEGER" + ")";
 
         db.execSQL(CREATE_USERS_TABLE);
@@ -111,6 +111,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(KEY_BUSINESS_LOC, user.get_business_loc()); // User business_loc
         values.put(KEY_BUSINESS_TYPE, user.get_business_type()); // User business  type
         values.put(KEY_BUSINESS_EMAIL, user.get_business_email()); // User business_email
+        values.put(KEY_USER_IMAGE, user.get_user_image()); // User business_email
 
         // Inserting Row
         db.insert(TABLE_USERS, null, values);
@@ -120,14 +121,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public  User getUser(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor cursor = db.query(TABLE_USERS, new String[]{KEY_ID, KEY_NAME, KEY_PH_NO, KEY_BUSINESS_NAME, KEY_BUSINESS_LOC,
+        Cursor cursor = db.query(TABLE_USERS, new String[]{KEY_ID, KEY_NAME, KEY_PH_NO,KEY_USER_IMAGE, KEY_BUSINESS_NAME, KEY_BUSINESS_LOC,
                         KEY_BUSINESS_TYPE, KEY_BUSINESS_EMAIL}, KEY_ID + "=?",
                 new String[]{String.valueOf(id)}, null, null, null, null);
         if (cursor != null)
             cursor.moveToFirst();
 
         User user = new User(Integer.parseInt(cursor.getString(0)), cursor.getString(1), cursor.getString(2)
-                , cursor.getString(3), cursor.getString(4), cursor.getString(5), cursor.getString(6));
+                , cursor.getString(3), cursor.getString(4), cursor.getString(5), cursor.getString(6),cursor.getString(7));
         // return user
         return user;
     }
@@ -174,6 +175,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(KEY_BUSINESS_LOC, user.get_business_loc());
         values.put(KEY_BUSINESS_TYPE, user.get_business_type());
         values.put(KEY_BUSINESS_EMAIL, user.get_business_email());
+        values.put(KEY_USER_IMAGE, user.get_user_image());
 
         // updating row
         return db.update(TABLE_USERS, values, KEY_ID + " = ?",
@@ -187,8 +189,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 new String[]{String.valueOf(user.getID())});
         db.close();
     }
-
-
     // Getting users Count
     public int getUsersCount() {
         String countQuery = "SELECT  * FROM " + TABLE_USERS;
@@ -215,6 +215,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(KEY_STOCK_QTY, stock.get_qty()); //QTY
         values.put(KEY_STOCK_PER_PRICE, stock.get_unit_per_price()); // PER UNIT PRICE
         values.put(KEY_STOCK_PRICE, stock.get_price()); // STOCK PRICE
+        values.put(KEY_STOCK_DATE, stock.get_date()); // STOCK PRICE
         values.put(KEY_STOCK_STATUS, stock.get_status()); // STOCK PRICE
 
 
@@ -239,10 +240,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 stock.set_id(Integer.parseInt(cursor.getString(0)));
                 stock.set_name(cursor.getString(1));
                 stock.set_qty(cursor.getString(2));
-
                 stock.set_unit_per_price(cursor.getString(3));
                 stock.set_price(cursor.getString(4));
-                stock.set_status(Integer.parseInt(cursor.getString(5)));
+                stock.set_date(cursor.getString(5));
+                stock.set_status(Integer.parseInt(cursor.getString(6)));
                 // Adding user to list
                 stocklist.add(stock);
             } while (cursor.moveToNext());
@@ -270,9 +271,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 stock.set_id(Integer.parseInt(cursor.getString(0)));
                 stock.set_name(cursor.getString(1));
                 stock.set_qty(cursor.getString(2));
-
                 stock.set_unit_per_price(cursor.getString(3));
                 stock.set_price(cursor.getString(4));
+                stock.set_date(cursor.getString(5));
                 // Adding user to list
                 stocklist.add(stock);
             } while (cursor.moveToNext());
@@ -301,10 +302,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 stock.set_id(Integer.parseInt(cursor.getString(0)));
                 stock.set_name(cursor.getString(1));
                 stock.set_qty(cursor.getString(2));
-
                 stock.set_unit_per_price(cursor.getString(3));
                 stock.set_price(cursor.getString(4));
-                stock.set_status(Integer.parseInt(cursor.getString(5)));
+                stock.set_date(cursor.getString(5));
+                stock.set_status(Integer.parseInt(cursor.getString(6)));
                 stocklist.add(stock);
             } while (cursor.moveToNext());
         }
@@ -330,10 +331,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 stock.set_id(Integer.parseInt(cursor.getString(0)));
                 stock.set_name(cursor.getString(1));
                 stock.set_qty(cursor.getString(2));
-
                 stock.set_unit_per_price(cursor.getString(3));
                 stock.set_price(cursor.getString(4));
-                stock.set_status(Integer.parseInt(cursor.getString(5)));
+                stock.set_date(cursor.getString(5));
+                stock.set_status(Integer.parseInt(cursor.getString(6)));
                 stocklist.add(stock);
             } while (cursor.moveToNext());
         }
@@ -355,6 +356,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(KEY_STOCK_QTY, stock.get_qty());
         values.put(KEY_STOCK_PER_PRICE, stock.get_unit_per_price());
         values.put(KEY_STOCK_PRICE, stock.get_price());
+        values.put(KEY_STOCK_DATE, stock.get_date()); // STOCK PRICE
         values.put(KEY_STOCK_STATUS, stock.get_status());
 
         System.out.println("======= values ======");
@@ -395,12 +397,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(KEY_STOCK_ID, sales.get_id()); // ID
-        values.put(KEY_STOCK_NAME, sales.get_name()); // NAME
-        values.put(KEY_STOCK_QTY, sales.get_qty()); //QTY
-        values.put(KEY_STOCK_PER_PRICE, sales.get_unit_per_price()); // PER UNIT PRICE
-        values.put(KEY_STOCK_PRICE, sales.get_price()); // STOCK PRICE
-        values.put(KEY_STOCK_STATUS, sales.get_status()); // STOCK PRICE
+        values.put(KEY_SALES_ID, sales.get_id()); // ID
+        values.put(KEY_SALES_NAME, sales.get_name()); // NAME
+        values.put(KEY_SALES_QTY, sales.get_qty()); //QTY
+        values.put(KEY_SALES_PER_PRICE, sales.get_unit_per_price()); // PER UNIT PRICE
+        values.put(KEY_SALES_PRICE, sales.get_price()); // STOCK PRICE
+        values.put(KEY_SALES_DATE, sales.get_price()); // STOCK PRICE
+        values.put(KEY_SALES_STATUS, sales.get_status()); // STOCK PRICE
 
         // Inserting Row
         db.insert(TABLE_SALES, null, values);
