@@ -3,6 +3,7 @@ package com.example.mind_android.bookingapp.activities;
 import android.app.Activity;
 import android.os.Bundle;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,11 +15,17 @@ import android.widget.SearchView;
 
 import com.example.mind_android.bookingapp.R;
 import com.example.mind_android.bookingapp.activities.dashboard_part.FormActivity;
+import com.example.mind_android.bookingapp.activities.dashboard_part.SalesActivity;
+import com.example.mind_android.bookingapp.adapter.SalesAdapter;
+import com.example.mind_android.bookingapp.beans.Sales;
+import com.example.mind_android.bookingapp.beans.Stock;
+import com.example.mind_android.bookingapp.storage.DatabaseHandler;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -26,6 +33,7 @@ import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 
+import static com.example.mind_android.bookingapp.Constant.CheckInternetConnection.isNetworkAvailable;
 import static com.example.mind_android.bookingapp.Constant.NetWorkClass.BASE_URL_NEW;
 
 import static com.example.mind_android.bookingapp.storage.MySharedPref.getData;
@@ -52,7 +60,13 @@ public class SaletemFragment extends android.app.DialogFragment {
         sv=(SearchView) rootView.findViewById(R.id.searchView1);
         btn=(Button) rootView.findViewById(R.id.dismiss);
 
+
+   if (isNetworkAvailable(getActivity().getApplicationContext()))
       getAllstocks(getActivity());
+   else
+   {
+       getAllStocksFromLocal();
+   }
 
 
 
@@ -116,11 +130,56 @@ public class SaletemFragment extends android.app.DialogFragment {
 
         return rootView;
     }
-    public  void getAllstocks(final Activity activity) {
+
+    private void getAllStocksFromLocal() {
         final List<String> stockList = new ArrayList<String>();
         final List<String> idlist = new ArrayList<String>();
 
+        DatabaseHandler db = new DatabaseHandler(getActivity().getApplicationContext());
+        JSONArray jArray = new JSONArray();
 
+        Log.d("Reading: ", "Reading all Stocks..");
+        List<Stock> stocks = db.getAllStocksExcept2();
+        try {
+            for (Stock cn : stocks) {
+                JSONObject jobj = new JSONObject();
+
+                String log = "Id: " + cn.get_id() +
+                        " ,Name: " + cn.get_name() +
+                        " ,qty: " + cn.get_qty() +
+                        " ,unit price : " + cn.get_unit_per_price() +
+                        " ,price : " + cn.get_price();
+                // Writing Contacts to log
+                Log.d("Name: ", log);
+
+
+                jobj.put("stock_id", cn.get_id());
+                jobj.put("stock_name", cn.get_name());
+                jobj.put("stock_qty", cn.get_qty());
+                jArray.put(jobj);
+
+                if (!cn.get_qty().equals("0")) {
+                    stockList.add(cn.get_name());
+                    idlist.add(String.valueOf(cn.get_id()));
+                }
+
+            }
+            stockArr = stockList.toArray(new String[stockList.size()]);
+            stockidArr = idlist.toArray(new String[idlist.size()]);
+            //CREATE AND SET ADAPTER TO LISTVIEW
+            adapter=new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1,stockArr);
+            lv.setAdapter(adapter);
+        } catch (JSONException e) {
+            e.printStackTrace();
+
+        }
+
+    }
+
+
+    public  void getAllstocks(final Activity activity) {
+        final List<String> stockList = new ArrayList<String>();
+        final List<String> idlist = new ArrayList<String>();
 
         final AsyncHttpClient client = new AsyncHttpClient();
         final RequestParams params = new RequestParams();

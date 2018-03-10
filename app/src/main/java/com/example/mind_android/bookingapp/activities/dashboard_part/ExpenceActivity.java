@@ -3,13 +3,11 @@ package com.example.mind_android.bookingapp.activities.dashboard_part;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -19,11 +17,9 @@ import android.widget.Toast;
 
 import com.example.mind_android.bookingapp.R;
 import com.example.mind_android.bookingapp.activities.BaseActivity;
-import com.example.mind_android.bookingapp.activities.EnterLoginActivity;
 import com.example.mind_android.bookingapp.activities.LoginActivity;
 import com.example.mind_android.bookingapp.adapter.StockAdapter;
 import com.example.mind_android.bookingapp.beans.Expense;
-import com.example.mind_android.bookingapp.beans.Stock;
 import com.example.mind_android.bookingapp.storage.DatabaseHandler;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -39,23 +35,18 @@ import cz.msebera.android.httpclient.Header;
 
 import static com.example.mind_android.bookingapp.Constant.CheckInternetConnection.isNetworkAvailable;
 import static com.example.mind_android.bookingapp.Constant.NetWorkClass.BASE_URL_NEW;
-import static com.example.mind_android.bookingapp.Constant.NetWorkClass.addExpense;
-import static com.example.mind_android.bookingapp.Constant.NetWorkClass.addStock;
 import static com.example.mind_android.bookingapp.Constant.NetWorkClass.deleteExpense;
-import static com.example.mind_android.bookingapp.Constant.NetWorkClass.deleteStock;
 import static com.example.mind_android.bookingapp.storage.MySharedPref.getData;
 import static com.example.mind_android.bookingapp.storage.MySharedPref.saveData;
 
 public class ExpenceActivity extends BaseActivity {
-    String total_amt = "0", price_unit = "0";
     ListView stocklist;
-    private int count;
-    private LinearLayout listLayout;
-    private ScrollView scrollview;
-    private static TextView total_amtTv;
     List<Expense> expense;
     DatabaseHandler db;
-    private String user_id="";
+    private TextView total_amtTv;
+    private LinearLayout listLayout;
+    private ScrollView scrollview;
+    private String user_id = "";
 
 
     @Override
@@ -64,23 +55,17 @@ public class ExpenceActivity extends BaseActivity {
         getLayoutInflater().inflate(R.layout.activity_expence, frameLayout);
 
         db = new DatabaseHandler(ExpenceActivity.this);
-        user_id =getData(ExpenceActivity.this,"user_id","");
+        user_id = getData(ExpenceActivity.this, "user_id", "");
 
         scrollview = findViewById(R.id.scrollview);
         listLayout = findViewById(R.id.listLayout);
         stocklist = findViewById(R.id.stocklist);
-        Button add_stock = findViewById(R.id.add_btn);
-        EditText item_nameEt = findViewById(R.id.item_nameTv);
-        EditText item_qtEt = findViewById(R.id.itemQuant_TV);
-        EditText itemPriceEt = (EditText) findViewById(R.id.item_price_tv);
-        EditText itemUnitPriceEt = findViewById(R.id.item_price_unit);
         total_amtTv = findViewById(R.id.total_amtTv);
 
         TextView addTv = findViewById(R.id.addTv);
 
 
-
-        Button reset_lay =findViewById(R.id.reset_lay);
+        Button reset_lay = findViewById(R.id.reset_lay);
 
         reset_lay.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -94,7 +79,7 @@ public class ExpenceActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(ExpenceActivity.this,
-                        ExpenseForm_Activity.class).putExtra("method_type","1")
+                        ExpenseForm_Activity.class).putExtra("method_type", "1")
                 );
 
             }
@@ -107,7 +92,7 @@ public class ExpenceActivity extends BaseActivity {
             public void onClick(View view) {
                 saveData(getApplicationContext(), "login", "0");
 
-                startActivity(new Intent(ExpenceActivity.this,LoginActivity.class));
+                startActivity(new Intent(ExpenceActivity.this, LoginActivity.class));
                 finishAffinity();
             }
         });
@@ -132,7 +117,7 @@ public class ExpenceActivity extends BaseActivity {
         ab.setNegativeButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-              resetExpanse();
+                resetExpanse();
                 dialog.dismiss();
             }
         });
@@ -171,11 +156,10 @@ public class ExpenceActivity extends BaseActivity {
                 ringProgressDialog.dismiss();
                 try {
 
-                    if (response.getString("status").equals("0"))
-                    {
+                    if (response.getString("status").equals("0")) {
                         scrollview.setVisibility(View.GONE);
                         stocklist.setVisibility(View.GONE);
-                        total_amtTv.setText("0.00");
+                        total_amtTv.setText(R.string.zerodouble);
                         Toast.makeText(ExpenceActivity.this,
                                 response.getString("message"), Toast.LENGTH_SHORT).show();
                     } else {
@@ -187,7 +171,7 @@ public class ExpenceActivity extends BaseActivity {
                         total_amtTv.setText(total_amt);
 
                         JSONArray jArray = response.getJSONArray("expanses");
-                        StockAdapter stockListAdapter = new StockAdapter(ExpenceActivity.this, jArray,"expense");
+                        StockAdapter stockListAdapter = new StockAdapter(ExpenceActivity.this, jArray, "expense");
                         stocklist.setAdapter(stockListAdapter);
                     }
                 } catch (Exception e) {
@@ -208,8 +192,7 @@ public class ExpenceActivity extends BaseActivity {
     }
 
 
-    private void resetExpanse()
-    {
+    private void resetExpanse() {
         final AsyncHttpClient client = new AsyncHttpClient();
         final RequestParams params = new RequestParams();
 
@@ -231,7 +214,7 @@ public class ExpenceActivity extends BaseActivity {
 
                     if (response.getString("status").equals("0")) {
                         stocklist.setVisibility(View.GONE);
-                        total_amtTv.setText("0.00");
+                        total_amtTv.setText(R.string.zerodouble);
 //                        Toast.makeText(StockActivity.this, response.getString("message"), Toast.LENGTH_SHORT).show();
                     } else {
                         stocklist.setVisibility(View.INVISIBLE);
@@ -242,12 +225,12 @@ public class ExpenceActivity extends BaseActivity {
             }
 
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-               ringProgressDialog.dismiss();
+                ringProgressDialog.dismiss();
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-              ringProgressDialog.dismiss();
+                ringProgressDialog.dismiss();
                 System.out.println(responseString);
             }
         });
@@ -271,13 +254,12 @@ public class ExpenceActivity extends BaseActivity {
     }
 
 
-
     public void showAllExpense() {
         if (isNetworkAvailable(ExpenceActivity.this)) {
 
             addUnregisteredExpense();
             deleteExpenseFromServer();
-           showExpense();
+            showExpense();
 
         } else {
             showExpenseFronLocal();
@@ -359,7 +341,7 @@ public class ExpenceActivity extends BaseActivity {
             System.out.println("=============== jArray from local ============");
             System.out.println(jArray);
 
-            StockAdapter stockListAdapter = new StockAdapter(ExpenceActivity.this, jArray,"expense");
+            StockAdapter stockListAdapter = new StockAdapter(ExpenceActivity.this, jArray, "expense");
             stocklist.setAdapter(stockListAdapter);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -367,37 +349,6 @@ public class ExpenceActivity extends BaseActivity {
         }
 
     }
-
-//    LayoutInflater inflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
-//    RelativeLayout root = (RelativeLayout) inflater.inflate
-//            (R.layout.activity_main, null); //RelativeLayout is root view of my UI(xml) file.
-//root.setDrawingCacheEnabled(true);
-//    Bitmap screen= getBitmapFromView(this.getWindow().findViewById
-//            (R.id.relativelayout)); // here give id of our root layout (here its my RelativeLayout's id)
-
-
-
-//try {
-//        Document  document = new Document();
-//
-//        PdfWriter.getInstance(document, new FileOutputStream(file));
-//        document.open();
-//        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-//        screen.compress(Bitmap.CompressFormat.PNG, 100, stream);
-//        byte[] byteArray = stream.toByteArray();
-//        addImage(document,byteArray);
-//        document.close();
-//    }
-//        catch (Exception e){
-//        e.printStackTrace();
-//    }}
-
-
-//    Intent intent = new Intent(Intent.ACTION_VIEW);
-//    Uri uri = Uri.fromFile(new File(pdfDir,  "pdfFileName"));
-// intent.setDataAndType(uri, "application/pdf");
-// intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-//    startActivity(intent);
 
 
 }

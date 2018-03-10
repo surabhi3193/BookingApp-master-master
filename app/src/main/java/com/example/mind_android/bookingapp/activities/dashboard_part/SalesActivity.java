@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -23,7 +22,6 @@ import com.example.mind_android.bookingapp.activities.BaseActivity;
 import com.example.mind_android.bookingapp.activities.LoginActivity;
 import com.example.mind_android.bookingapp.adapter.SalesAdapter;
 import com.example.mind_android.bookingapp.beans.Sales;
-import com.example.mind_android.bookingapp.beans.Stock;
 import com.example.mind_android.bookingapp.storage.DatabaseHandler;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -39,24 +37,20 @@ import cz.msebera.android.httpclient.Header;
 
 import static com.example.mind_android.bookingapp.Constant.CheckInternetConnection.isNetworkAvailable;
 import static com.example.mind_android.bookingapp.Constant.NetWorkClass.BASE_URL_NEW;
-import static com.example.mind_android.bookingapp.Constant.NetWorkClass.addStock;
-import static com.example.mind_android.bookingapp.Constant.NetWorkClass.deleteStock;
 import static com.example.mind_android.bookingapp.storage.MySharedPref.getData;
 import static com.example.mind_android.bookingapp.storage.MySharedPref.saveData;
 
 public class SalesActivity extends BaseActivity {
 
+    private  TextView total_amtTv;
     ListView stocklist;
-
     DatabaseHandler db;
     List<Sales> sales;
     String user_id;
     LinearLayout income_formLay;
     RelativeLayout bottom_lay;
+    Button reset_lay;
     private LinearLayout listLayout;
-    private static TextView total_amtTv;
-     Button reset_lay;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,14 +72,14 @@ public class SalesActivity extends BaseActivity {
         final EditText priceEt = findViewById(R.id.service_price);
         total_amtTv = findViewById(R.id.total_amtTv);
         income_formLay.setVisibility(View.GONE);
-          reset_lay =findViewById(R.id.reset_lay);
+        reset_lay = findViewById(R.id.reset_lay);
 
         saleTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                    startActivity(new Intent(SalesActivity.this, FormActivity.class)
-                            .putExtra("Activity", "saleStocks"));
+                startActivity(new Intent(SalesActivity.this, FormActivity.class)
+                        .putExtra("Activity", "saleStocks"));
 
 
             }
@@ -125,20 +119,22 @@ public class SalesActivity extends BaseActivity {
                     nameEt.setError("Field required");
                 }
 
-                if (service_amt.length() == 0 ) {
+                if (service_amt.length() == 0) {
                     priceEt.setError("Field required");
                 }
 
                 if (servicename.length() > 0 && service_amt.length() > 0) {
 
-                    FormActivity.addsale(SalesActivity.this,user_id, "", "", service_amt,
-                            "",servicename,"1");
+                    if (isNetworkAvailable(SalesActivity.this)) {
+                        FormActivity.addsale(SalesActivity.this, user_id, "", "", service_amt,
+                                "", servicename, "1", "");
+                    } else {
+                        FormActivity.addsaleToLocal(SalesActivity.this, servicename, "", service_amt, "", "1");
+                    }
                     showAllSales();
                 }
             }
         });
-
-
 
 
         reset_lay.setOnClickListener(new View.OnClickListener() {
@@ -170,7 +166,6 @@ public class SalesActivity extends BaseActivity {
     }
 
 
-
     public void resetSaleWarning() {
         AlertDialog.Builder ab = new AlertDialog.Builder
                 (SalesActivity.this, R.style.MyAlertDialogStyle1);
@@ -179,7 +174,11 @@ public class SalesActivity extends BaseActivity {
         ab.setNegativeButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                resetSale();
+
+                if (isNetworkAvailable(SalesActivity.this))
+                    resetSale();
+                else
+                    db.deleteAllSales();
                 dialog.dismiss();
             }
         });
@@ -194,8 +193,7 @@ public class SalesActivity extends BaseActivity {
 
     }
 
-    private void resetSale()
-    {
+    private void resetSale() {
         final AsyncHttpClient client = new AsyncHttpClient();
         final RequestParams params = new RequestParams();
 
@@ -203,6 +201,7 @@ public class SalesActivity extends BaseActivity {
         ringProgressDialog = ProgressDialog.show(SalesActivity.this, "Please wait ...",
                 "", true);
         ringProgressDialog.setCancelable(false);
+
         params.put("bk_userid", user_id);
 
         System.out.println(params);
@@ -213,17 +212,17 @@ public class SalesActivity extends BaseActivity {
                 System.out.println(" ************* show stock  response ***");
                 System.out.println(response);
                 stocklist.setVisibility(View.GONE);
-
-
+                db.deleteAllSales();
+                ringProgressDialog.dismiss();
             }
 
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-              ringProgressDialog.dismiss();
+                ringProgressDialog.dismiss();
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-               ringProgressDialog.dismiss();
+                ringProgressDialog.dismiss();
                 System.out.println(responseString);
             }
         });
@@ -246,10 +245,11 @@ public class SalesActivity extends BaseActivity {
 
                     if (response.getString("status").equals("0")) {
                         total_amtTv.setText("0");
-                     Toast.makeText(context, response.getString("message"), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, response.getString("message"), Toast.LENGTH_SHORT).show();
                     } else {
 
                         listLayout.setVisibility(View.VISIBLE);
+                        stocklist.setVisibility(View.VISIBLE);
 
                         String total_amt = response.getString("total");
                         total_amtTv.setText(total_amt);
@@ -258,9 +258,9 @@ public class SalesActivity extends BaseActivity {
 
                         SalesAdapter stockListAdapter = new SalesAdapter(SalesActivity.this, jArray);
                         stocklist.setAdapter(stockListAdapter);
+                        stockListAdapter.notifyDataSetChanged();
                     }
-                } catch (Exception e)
-                {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -296,15 +296,21 @@ public class SalesActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-      showAllSales();
+        showAllSales();
     }
 
     public void showAllSales() {
+        user_id = getData(SalesActivity.this, "user_id", "");
+
         if (isNetworkAvailable(SalesActivity.this)) {
 
-            addUnregisteredStock();
-            deleteStockFromServer();
-            user_id = getData(SalesActivity.this, "user_id", "");
+            int count = db.getSalesCount();
+            if (count == 0) {
+                resetSale();
+            } else {
+                addUnregisteredSale();
+                deleteStockFromServer();
+            }
             showSale(SalesActivity.this, user_id);
 
         } else {
@@ -333,7 +339,7 @@ public class SalesActivity extends BaseActivity {
         }
     }
 
-    private void addUnregisteredStock() {
+    private void addUnregisteredSale() {
         sales = db.getAllSalesWith0();
         System.out.println("================ stocks with 0 status ========");
         System.out.println(sales);
@@ -348,7 +354,7 @@ public class SalesActivity extends BaseActivity {
             Log.d("Name: ", log);
             FormActivity.addsale(SalesActivity.this, user_id, cn.get_unit_per_price(),
                     cn.get_qty(), cn.get_price(),
-                    String.valueOf(cn.get_id()), cn.get_name(), "1");
+                    String.valueOf(cn.get_id()), cn.get_name(), cn.get_sale_type(), "local");
 
         }
     }
@@ -375,10 +381,12 @@ public class SalesActivity extends BaseActivity {
 
 
                 jobj.put("stock_id", cn.get_id());
-                jobj.put("stock_name", cn.get_name());
-                jobj.put("stock_qty", cn.get_qty());
-                jobj.put("stock_per_price", cn.get_unit_per_price());
-                jobj.put("stock_price", cn.get_price());
+                jobj.put("sale_stock_name", cn.get_name());
+                jobj.put("sale_stock_qty", cn.get_qty());
+                jobj.put("sale_date", cn.get_date());
+                jobj.put("stock_type", cn.get_sale_type());
+
+                jobj.put("sale_price", cn.get_price());
                 jArray.put(jobj);
                 double price = Double.parseDouble(cn.get_price());
 
@@ -386,12 +394,14 @@ public class SalesActivity extends BaseActivity {
             }
 
             String amount = String.valueOf(total);
+            total_amtTv.setText(amount);
 
             System.out.println("=============== jArray from local ============");
             System.out.println(jArray);
 
             SalesAdapter stockListAdapter = new SalesAdapter(SalesActivity.this, jArray);
             stocklist.setAdapter(stockListAdapter);
+            stockListAdapter.notifyDataSetChanged();
         } catch (JSONException e) {
             e.printStackTrace();
 

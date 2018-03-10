@@ -30,6 +30,7 @@ import org.json.JSONObject;
 import cz.msebera.android.httpclient.Header;
 
 import static com.example.mind_android.bookingapp.Constant.NetWorkClass.BASE_URL_NEW;
+import static com.example.mind_android.bookingapp.activities.BaseActivity.image;
 import static com.example.mind_android.bookingapp.storage.MySharedPref.saveData;
 
 public class LoginActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, View.OnClickListener {
@@ -224,7 +225,7 @@ client.setConnectTimeout(30000);
                         String bus_type = response.getString("business_type");
                         String bus_email = response.getString("business_email");
                         String user_image = response.getString("user_pic");
-
+                        saveData(LoginActivity.this,"user_image",user_image);
                         Toast.makeText(getApplicationContext(), "Login Successfully", Toast.LENGTH_SHORT).show();
 
                         saveData(getApplicationContext(), "login", "1");
@@ -315,7 +316,6 @@ client.setConnectTimeout(30000);
 
                 System.out.println("========== selected country =========");
                 System.out.println(name + " / " + code + "/" + dialCode);
-                code = dialCode;
                 spin.setText(dialCode);
                 picker.dismiss();
             }

@@ -7,25 +7,18 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.mind_android.bookingapp.activities.dashboard_part.ExpenceActivity;
-import com.example.mind_android.bookingapp.activities.dashboard_part.ExpenseForm_Activity;
-import com.example.mind_android.bookingapp.activities.dashboard_part.SalesActivity;
 import com.example.mind_android.bookingapp.activities.dashboard_part.StockActivity;
 import com.example.mind_android.bookingapp.beans.Expense;
-import com.example.mind_android.bookingapp.beans.Sales;
 import com.example.mind_android.bookingapp.beans.Stock;
 import com.example.mind_android.bookingapp.storage.DatabaseHandler;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.sql.SQLDataException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -36,15 +29,14 @@ import static com.example.mind_android.bookingapp.storage.MySharedPref.getData;
  */
 
 public class NetWorkClass extends AppCompatActivity {
-//    public  static  String BASE_URL_NEW ="http://mindlbs.com/BookKeeping/index.php/Webservice/";
-    public  static  String BASE_URL_NEW ="http://18.218.89.83/BookKeeping/index.php/Webservice/";
+    //    public  static  String BASE_URL_NEW ="http://mindlbs.com/BookKeeping/index.php/Webservice/";
+    public static String BASE_URL_NEW = "http://18.218.89.83/BookKeeping/index.php/Webservice/";
 
-    DatabaseHandler db  = new DatabaseHandler(NetWorkClass.this);
+    DatabaseHandler db = new DatabaseHandler(NetWorkClass.this);
 
     public static void addStock(final Activity context, final String bk_userid, final String stock_name, final String stock_qty, final
     String stock_amount, final String method_type, final String stock_per_price,
-                                final String stock_id, final String local)
-    {
+                                final String stock_id, final String local) {
         final AsyncHttpClient client = new AsyncHttpClient();
         final RequestParams params = new RequestParams();
 
@@ -65,8 +57,7 @@ public class NetWorkClass extends AppCompatActivity {
 
         client.post(BASE_URL_NEW + "add_stock", params, new JsonHttpResponseHandler() {
 
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response)
-            {
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 System.out.println(" ************* add response ***");
                 System.out.println(response);
 
@@ -76,46 +67,44 @@ public class NetWorkClass extends AppCompatActivity {
                         ringProgressDialog.dismiss();
                         Toast.makeText(context, response.getString("message"), Toast.LENGTH_SHORT).show();
 
-                    } else
-                    {
+                    } else {
                         DatabaseHandler db = new DatabaseHandler(context);
                         JSONObject obj = response.getJSONObject("stocks");
-                        int id= Integer.parseInt(obj.getString("stock_id"));
-                        String name= obj.getString("stock_name");
-                        String qty= obj.getString("stock_qty");
-                        String unit_price= obj.getString("stock_per_price");
-                        String price= obj.getString("stock_price");
-                        int status=1;
-                        SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyy_HHmmss");
+                        int id = Integer.parseInt(obj.getString("stock_id"));
+                        String name = obj.getString("stock_name");
+                        String qty = obj.getString("stock_qty");
+                        String unit_price = obj.getString("stock_per_price");
+                        String price = obj.getString("stock_price");
+                        String total = obj.getString("stock_price");
+                        int status = 1;
+                        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
                         String currentDateandTime = sdf.format(new Date());
 
-                        if (method_type.equals("1"))
-                        {
+                        if (method_type.equals("1")) {
                             Log.d("Updating: ", "Updating .. Stock");
-                            if (local.equals("local"))
-                            {
-                                db.updateStock(new Stock(id,name,qty,unit_price,price,currentDateandTime,status),stock_id);
+                            if (local.equals("local")) {
+                                db.updateStock(new Stock(id, name, qty, unit_price, price, currentDateandTime, total,status), stock_id);
                                 ringProgressDialog.dismiss();
-                            }
-                            else
-                            {
+                            } else {
                                 ringProgressDialog.dismiss();
-//                                    db.addStock(new Stock(id, name, qty, unit_price, price, currentDateandTime, status));
+
+                                boolean isExist = db.checkStock(name);
+                                if (isExist)
+                                    db.updateStock(new Stock(id, name, qty, unit_price, price, currentDateandTime,total, status), stock_id);
+                                else
+                                    db.addStock(new Stock(id, name, qty, unit_price, price, currentDateandTime,total, status));
 
 
-                                Toast.makeText(context,"Added Successfully",Toast.LENGTH_SHORT).show();
-                                context.onBackPressed();
+                                Toast.makeText(context, "Added Successfully", Toast.LENGTH_SHORT).show();
                             }
-                        }
-
-                        else if (method_type.equals("2"))
-                        {
+                        } else if (method_type.equals("2")) {
                             ringProgressDialog.dismiss();
                             Log.d("Update: ", "Updating .. Stock");
-                            db.updateStock(new Stock(id,name,qty,unit_price,price,currentDateandTime,status), stock_id);
-                            context.onBackPressed();
+                            db.updateStock(new Stock(id, name, qty, unit_price, price, currentDateandTime,total, status), stock_id);
                         }
 
+                        if (!local.equalsIgnoreCase("local"))
+                            context.onBackPressed();
                     }
                 } catch (Exception e) {
                     ringProgressDialog.dismiss();
@@ -139,12 +128,11 @@ public class NetWorkClass extends AppCompatActivity {
     }
 
 
-    public static void addExpense(final Activity context,final  String bk_userid,
-                                  final  String stock_name,final String expanse_type,
-                                  final String expense_desc ,final String expense_date
-                                  ,final String stock_price,final String method_type,
-                                  final String expense_id,final String local)
-    {
+    public static void addExpense(final Activity context, final String bk_userid,
+                                  final String stock_name, final String expanse_type,
+                                  final String expense_desc, final String expense_date
+            , final String stock_price, final String method_type,
+                                  final String expense_id, final String local) {
         final AsyncHttpClient client = new AsyncHttpClient();
         final RequestParams params = new RequestParams();
 
@@ -166,45 +154,35 @@ public class NetWorkClass extends AppCompatActivity {
 
         client.post(BASE_URL_NEW + "add_expanse", params, new JsonHttpResponseHandler() {
 
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response)
-            {
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 System.out.println(" ************* add response ***");
                 System.out.println(response);
                 ringProgressDialog.dismiss();
                 try {
-                    if (response.getString("status").equals("0"))
-                    {
+                    if (response.getString("status").equals("0")) {
                         Toast.makeText(context, response.getString("message"), Toast.LENGTH_SHORT).show();
 
-                    } else
-                    {
+                    } else {
                         DatabaseHandler db = new DatabaseHandler(context);
                         String id = response.getString("expense_id");
-                        String date =response.getString("expanse_date");
+                        String date = response.getString("expanse_date");
 
-                        if (method_type.equals("1"))
-                        {
+                        if (method_type.equals("1")) {
                             Log.d("Updating: ", "Updating .. Stock");
-                            if (local.equals("local"))
-                            {
-                                db.updateExpense(new Expense(Integer.parseInt(id),stock_name,date,stock_price,1),expense_id);
+                            if (local.equals("local")) {
+                                db.updateExpense(new Expense(Integer.parseInt(id), stock_name, date, stock_price, 1), expense_id);
                                 ringProgressDialog.dismiss();
-                            }
-                            else
-                            {
+                            } else {
                                 ringProgressDialog.dismiss();
-                                db.addExpense(new Expense(Integer.parseInt(id),stock_name,date,stock_price,1));
+                                db.addExpense(new Expense(Integer.parseInt(id), stock_name, date, stock_price, 1));
 
-                                Toast.makeText(context,"Added Successfully",Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, "Added Successfully", Toast.LENGTH_SHORT).show();
                                 context.onBackPressed();
                             }
-                        }
-
-                        else if (method_type.equals("2"))
-                        {
+                        } else if (method_type.equals("2")) {
                             ringProgressDialog.dismiss();
                             Log.d("Update: ", "Updating .. Stock");
-                            db.updateExpense(new Expense(Integer.parseInt(id),stock_name,date,stock_price,1),expense_id);
+                            db.updateExpense(new Expense(Integer.parseInt(id), stock_name, date, stock_price, 1), expense_id);
                             context.onBackPressed();
                         }
                     }

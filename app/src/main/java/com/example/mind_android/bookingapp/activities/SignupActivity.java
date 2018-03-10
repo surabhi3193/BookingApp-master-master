@@ -1,6 +1,5 @@
 package com.example.mind_android.bookingapp.activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -8,10 +7,8 @@ import android.view.Menu;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,10 +32,10 @@ import static com.example.mind_android.bookingapp.Constant.NetWorkClass.BASE_URL
 
 public class SignupActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, View.OnClickListener {
 
-    EditText  phoneNoET, passEt, cPasswordEt;
+    EditText phoneNoET, passEt, cPasswordEt;
     TextView spin;
-    String cpassword,phone,password,code;
-    int count =0;
+    String cpassword, phone, password, code;
+    int count = 0;
     private RelativeLayout next_signup;
 
     public static boolean isMatch(String s, String patt) {
@@ -54,13 +51,12 @@ public class SignupActivity extends AppCompatActivity implements AdapterView.OnI
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         System.out.println("============== onCreate============");
-         next_signup = findViewById(R.id.next_signup);
+        next_signup = findViewById(R.id.next_signup);
 
 
         phoneNoET = findViewById(R.id.phoneEt);
         passEt = findViewById(R.id.passEt);
         cPasswordEt = findViewById(R.id.cPassEt);
-
 
 
         next_signup.setOnClickListener(new View.OnClickListener() {
@@ -72,7 +68,7 @@ public class SignupActivity extends AppCompatActivity implements AdapterView.OnI
         });
 
 
-         spin = findViewById(R.id.spinner1);
+        spin = findViewById(R.id.spinner1);
         spin.setOnClickListener(this);
 
     }
@@ -80,34 +76,30 @@ public class SignupActivity extends AppCompatActivity implements AdapterView.OnI
     private void nextActivity() {
 
 
-         phone = phoneNoET.getText().toString();
-         code=spin.getText().toString();
-         password = passEt.getText().toString();
-         cpassword = cPasswordEt.getText().toString();
+        phone = phoneNoET.getText().toString();
+        code = spin.getText().toString();
+        password = passEt.getText().toString();
+        cpassword = cPasswordEt.getText().toString();
 
 
+        if (code.length() == 0)
+            Toast.makeText(getApplicationContext(), "Select Dial Code", Toast.LENGTH_SHORT).show();
 
-        if (code.length()==0)
-         Toast.makeText(getApplicationContext(),"Select Dial Code",Toast.LENGTH_SHORT).show();
-
-        if (phone.length()==0)
+        if (phone.length() == 0)
             phoneNoET.setError("Field Required");
 
-        if (password.length()==0)
+        if (password.length() == 0)
             passEt.setError("Field Required");
 
-       if (cpassword.length()==0)
+        if (cpassword.length() == 0)
             cPasswordEt.setError("Field Required");
 
-     if (password.length()>0 && cpassword.length()>0 && password.equals(cpassword)) {
-         if (count == 0)
-         {
+        if (password.length() > 0 && cpassword.length() > 0 && password.equals(cpassword)) {
+            if (count == 0) {
 
-             sendOtp(phone, code, password);
-         }
-     }
-        else
-        {
+                sendOtp(phone, code, password);
+            }
+        } else {
             cPasswordEt.setError("Password Mismatch");
         }
 
@@ -137,7 +129,7 @@ public class SignupActivity extends AppCompatActivity implements AdapterView.OnI
 
     @Override
     public void onBackPressed() {
-        startActivity(new Intent(SignupActivity.this,LoginActivity.class));
+        startActivity(new Intent(SignupActivity.this, LoginActivity.class));
         finish();
     }
 
@@ -157,28 +149,25 @@ public class SignupActivity extends AppCompatActivity implements AdapterView.OnI
             public void onSelectCountry(String name, String code, String dialCode, int flagDrawableResID) {
 
                 System.out.println("========== selected country =========");
-                System.out.println(name + " / " + code + "/" +dialCode);
+                System.out.println(name + " / " + code + "/" + dialCode);
                 spin.setText(dialCode);
                 picker.dismiss();
             }
         });
     }
 
-
-
-    public  void sendOtp( final  String phone, final  String code, final  String password) {
+    public void sendOtp(final String phone, final String code, final String password) {
         AsyncHttpClient client = new AsyncHttpClient();
-        RequestParams params  = new RequestParams();
+        RequestParams params = new RequestParams();
 
-        params.put("business_phone",code+phone);
+        params.put("business_phone", code + phone);
         params.put("business_pass", password);
 
         System.out.println(params);
 
         client.post(BASE_URL_NEW + "send_otp", params, new JsonHttpResponseHandler() {
 
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response)
-            {
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 System.out.println(" ************* signup response ***");
                 System.out.println(response);
 //                ringProgressDialog.dismiss();
@@ -188,18 +177,17 @@ public class SignupActivity extends AppCompatActivity implements AdapterView.OnI
                         Toast.makeText(getApplicationContext(),
                                 response.getString("message"), Toast.LENGTH_SHORT).show();
 
-                    } else
-                    {
+                    } else {
                         System.out.println("======= otp sent successfully ============");
 
                         count++;
                         next_signup.setBackground(getResources().getDrawable(R.drawable.grey_rect_btn));
                         String userid = response.getString("bk_userid");
-                                startActivity(new Intent(SignupActivity.this, Sms.class)
-                                .putExtra("phone",phone)
-                                .putExtra("code",code)
-                                .putExtra("password",password)
-                                .putExtra("user_id",userid));
+                        startActivity(new Intent(SignupActivity.this, Sms.class)
+                                .putExtra("phone", phone)
+                                .putExtra("code", code)
+                                .putExtra("password", password)
+                                .putExtra("user_id", userid));
 
                         finish();
 

@@ -7,6 +7,9 @@ public class Sales {
     String _qty;
     String _unit_per_price;
     String _price;
+    String _sale_type;
+    String _date;
+    String _sale_total;
     int _status;
 
     // Empty constructor
@@ -15,12 +18,15 @@ public class Sales {
 
     // constructor
     public Sales(int id, String name, String _qty, String _unit_per_price
-            , String _price, int _status) {
+            , String _price,String _sale_type,String _date,String _sale_total, int _status) {
         this._id = id;
         this._name = name;
         this._qty = _qty;
         this._unit_per_price = _unit_per_price;
         this._price = _price;
+        this._sale_type = _sale_type;
+        this._date = _date;
+        this._sale_total = _sale_total;
         this._status = _status;
     }
 
@@ -28,6 +34,22 @@ public class Sales {
     public Sales(String name, String _price) {
         this._name = name;
         this._price = _price;
+    }
+
+    public String get_sale_total() {
+        return _sale_total;
+    }
+
+    public void set_sale_total(String _sale_total) {
+        this._sale_total = _sale_total;
+    }
+
+    public String get_sale_type() {
+        return _sale_type;
+    }
+
+    public void set_sale_type(String _sale_type) {
+        this._sale_type = _sale_type;
     }
 
     public int get_id() {
@@ -76,5 +98,13 @@ public class Sales {
 
     public void set_status(int _status) {
         this._status = _status;
+    }
+
+    public String get_date() {
+        return _date;
+    }
+
+    public void set_date(String _date) {
+        this._date = _date;
     }
 }

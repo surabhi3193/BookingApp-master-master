@@ -1,10 +1,8 @@
 package com.example.mind_android.bookingapp.activities.dashboard_part;
 
-import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
@@ -41,11 +39,9 @@ import static com.example.mind_android.bookingapp.storage.MySharedPref.getData;
 public class SummaryReport extends AppCompatActivity {
 
     private List<TransectionSummary> summaryList = new ArrayList<>();
-    private RecyclerView recyclerView;
     private SummaryAdapter mAdapter;
     private String user_id;
     private Spinner spinner;
-    private TextView filter_btn;
     private TextView fromTV, toTV;
 
     @Override
@@ -54,11 +50,11 @@ public class SummaryReport extends AppCompatActivity {
         setContentView(R.layout.activity_summary_report);
         user_id = getData(SummaryReport.this, "user_id", "");
         spinner = findViewById(R.id.spinner);
-        filter_btn = findViewById(R.id.filter_btn);
+        TextView filter_btn = findViewById(R.id.filter_btn);
         fromTV = findViewById(R.id.fromTV);
         toTV = findViewById(R.id.toTv);
 
-        recyclerView = (RecyclerView) findViewById(R.id.transection_LV);
+        RecyclerView recyclerView = findViewById(R.id.transection_LV);
 
         ImageView back_btn = findViewById(R.id.back_btn);
 
@@ -78,7 +74,7 @@ public class SummaryReport extends AppCompatActivity {
         categList.add("Loan");//5
         categList.add("Bank");//6
 
-        final ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(
+        final ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(
                 SummaryReport.this, R.layout.spinner_item, categList);
 
         spinnerArrayAdapter.setDropDownViewResource(R.layout.spinner_item);
@@ -91,7 +87,7 @@ public class SummaryReport extends AppCompatActivity {
                 DividerItemDecoration.VERTICAL));
         recyclerView.setAdapter(mAdapter);
 
-        getReport(user_id,"","","");
+        getReport(user_id, "", "", "");
         final Calendar myCalendar = Calendar.getInstance();
 
         final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
@@ -144,7 +140,7 @@ public class SummaryReport extends AppCompatActivity {
         filter_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String start = "", end = "", type = "";
+                String start, end, type;
 
                 start = fromTV.getText().toString();
                 end = toTV.getText().toString();
@@ -167,17 +163,18 @@ public class SummaryReport extends AppCompatActivity {
                     case "Bank":
                         type = "6";
                         break;
-                        default:
-                            type="";
-                            break;
+                    default:
+                        type = "";
+                        break;
                 }
 
-                getReport(user_id,start,end,type);
+                getReport(user_id, start, end, type);
             }
         });
 
 
     }
+
     private void getReport(final String user_id, String start, String end, String type) {
 
         final AsyncHttpClient client = new AsyncHttpClient();
@@ -188,8 +185,6 @@ public class SummaryReport extends AppCompatActivity {
                 "Loading..", true);
         ringProgressDialog.setCancelable(false);
 
-        @SuppressLint("HardwareIds") String android_id = Settings.Secure.getString(getContentResolver(),
-                Settings.Secure.ANDROID_ID);
 
         params.put("bk_userid", user_id);
         params.put("filter_value", type);
@@ -207,19 +202,17 @@ public class SummaryReport extends AppCompatActivity {
                 try {
 
                     if (response.getString("status").equals("1")) {
-                        JSONArray jArray = new JSONArray();
+                        JSONArray jArray;
 
                         jArray = response.getJSONArray("result");
 
-                        if (jArray.length() > 0)
-                        {
+                        if (jArray.length() > 0) {
                             summaryList.clear();
                             TransectionSummary summary;
                             for (int i = 0; i < jArray.length(); i++)
 
                             {
                                 JSONObject obj = jArray.getJSONObject(i);
-                                String id = obj.getString("id");
                                 String name = obj.getString("name");
                                 String qty = obj.getString("qty");
                                 String per_price = obj.getString("per_price");
@@ -228,15 +221,13 @@ public class SummaryReport extends AppCompatActivity {
                                 String type = obj.getString("type");
                                 String trans_type = obj.getString("transaction_type");
 
-                                summary = new TransectionSummary(name, qty, per_price, amount, type,trans_type, date);
+                                summary = new TransectionSummary(name, qty, per_price, amount, type, trans_type, date);
                                 summaryList.add(summary);
                             }
 
                             mAdapter.notifyDataSetChanged();
 
-                        }
-                        else
-                        {
+                        } else {
                             summaryList.clear();
                             mAdapter.notifyDataSetChanged();
 

@@ -1,7 +1,6 @@
 package com.example.mind_android.bookingapp.activities.dashboard_part;
 
 import android.app.DatePickerDialog;
-import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -18,9 +17,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.mind_android.bookingapp.R;
-import com.example.mind_android.bookingapp.activities.BanktemFragment;
-import com.example.mind_android.bookingapp.activities.BaseActivity;
-import com.example.mind_android.bookingapp.activities.SaletemFragment;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -40,18 +36,16 @@ import static com.example.mind_android.bookingapp.Constant.NetWorkClass.BASE_URL
 import static com.example.mind_android.bookingapp.storage.MySharedPref.getData;
 
 public class BankFormActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+    public static String bank_name = "", bank_id = "";
+    static String[] bankArr = {};
+    static String[] bankidArr = {};
     private String[] bussiness = {"Transaction Type", "Deposit", "Withdrawal",};
-    private EditText  bankamountEt;
-
+    private EditText bankamountEt;
     private TextView dateTv;
-    private Spinner spin,spinner;
+    private Spinner spin, spinner;
     private LinearLayout bank_form;
     private String trans_type = "0";
-    public static  String bank_name= "",bank_id="";
-
-    List<String> categList;
-    static String[]bankArr = {};
-    static String[]bankidArr = {};
+    private List<String> categList;
     private LinearLayout addbank_lay;
     private EditText bank_nameEt;
     private Button addbankName_Btn;
@@ -63,17 +57,18 @@ public class BankFormActivity extends AppCompatActivity implements AdapterView.O
         setContentView(R.layout.activity_bank_form);
         bank_form = findViewById(R.id.bank_form);
         spinner = findViewById(R.id.spinner);
-        addbank_lay =findViewById(R.id.addbank_lay);
-        addbankName_Btn =findViewById(R.id.addbank_btn);
-        bank_nameEt =findViewById(R.id.bank_nameEt);
+        addbank_lay = findViewById(R.id.addbank_lay);
+        addbankName_Btn = findViewById(R.id.addbank_btn);
+        bank_nameEt = findViewById(R.id.bank_nameEt);
 
 
         Bundle bundle = getIntent().getExtras();
 
         if (bundle != null) {
-            String type = "";
+            String type;
             type = bundle.getString("form");
 
+            assert type != null;
             switch (type) {
                 case "bank_form":
 
@@ -111,23 +106,20 @@ public class BankFormActivity extends AppCompatActivity implements AdapterView.O
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-               bank_name=spinner.getSelectedItem().toString();
+                bank_name = spinner.getSelectedItem().toString();
 
                 System.out.println("= bank name =======");
                 System.out.println(bank_name);
-               if (bank_name.equalsIgnoreCase("Add Bank"))
-               {
-                   addbank_lay.setVisibility(View.VISIBLE);
-                   bank_form.setVisibility(View.GONE);
-                   performaddBankAction();
-               }
-               else
-               {
-                   bank_id=bankidArr[position];
-                   addbank_lay.setVisibility(View.GONE);
-                   bank_form.setVisibility(View.VISIBLE);
+                if (bank_name.equalsIgnoreCase("Add Bank")) {
+                    addbank_lay.setVisibility(View.VISIBLE);
+                    bank_form.setVisibility(View.GONE);
+                    performaddBankAction();
+                } else {
+                    bank_id = bankidArr[position];
+                    addbank_lay.setVisibility(View.GONE);
+                    bank_form.setVisibility(View.VISIBLE);
 
-               }
+                }
             }
 
             @Override
@@ -145,7 +137,7 @@ public class BankFormActivity extends AppCompatActivity implements AdapterView.O
 //        });
 
         spin.setOnItemSelectedListener(this);
-        ArrayAdapter aa = new ArrayAdapter(this, R.layout.spinner_items, bussiness);
+        ArrayAdapter aa = new ArrayAdapter(BankFormActivity.this, R.layout.spinner_items, bussiness);
         aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spin.setAdapter(aa);
 
@@ -226,8 +218,7 @@ public class BankFormActivity extends AppCompatActivity implements AdapterView.O
         });
     }
 
-    private void addTransection(String name, String amount, String cdate, String trans_type)
-    {
+    private void addTransection(String name, String amount, String cdate, String trans_type) {
         final AsyncHttpClient client = new AsyncHttpClient();
         final RequestParams params = new RequestParams();
 
@@ -308,8 +299,8 @@ public class BankFormActivity extends AppCompatActivity implements AdapterView.O
 
     private void getBankList() {
 
-        final List<String> banklist = new ArrayList<String>();
-        final List<String> idlist = new ArrayList<String>();
+        final List<String> banklist = new ArrayList<>();
+        final List<String> idlist = new ArrayList<>();
         final AsyncHttpClient client = new AsyncHttpClient();
         final RequestParams params = new RequestParams();
 
@@ -329,38 +320,37 @@ public class BankFormActivity extends AppCompatActivity implements AdapterView.O
 
                         categList.add("Add Bank");
                         categList.add("Select Bank");
-                        final ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(
+                        final ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(
                                 BankFormActivity.this, R.layout.spinner_item, categList);
 
                         spinnerArrayAdapter.setDropDownViewResource(R.layout.spinner_item);
                         spinner.setAdapter(spinnerArrayAdapter);
 
-                    }
-                    else {
+                    } else {
 
 
-                            JSONArray jArray = response.getJSONArray("banks");
+                        JSONArray jArray = response.getJSONArray("banks");
                         categList.add("Select Bank");
 
-                            for (int i = 0; i < jArray.length(); i++) {
-                                String expenses_name = jArray.getJSONObject(i)
-                                        .getString("bank_name");
+                        for (int i = 0; i < jArray.length(); i++) {
+                            String expenses_name = jArray.getJSONObject(i)
+                                    .getString("bank_name");
 
-                                String id = jArray.getJSONObject(i)
-                                        .getString("bank_id");
+                            String id = jArray.getJSONObject(i)
+                                    .getString("bank_id");
 
 
-                                banklist.add(expenses_name);
-                                idlist.add(id);
-                                categList.add(expenses_name);
-                            }
+                            banklist.add(expenses_name);
+                            idlist.add(id);
+                            categList.add(expenses_name);
+                        }
                         categList.add("Add Bank");
 
                         idlist.add("xx");
 
                         bankArr = banklist.toArray(new String[banklist.size()]);
                         bankidArr = idlist.toArray(new String[idlist.size()]);
-                        final ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(
+                        final ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(
                                 BankFormActivity.this, R.layout.spinner_item, categList);
 
                         spinnerArrayAdapter.setDropDownViewResource(R.layout.spinner_item);
@@ -387,11 +377,10 @@ public class BankFormActivity extends AppCompatActivity implements AdapterView.O
             public void onClick(View v) {
                 String name = bank_nameEt.getText().toString();
 
-                if (name.length()==0)
+                if (name.length() == 0)
                     bank_nameEt.setError("Name Required");
 
-                else
-                {
+                else {
                     bank_nameEt.setError(null);
                     addBank(name);
                 }
@@ -399,8 +388,7 @@ public class BankFormActivity extends AppCompatActivity implements AdapterView.O
         });
     }
 
-    private void addBank(String name)
-    {
+    private void addBank(String name) {
 
         final AsyncHttpClient client = new AsyncHttpClient();
         final RequestParams params = new RequestParams();
@@ -411,7 +399,7 @@ public class BankFormActivity extends AppCompatActivity implements AdapterView.O
                 "Loading..", true);
         ringProgressDialog.setCancelable(false);
 
-        String user_id = getData(BankFormActivity.this,"user_id","");
+        String user_id = getData(BankFormActivity.this, "user_id", "");
         params.put("bk_userid", user_id);
         params.put("bank_name", name);
 
@@ -425,17 +413,14 @@ public class BankFormActivity extends AppCompatActivity implements AdapterView.O
                 ringProgressDialog.dismiss();
                 try {
 
-                    if (response.getString("status").equals("1"))
-                    {
-                        Toast.makeText(BankFormActivity.this,"Bank added in your list",
+                    if (response.getString("status").equals("1")) {
+                        Toast.makeText(BankFormActivity.this, "Bank added in your list",
                                 Toast.LENGTH_SHORT).show();
                         addbank_lay.setVisibility(View.GONE);
                         bank_form.setVisibility(View.VISIBLE);
                         getBankList();
-                    }
-                    else
-                    {
-                        Toast.makeText(BankFormActivity.this,response.getString("message"),
+                    } else {
+                        Toast.makeText(BankFormActivity.this, response.getString("message"),
                                 Toast.LENGTH_SHORT).show();
                     }
 
@@ -457,5 +442,4 @@ public class BankFormActivity extends AppCompatActivity implements AdapterView.O
             }
         });
     }
-
 }

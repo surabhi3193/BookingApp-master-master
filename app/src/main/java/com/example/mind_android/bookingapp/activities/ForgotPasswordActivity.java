@@ -18,11 +18,11 @@ import org.json.JSONObject;
 import cz.msebera.android.httpclient.Header;
 
 import static com.example.mind_android.bookingapp.Constant.NetWorkClass.BASE_URL_NEW;
-import static com.example.mind_android.bookingapp.storage.MySharedPref.getData;
 
 public class ForgotPasswordActivity extends AppCompatActivity {
 
-    private  String user_id="";
+    private String user_id = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,9 +32,9 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         final TextView passEt = findViewById(R.id.passEt);
         final TextView confirmEt = findViewById(R.id.confirmEt);
 
-                Bundle bundle= getIntent().getExtras();
-        if (bundle!=null) {
-              user_id = bundle.getString("user_id");
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            user_id = bundle.getString("user_id");
         }
 
 
@@ -49,11 +49,8 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                     passEt.setError(null);
                     confirmEt.setError(null);
                     updatePassword(pass, user_id);
-                }
-                else
-                {
-                    if (pass.length()==0)
-                    {
+                } else {
+                    if (pass.length() == 0) {
                         passEt.setError("Field required");
                     }
 

@@ -38,15 +38,15 @@ import static com.example.mind_android.bookingapp.Constant.NetWorkClass.deleteSt
 import static com.example.mind_android.bookingapp.storage.MySharedPref.getData;
 
 public class StockActivity extends BaseActivity {
-    private static ListView stocklist;
-    private static LinearLayout listLayout;
-    private static TextView total_amtTv;
+    private  ListView stocklist;
+    private  LinearLayout listLayout;
+    private  TextView total_amtTv;
     DatabaseHandler db;
     List<Stock> stocks;
     String user_id;
 
 
-    private static void showStock(final Activity context, String user_id) {
+    private  void showStock(final Activity context, String user_id) {
         final AsyncHttpClient client = new AsyncHttpClient();
         final RequestParams params = new RequestParams();
 
@@ -63,7 +63,7 @@ public class StockActivity extends BaseActivity {
 
                     if (response.getString("status").equals("0")) {
                         stocklist.setVisibility(View.GONE);
-                        total_amtTv.setText("0.00");
+                        total_amtTv.setText(R.string.zerodouble);
 //                        Toast.makeText(StockActivity.this, response.getString("message"), Toast.LENGTH_SHORT).show();
                     } else {
 
@@ -75,6 +75,7 @@ public class StockActivity extends BaseActivity {
                         JSONArray jArray = response.getJSONArray("stocks");
                         StockAdapter stockListAdapter = new StockAdapter(context, jArray, "stocks");
                         stocklist.setAdapter(stockListAdapter);
+                        stockListAdapter.notifyDataSetChanged();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -148,7 +149,14 @@ public class StockActivity extends BaseActivity {
         ab.setNegativeButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+
+                if (isNetworkAvailable(StockActivity.this))
                 resetStock();
+                else {
+                    db.deleteAllStocks();
+                    stocklist.setVisibility(View.GONE);
+                }
+
                 dialog.dismiss();
             }
         });
@@ -185,9 +193,10 @@ public class StockActivity extends BaseActivity {
 
                     if (response.getString("status").equals("0")) {
                         stocklist.setVisibility(View.GONE);
-                        total_amtTv.setText("0.00");
+                        total_amtTv.setText(R.string.zerodouble);
 //                        Toast.makeText(StockActivity.this, response.getString("message"), Toast.LENGTH_SHORT).show();
                     } else {
+                        db.deleteAllStocks();
                         stocklist.setVisibility(View.GONE);
                     }
                 } catch (Exception e) {
@@ -210,9 +219,21 @@ public class StockActivity extends BaseActivity {
     public void showAllStocks() {
         if (isNetworkAvailable(StockActivity.this)) {
 
-            addUnregisteredStock();
-            deleteStockFromServer();
-            showStock(StockActivity.this, user_id);
+            int count = db.getStocksCount();
+            if (count==0)
+            {
+               resetStock();
+                showStock(StockActivity.this, user_id);
+
+            }
+            else
+            {
+                addUnregisteredStock();
+                updateregisteredStock();
+                deleteStockFromServer();
+                showStock(StockActivity.this, user_id);
+
+            }
 
         } else {
             showStockFronLocal();
@@ -254,7 +275,26 @@ public class StockActivity extends BaseActivity {
                     " ,price : " + cn.get_price();
             // Writing Contacts to log
             Log.d("Name: ", log);
+
             addStock(StockActivity.this, user_id, cn.get_name(), cn.get_qty(), cn.get_price(), "1", cn.get_unit_per_price(), String.valueOf(cn.get_id()), "local");
+        }
+    }    private void updateregisteredStock() {
+        stocks = db.getAllStocksWith3();
+        System.out.println("================ stocks with 0 status ========");
+        System.out.println(stocks);
+        for (Stock cn : stocks)
+
+        {
+            String log = "Id: " + cn.get_id() +
+                    " ,Name: " + cn.get_name() +
+                    " ,qty: " + cn.get_qty() +
+                    " ,unit price : " + cn.get_unit_per_price() +
+                    " ,status : " + cn.get_status() +
+                    " ,price : " + cn.get_price();
+            // Writing Contacts to log
+            Log.d("Name: ", log);
+
+            addStock(StockActivity.this, user_id, cn.get_name(), cn.get_qty(), cn.get_price(), "2", cn.get_unit_per_price(), String.valueOf(cn.get_id()), "local");
         }
     }
 
@@ -284,10 +324,12 @@ public class StockActivity extends BaseActivity {
                 jobj.put("stock_qty", cn.get_qty());
                 jobj.put("stock_per_price", cn.get_unit_per_price());
                 jobj.put("stock_price", cn.get_price());
-                jArray.put(jobj);
-//                double price = Double.parseDouble(cn.get_price());
+                if (!cn.get_qty().equalsIgnoreCase("0")) {
+                    jArray.put(jobj);
+                    double price = Double.parseDouble(cn.get_price());
 
-//                total = total + price;
+                    total = total + price;
+                }
             }
 
             String amount = String.valueOf(total);
@@ -307,6 +349,7 @@ public class StockActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
         showAllStocks();
     }
 

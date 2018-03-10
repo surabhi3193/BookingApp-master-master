@@ -83,7 +83,6 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="70dp"
-                android:text="Laxman Marothiya"
                 android:textColor="#fff"
                 android:textSize="24sp"
                 android:textStyle="bold" />
@@ -100,7 +99,7 @@
                 android:layout_marginTop="10dp"
                 android:backgroundTint="@null"
                 android:editable="false"
-                android:cursorVisible="false"                android:text="Surat"
+                android:cursorVisible="false"
                 android:textColor="#fff"
                 android:textSize="16sp" />
 
@@ -111,7 +110,6 @@
                 android:layout_below="@+id/name"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="10dp"
-                android:text="(Adhyaksh)"
                 android:textColor="#fff"
                 android:textSize="18sp" />
         </RelativeLayout>
@@ -158,7 +156,6 @@
                 android:backgroundTint="@null"
                 android:editable="false"
                 android:cursorVisible="false"                android:gravity="center"
-                android:text="9876543210"
                 app:layout_constraintLeft_toRightOf="@+id/textView22"
                 app:layout_constraintTop_toBottomOf="@+id/bus_name" />
 
@@ -172,7 +169,6 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginTop="8dp"
                 android:clickable="true"
-                android:text="ABCD XYZ"
                 app:layout_constraintLeft_toRightOf="@+id/textView26"
                 app:layout_constraintTop_toBottomOf="@+id/email" />
 
@@ -186,7 +182,6 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginTop="0dp"
                 android:clickable="false"
-                android:text="marothiatechs@gmail.com"
                 app:layout_constraintLeft_toRightOf="@+id/textView27"
                 app:layout_constraintTop_toBottomOf="@+id/mobileNumber" />
 
@@ -241,7 +236,6 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginTop="8dp"
                 android:clickable="true"
-                android:text="xyzABC"
                 app:layout_constraintLeft_toRightOf="@+id/textView5" />
 
         </android.support.constraint.ConstraintLayout>

@@ -92,16 +92,15 @@ public class ExpenseForm_Activity extends AppCompatActivity {
         if (bundle != null) {
 
             method_type = bundle.getString("method_type");
-            if (method_type.equals("2"))
-            {
+            assert method_type != null;
+            if (method_type.equals("2")) {
                 expense_id = bundle.getString("expanse_id");
 
                 priceEt.setText(bundle.getString("expanse_amount"));
-                add_btn.setText("Save");
-                getExpenseType(2,bundle.getString("expanse_name"));
-            }
-            else {
-                add_btn.setText("Add Expense");
+                add_btn.setText(R.string.save);
+                getExpenseType(2, bundle.getString("expanse_name"));
+            } else {
+                add_btn.setText(R.string.addexpense);
                 getExpenseType(1, "");
 
             }
@@ -151,70 +150,60 @@ public class ExpenseForm_Activity extends AppCompatActivity {
                 if (cat.equalsIgnoreCase("Select Category")) {
                     Toast.makeText(ExpenseForm_Activity.this, " Please select expense category", Toast.LENGTH_SHORT).show();
                 }
-                if (otherET.getVisibility() == View.VISIBLE)
-                {
+                if (otherET.getVisibility() == View.VISIBLE) {
                     expType = otherET.getText().toString();
                     System.out.println("======== other category name ===== " + expType);
-                    if (expType.length()<2)
-                    {
+                    if (expType.length() < 2) {
                         otherET.setError("Field Required");
                     }
                 }
-                if (desc.length()==0)
-                {
+                if (desc.length() == 0) {
                     descET.setError("Field Required");
                 }
-                if (date.length()==0)
+                if (date.length() == 0)
                     dateTV.setError("Field Required");
 
-                if (price.length()==0)
-                priceEt.setError("Field Required");
+                if (price.length() == 0)
+                    priceEt.setError("Field Required");
 
-if (otherET.getVisibility()==View.VISIBLE)
-{
-    if (desc.length() != 0
-            && price.length() != 0
-            && date.length() != 0
-            && expType.length() != 0
-            && !cat.equalsIgnoreCase("Select Category")
-            )
-    {
-        String user_id = getData(ExpenseForm_Activity.this, "user_id", "");
+                if (otherET.getVisibility() == View.VISIBLE) {
+                    if (desc.length() != 0
+                            && price.length() != 0
+                            && date.length() != 0
+                            && expType.length() != 0
+                            && !cat.equalsIgnoreCase("Select Category")
+                            ) {
+                        String user_id = getData(ExpenseForm_Activity.this, "user_id", "");
 
-        if (isNetworkAvailable(ExpenseForm_Activity.this))
-            addExpense(ExpenseForm_Activity.this, user_id, cat,expType,desc,date,
-                    price, method_type, expense_id, "");
+                        if (isNetworkAvailable(ExpenseForm_Activity.this))
+                            addExpense(ExpenseForm_Activity.this, user_id, cat, expType, desc, date,
+                                    price, method_type, expense_id, "");
 
-        else {
+                        else {
 
-            addExpenseinLocal(user_id, cat, date, price, method_type, expense_id);
+                            addExpenseinLocal(cat, date, price, method_type, expense_id);
 
-        }
-    }
-}
-else
-{
-    if (desc.length() != 0
-            && price.length() != 0
-            && date.length() != 0
-            && !cat.equalsIgnoreCase("Select Category")
-            )
-    {
-        String user_id = getData(ExpenseForm_Activity.this, "user_id", "");
+                        }
+                    }
+                } else {
+                    if (desc.length() != 0
+                            && price.length() != 0
+                            && date.length() != 0
+                            && !cat.equalsIgnoreCase("Select Category")
+                            ) {
+                        String user_id = getData(ExpenseForm_Activity.this, "user_id", "");
 
-        if (isNetworkAvailable(ExpenseForm_Activity.this))
-            addExpense(ExpenseForm_Activity.this, user_id, cat,expType,desc,date,
-                    price, method_type, expense_id, "");
+                        if (isNetworkAvailable(ExpenseForm_Activity.this))
+                            addExpense(ExpenseForm_Activity.this, user_id, cat, expType, desc, date,
+                                    price, method_type, expense_id, "");
 
-        else {
+                        else {
 
-            addExpenseinLocal(user_id, cat, date, price, method_type, expense_id);
+                            addExpenseinLocal(cat, date, price, method_type, expense_id);
 
-        }
-    }
-}
-
-
+                        }
+                    }
+                }
 
 
             }
@@ -227,6 +216,7 @@ else
 
         textEdit.setText(sdf.format(myCalendar.getTime()));
     }
+
     private void getExpenseType(final int s, final String expanse_name) {
 
         System.out.println(" ************* expense list api ***");
@@ -244,28 +234,25 @@ else
                 System.out.println(response);
                 try {
 
-                    if (response.getString("status").equals("0")) {
+                    if (!response.getString("status").equals("0")) {
 
-                    } else {
                         categList = new ArrayList<>();
                         if (s == 2) {
                             categList.add(expanse_name);
                             otherET.setVisibility(View.GONE);
-                        }
-                        else
-                        {
+                        } else {
                             JSONArray jArray = response.getJSONArray("expenses");
-                        categList.add("Select Category");
-                        for (int i = 0; i < jArray.length(); i++) {
-                            String expenses_name = jArray.getJSONObject(i).getString("expenses_name");
+                            categList.add("Select Category");
+                            for (int i = 0; i < jArray.length(); i++) {
+                                String expenses_name = jArray.getJSONObject(i).getString("expenses_name");
 
-                            categList.add(expenses_name);
+                                categList.add(expenses_name);
+                            }
+                            categList.add("OTHER");
+
                         }
-                        categList.add("OTHER");
 
-                    }
-
-                        final ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(
+                        final ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(
                                 ExpenseForm_Activity.this, R.layout.spinner_item, categList);
 
                         spinnerArrayAdapter.setDropDownViewResource(R.layout.spinner_item);
@@ -285,7 +272,7 @@ else
 
     }
 
-    private void addExpenseinLocal(final String bk_userid, final String stock_name,
+    private void addExpenseinLocal(final String stock_name,
                                    final String date, final
                                    String stock_amount, final String method_type,
                                    final String stock_id) {

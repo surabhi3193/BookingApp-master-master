@@ -3,8 +3,8 @@ package com.example.mind_android.bookingapp.activities;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
@@ -32,19 +32,19 @@ import cz.msebera.android.httpclient.Header;
 
 import static com.example.mind_android.bookingapp.Constant.NetWorkClass.BASE_URL_NEW;
 import static com.example.mind_android.bookingapp.activities.SignupActivity.isMatch;
-import static com.example.mind_android.bookingapp.storage.MySharedPref.NullData;
 import static com.example.mind_android.bookingapp.storage.MySharedPref.getData;
 import static com.example.mind_android.bookingapp.storage.MySharedPref.saveData;
 
 public class BussinessSignUpActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, View.OnClickListener {
 
 
-    String[] bussiness = { "Business Type","Services","Retail" , };
-    EditText buss_nameET,cityEt,emailEt,fullnameEt;
+    String[] bussiness = {"Business Type", "Services", "Retail",};
+    EditText buss_nameET, cityEt, emailEt, fullnameEt;
     Spinner spin;
     TextView countryEt;
     ScrollView scrollview;
-    String password,name,email,phone,buss_name="",city="",country="",buss_type,code,user_id;
+    String password, name, email, phone, buss_name = "", city = "", country = "", buss_type, code, user_id;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,21 +53,21 @@ public class BussinessSignUpActivity extends AppCompatActivity implements Adapte
         scrollview = findViewById(R.id.scrollview);
         emailEt = findViewById(R.id.emailEt);
         fullnameEt = findViewById(R.id.nameET);
-         spin =  findViewById(R.id.spinner2);
-         buss_nameET =  findViewById(R.id.buss_nameET);
-         cityEt =  findViewById(R.id.cityEt);
-         countryEt =  findViewById(R.id.countryEt);
-         TextView login_link =  findViewById(R.id.login_link);
-        RelativeLayout signup_btn= findViewById(R.id.signup_btn);
+        spin = findViewById(R.id.spinner2);
+        buss_nameET = findViewById(R.id.buss_nameET);
+        cityEt = findViewById(R.id.cityEt);
+        countryEt = findViewById(R.id.countryEt);
+        TextView login_link = findViewById(R.id.login_link);
+        RelativeLayout signup_btn = findViewById(R.id.signup_btn);
 
-          countryEt.setOnClickListener(this);
+        countryEt.setOnClickListener(this);
         setData();
 
 
         spin.setOnItemSelectedListener(this);
 
         //Creating the ArrayAdapter instance having the country list
-        ArrayAdapter aa = new ArrayAdapter(this,R.layout.spinner_items,bussiness);
+        ArrayAdapter aa = new ArrayAdapter(this, R.layout.spinner_items, bussiness);
         aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         //Setting the ArrayAdapter data on the Spinner
         spin.setAdapter(aa);
@@ -75,7 +75,7 @@ public class BussinessSignUpActivity extends AppCompatActivity implements Adapte
 
         Bundle bundle = getIntent().getExtras();
 
-        if (bundle!=null) {
+        if (bundle != null) {
 
             phone = bundle.getString("phone");
             password = bundle.getString("password");
@@ -90,7 +90,8 @@ public class BussinessSignUpActivity extends AppCompatActivity implements Adapte
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     System.out.println("=========== action done ==========");
-                    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    assert imm != null;
                     imm.hideSoftInputFromWindow(countryEt.getWindowToken(), 0);
                     scrollview.fullScroll(View.FOCUS_DOWN);
                     cityEt.setCursorVisible(false);
@@ -102,11 +103,10 @@ public class BussinessSignUpActivity extends AppCompatActivity implements Adapte
         });
 
 
-
         login_link.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(BussinessSignUpActivity.this,LoginActivity.class));
+                startActivity(new Intent(BussinessSignUpActivity.this, LoginActivity.class));
                 finish();
             }
         });
@@ -114,35 +114,41 @@ public class BussinessSignUpActivity extends AppCompatActivity implements Adapte
         signup_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                
+
                 nextActivity();
             }
         });
     }
 
     private void setData() {
-        buss_name = getData(getApplicationContext(),"buss_name",null);
-        buss_type = getData(getApplicationContext(),"buss_type",null);
-        city = getData(getApplicationContext(),"city",null);
-        country = getData(getApplicationContext(),"country",null);
+        buss_name = getData(getApplicationContext(), "buss_name", null);
+        buss_type = getData(getApplicationContext(), "buss_type", null);
+        city = getData(getApplicationContext(), "city", null);
+        country = getData(getApplicationContext(), "country", null);
 
-        if (buss_name!=null && buss_name.length()>0)
+        if (buss_name != null && buss_name.length() > 0)
             buss_nameET.setText(buss_name);
 
-        if (buss_type!=null && buss_type.length()>0)
-        {
-            if (buss_type.equals("Services"))
-                spin.setSelection(1);
-            else if (buss_type.equals("Retail"))
-                spin.setSelection(2);
-            else
-                spin.setSelection(0);
+        if (buss_type != null && buss_type.length() > 0) {
+            switch (buss_type) {
+                case "Services":
+                    spin.setSelection(1);
+                    break;
+                case "Retail":
+                    spin.setSelection(2);
+                    break;
+
+                default:
+                    spin.setSelection(0);
+                    break;
+
+            }
         }
 
-        if (city!=null && city.length()>0)
+        if (city != null && city.length() > 0)
             cityEt.setText(buss_name);
 
-        if (country!=null && country.length()>0)
+        if (country != null && country.length() > 0)
             countryEt.setText(country);
     }
 
@@ -151,18 +157,18 @@ public class BussinessSignUpActivity extends AppCompatActivity implements Adapte
 
         email = emailEt.getText().toString();
         name = fullnameEt.getText().toString();
-         buss_name = buss_nameET.getText().toString();
-         city = cityEt.getText().toString();
-         country = countryEt.getText().toString();
+        buss_name = buss_nameET.getText().toString();
+        city = cityEt.getText().toString();
+        country = countryEt.getText().toString();
         buss_type = spin.getSelectedItem().toString();
 
 //String pat = "[a-zA-Z0-9._-]+@[a-zA-Z0-9]+\\\\.+[a-z]+";
         String empatt = "^[a-zA-Z0-9_.]+@[a-zA-Z0-9]+\\.[a-zA-Z]+$";
 
-        if (name.length()==0)
+        if (name.length() == 0)
             fullnameEt.setError("Field Required");
 
-        if (email.length()>0) {
+        if (email.length() > 0) {
             boolean b4 = isMatch(email, empatt);
             if (!b4) {
                 emailEt.setError("Invalid Email ID");
@@ -170,35 +176,43 @@ public class BussinessSignUpActivity extends AppCompatActivity implements Adapte
             }
         }
 
-         if (buss_name.length()==0)
-             buss_nameET.setError("Field Required");
+        if (buss_name.length() == 0)
+            buss_nameET.setError("Field Required");
 
-         if (city.length()==0)
-             cityEt.setError("Field Required");
+        if (city.length() == 0)
+            cityEt.setError("Field Required");
 
-         if (country.length()==0)
-             countryEt.setError("Field Required");
+        if (country.length() == 0)
+            countryEt.setError("Field Required");
 
         System.out.println("== buss type=======");
         System.out.println(buss_type);
-        if (buss_type.equals("Services"))
-            buss_type="1";
 
-        else if (buss_type.equals("Retail"))
-            buss_type="2";
-        else {
-            buss_type="0";
-            Toast.makeText(getApplicationContext(), "Select Bussiness Type", Toast.LENGTH_SHORT).show();
+        switch (buss_type) {
+            case "Services":
+                buss_type = "1";
+                break;
+
+            case "Retail":
+                buss_type = "2";
+                break;
+
+            default:
+                buss_type = "0";
+                Toast.makeText(getApplicationContext(), "Select Bussiness Type", Toast.LENGTH_SHORT).show();
+
+                break;
+
         }
 
-        if (buss_name.length()>0&&city.length()>0&&country.length()>0&& !buss_type.equals("0"))
-            registerUser(buss_name,city,country,buss_type,name,phone,code,password,email,user_id);
+
+        if (buss_name.length() > 0 && city.length() > 0 && country.length() > 0 && !buss_type.equals("0"))
+            registerUser(buss_name, city, country, buss_type, name, phone, code, password, email, user_id);
     }
 
     private void registerUser(String buss_name, String city, String country, String buss_type, String name,
                               String phone, String code, String password, String email,
-                              String user_id)
-    {
+                              String user_id) {
         final AsyncHttpClient client = new AsyncHttpClient();
         final RequestParams params = new RequestParams();
 
@@ -210,9 +224,9 @@ public class BussinessSignUpActivity extends AppCompatActivity implements Adapte
         params.put("business_name", buss_name);
         params.put("full_name", name);
         params.put("business_location", city);
-        params.put("business_country",  country);
+        params.put("business_country", country);
         params.put("business_pass", password);
-        params.put("business_phone", code+phone);
+        params.put("business_phone", code + phone);
         params.put("business_type", buss_type);
         params.put("user_device_type", "1");
         params.put("user_device_token", "5482746982y");
@@ -221,12 +235,11 @@ public class BussinessSignUpActivity extends AppCompatActivity implements Adapte
 
         System.err.println(params);
 
-        client.setTimeout(20*1000);
+        client.setTimeout(20 * 1000);
 
         client.post(BASE_URL_NEW + "signup", params, new JsonHttpResponseHandler() {
 
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response)
-            {
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 System.out.println(" ************* signup response ***");
                 System.out.println(response);
                 ringProgressDialog.dismiss();
@@ -236,7 +249,7 @@ public class BussinessSignUpActivity extends AppCompatActivity implements Adapte
                         Toast.makeText(BussinessSignUpActivity.this, response.getString("message"), Toast.LENGTH_SHORT).show();
 
                     } else {
-                        Toast.makeText(getApplicationContext(),"Signup Successfully",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Signup Successfully", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(getApplicationContext(), LoginActivity.class));
                         finish();
                     }
@@ -245,14 +258,15 @@ public class BussinessSignUpActivity extends AppCompatActivity implements Adapte
                 }
 
             }
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse)
-            {
+
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 System.out.println(errorResponse);
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                System.out.println(responseString);            }
+                System.out.println(responseString);
+            }
 
         });
     }
@@ -288,20 +302,20 @@ public class BussinessSignUpActivity extends AppCompatActivity implements Adapte
         buss_type = spin.getSelectedItem().toString();
 
 
-        saveData(getApplicationContext(),"buss_name",buss_name);
-        saveData(getApplicationContext(),"buss_type",buss_type);
-        saveData(getApplicationContext(),"city",city);
-        saveData(getApplicationContext(),"country",country);
+        saveData(getApplicationContext(), "buss_name", buss_name);
+        saveData(getApplicationContext(), "buss_type", buss_type);
+        saveData(getApplicationContext(), "city", city);
+        saveData(getApplicationContext(), "country", country);
 
-      startActivity(new Intent(BussinessSignUpActivity.this,SignupActivity.class)
-              .putExtra("name",name)
-              .putExtra("phone",phone)
-              .putExtra("email",email)
-              .putExtra("password",password)
-              .putExtra("code",code)
+        startActivity(new Intent(BussinessSignUpActivity.this, SignupActivity.class)
+                .putExtra("name", name)
+                .putExtra("phone", phone)
+                .putExtra("email", email)
+                .putExtra("password", password)
+                .putExtra("code", code)
 
-      );
-      finish();
+        );
+        finish();
     }
 
     @Override
@@ -309,7 +323,7 @@ public class BussinessSignUpActivity extends AppCompatActivity implements Adapte
 
         System.out.println("============ clicked country ============");
 
-       final CountryPicker picker = CountryPicker.newInstance("Select Country");
+        final CountryPicker picker = CountryPicker.newInstance("Select Country");
         picker.show(getSupportFragmentManager(), "COUNTRY_PICKER");
         picker.setListener(new CountryPickerListener() {
             @Override
@@ -317,8 +331,8 @@ public class BussinessSignUpActivity extends AppCompatActivity implements Adapte
 
                 System.out.println("========== selected country =========");
                 System.out.println(name);
-              countryEt.setText(name);
-              picker.dismiss();
+                countryEt.setText(name);
+                picker.dismiss();
 
             }
         });

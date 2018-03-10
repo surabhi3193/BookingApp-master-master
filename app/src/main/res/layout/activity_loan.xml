@@ -72,6 +72,7 @@
             android:textColor="@color/white" />
     </RelativeLayout>
     <android.support.v7.widget.RecyclerView
+        android:layout_above="@+id/bottom_lay"
         android:layout_below="@+id/topbar"
         android:padding="10dp"
         android:layout_marginTop="10dp"

@@ -1,9 +1,9 @@
 package com.example.mind_android.bookingapp.activities;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 
 import com.example.mind_android.bookingapp.R;
 
@@ -12,6 +12,7 @@ import static com.example.mind_android.bookingapp.storage.MySharedPref.getData;
 public class SplashActivity extends AppCompatActivity {
 
     private static final long SPLASH_TIME_OUT = 2000;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,8 +25,7 @@ public class SplashActivity extends AppCompatActivity {
         if (login.equals("1")) {
             startActivity(new Intent(getApplicationContext(), MainActivity.class));
             finish();
-        }
-        else {
+        } else {
             new Handler().postDelayed(new Runnable() {
 
             /*
@@ -46,4 +46,5 @@ public class SplashActivity extends AppCompatActivity {
             }, SPLASH_TIME_OUT);
         }
     }
-    }
+
+}

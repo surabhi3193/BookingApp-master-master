@@ -4,12 +4,15 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.example.mind_android.bookingapp.beans.Expense;
+import com.example.mind_android.bookingapp.beans.Report;
 import com.example.mind_android.bookingapp.beans.Sales;
 import com.example.mind_android.bookingapp.beans.Stock;
 import com.example.mind_android.bookingapp.beans.User;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +20,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     // All Static variables
     // Database Version
-    private static final int DATABASE_VERSION = 7;
+    private static final int DATABASE_VERSION = 11;
 
     // Database Name
     private static final String DATABASE_NAME = "usersManager";
@@ -26,6 +29,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String TABLE_STOCKS = "stocks";
     private static final String TABLE_SALES = "sales";
     private static final String TABLE_EXPENSE = "expense";
+    private static final String TABLE_REPORT = "report";
 
     // Users Table Columns names
     private static final String KEY_ID = "id";
@@ -45,40 +49,52 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_STOCK_PRICE = "stock_price";
     private static final String KEY_STOCK_STATUS = "stock_status";
     private static final String KEY_STOCK_DATE = "stock_date";
+    private static final String KEY_STOCK_TOTAL = "stock_total";
 
     // Sales Table Columns names
     private static final String KEY_SALES_ID = "sales_id";
+    private static final String KEY_SALE_TYPE = "sale_type";
     private static final String KEY_SALES_NAME = "sales_name";
     private static final String KEY_SALES_QTY = "sales_qty";
     private static final String KEY_SALES_PER_PRICE = "sales_per_price";
     private static final String KEY_SALES_PRICE = "sale_price";
     private static final String KEY_SALES_STATUS = "sale_status";
     private static final String KEY_SALES_DATE = "sale_date";
+    private static final String KEY_SALES_TOTAL = "sale_total";
 
-    // Sales Table Columns names
+    // Expense Table Columns names
     private static final String KEY_EXPENSE_ID = "expense_id";
     private static final String KEY_EXPENSE_NAME = "expense_name";
     private static final String KEY_EXPENSE_DATE = "expense_date";
-
     private static final String KEY_EXPENSE_PRICE = "expense_price";
     private static final String KEY_EXPENSE_STATUS = "expense_status";
+
+    // Report Table Columns names
+    private static final String KEY_TOTAL_SALE = "t_sale";
+    private static final String KEY_TOTAL_STOCK = "t_stock";
+    private static final String KEY_TOTAL_EXPENSE = "t_exp";
+    private static final String KEY_TOTAL_OTHER_INCOME = "t_other";
+
 
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
+
     // Creating Tables
     @Override
     public void onCreate(SQLiteDatabase db) {
-//        String CREATE_USERS_TABLE = "CREATE TABLE " + TABLE_USERS + "(" + KEY_ID + " INTEGER PRIMARY KEY," + KEY_NAME + " TEXT," + KEY_PH_NO + " TEXT" + ")";
-        String CREATE_USERS_TABLE = "CREATE TABLE " + TABLE_USERS + "(" + KEY_ID + " INTEGER PRIMARY KEY," + KEY_NAME + " TEXT," + KEY_PH_NO + " TEXT," +KEY_USER_IMAGE + " TEXT," + KEY_BUSINESS_NAME + " TEXT," + KEY_BUSINESS_LOC + " TEXT," + KEY_BUSINESS_TYPE + " TEXT," + KEY_BUSINESS_EMAIL + " TEXT" + ")";
-        String CREATE_STOCK_TABLE = "CREATE TABLE " + TABLE_STOCKS + "(" + KEY_STOCK_ID + " INTEGER PRIMARY KEY," + KEY_STOCK_NAME + " TEXT," + KEY_STOCK_QTY + " TEXT," + KEY_STOCK_PER_PRICE + " TEXT," + KEY_STOCK_PRICE + " TEXT," +KEY_STOCK_DATE + " TEXT," + KEY_STOCK_STATUS + " INTEGER" + ")";
-        String CREATE_SALES_TABLE = "CREATE TABLE " + TABLE_SALES + "(" + KEY_SALES_ID + " INTEGER PRIMARY KEY," + KEY_SALES_NAME + " TEXT," + KEY_SALES_QTY + " TEXT," + KEY_SALES_PER_PRICE + " TEXT," + KEY_SALES_PRICE + " TEXT," +KEY_SALES_DATE + " TEXT," + KEY_SALES_STATUS + " INTEGER" + ")";
+
+        String CREATE_USERS_TABLE = "CREATE TABLE " + TABLE_USERS + "(" + KEY_ID + " INTEGER PRIMARY KEY," + KEY_NAME + " TEXT," + KEY_PH_NO + " TEXT," + KEY_USER_IMAGE + " TEXT," + KEY_BUSINESS_NAME + " TEXT," + KEY_BUSINESS_LOC + " TEXT," + KEY_BUSINESS_TYPE + " TEXT," + KEY_BUSINESS_EMAIL + " TEXT" + ")";
+        String CREATE_STOCK_TABLE = "CREATE TABLE " + TABLE_STOCKS + "(" + KEY_STOCK_ID + " INTEGER PRIMARY KEY," + KEY_STOCK_NAME + " TEXT," + KEY_STOCK_QTY + " TEXT," + KEY_STOCK_PER_PRICE + " TEXT," + KEY_STOCK_PRICE + " TEXT," + KEY_STOCK_DATE + " TEXT," + KEY_STOCK_TOTAL + " TEXT," + KEY_STOCK_STATUS + " INTEGER" + ")";
+        String CREATE_SALES_TABLE = "CREATE TABLE " + TABLE_SALES + "(" + KEY_SALES_ID + " INTEGER PRIMARY KEY," + KEY_SALES_NAME + " TEXT," + KEY_SALES_QTY + " TEXT," + KEY_SALES_PER_PRICE + " TEXT," + KEY_SALES_PRICE + " TEXT," + KEY_SALE_TYPE + " TEXT," + KEY_SALES_DATE + " TEXT," + KEY_SALES_TOTAL + " TEXT," + KEY_SALES_STATUS + " INTEGER" + ")";
         String CREATE_EXPENSE_TABLE = "CREATE TABLE " + TABLE_EXPENSE + "(" + KEY_EXPENSE_ID + " INTEGER PRIMARY KEY," + KEY_EXPENSE_NAME + " TEXT," + KEY_EXPENSE_DATE + " TEXT," + KEY_EXPENSE_PRICE + " TEXT," + KEY_EXPENSE_STATUS + " INTEGER" + ")";
+        String CREATE_REPORT_TABLE = "CREATE TABLE " + TABLE_REPORT + "(" + KEY_TOTAL_SALE + " TEXT," + KEY_TOTAL_STOCK + " TEXT," + KEY_TOTAL_EXPENSE + " TEXT," + KEY_TOTAL_OTHER_INCOME + " TEXT" + ")";
 
         db.execSQL(CREATE_USERS_TABLE);
         db.execSQL(CREATE_STOCK_TABLE);
         db.execSQL(CREATE_SALES_TABLE);
         db.execSQL(CREATE_EXPENSE_TABLE);
+        db.execSQL(CREATE_REPORT_TABLE);
 
     }
 
@@ -90,6 +106,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_STOCKS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_SALES);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_EXPENSE);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_REPORT);
 
         // Create tables again
         onCreate(db);
@@ -117,25 +134,27 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.insert(TABLE_USERS, null, values);
         db.close(); // Closing database connection
     }
+
     // Getting single user
-    public  User getUser(int id) {
-        SQLiteDatabase db = this.getReadableDatabase();
-
-        Cursor cursor = db.query(TABLE_USERS, new String[]{KEY_ID, KEY_NAME, KEY_PH_NO,KEY_USER_IMAGE, KEY_BUSINESS_NAME, KEY_BUSINESS_LOC,
-                        KEY_BUSINESS_TYPE, KEY_BUSINESS_EMAIL}, KEY_ID + "=?",
-                new String[]{String.valueOf(id)}, null, null, null, null);
-        if (cursor != null)
-            cursor.moveToFirst();
-
-        User user = new User(Integer.parseInt(cursor.getString(0)), cursor.getString(1), cursor.getString(2)
-                , cursor.getString(3), cursor.getString(4), cursor.getString(5), cursor.getString(6),cursor.getString(7));
-        // return user
-        return user;
-    }
+//    public User getUser(int id) {
+//        SQLiteDatabase db = this.getReadableDatabase();
+//        User user = new User();
+//        Cursor cursor = db.query(TABLE_USERS, new String[]{KEY_ID, KEY_NAME, KEY_PH_NO, KEY_USER_IMAGE, KEY_BUSINESS_NAME, KEY_BUSINESS_LOC,
+//                        KEY_BUSINESS_TYPE, KEY_BUSINESS_EMAIL}, KEY_ID + "=?",
+//                new String[]{String.valueOf(id)}, null, null, null, null);
+//        if (cursor != null){
+//            cursor.moveToFirst();
+//         user = new User(Integer.parseInt(cursor.getString(0)), cursor.getString(1), cursor.getString(2)
+//                , cursor.getString(3), cursor.getString(4), cursor.getString(5), cursor.getString(6), cursor.getString(7));
+//
+//            cursor.close();
+//    }
+//        return user;
+//    }
 
     // Getting All Users
     public List<User> getAllUsers() {
-        List<User> userList = new ArrayList<User>();
+        List<User> userList = new ArrayList<>();
         // Select All Query
         String selectQuery = "SELECT  * FROM " + TABLE_USERS;
 
@@ -159,7 +178,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
 
-        // return user list
+       cursor.close();
         return userList;
     }
 
@@ -189,6 +208,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 new String[]{String.valueOf(user.getID())});
         db.close();
     }
+
     // Getting users Count
     public int getUsersCount() {
         String countQuery = "SELECT  * FROM " + TABLE_USERS;
@@ -205,8 +225,69 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      * All CRUD FOR STOCK (Create, Read, Update, Delete) Operations
      */
 
-    // Adding new user
+
+    public Stock getStock(String name) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.query(TABLE_STOCKS, new String[]{KEY_STOCK_ID, KEY_STOCK_NAME, KEY_STOCK_QTY,
+                        KEY_STOCK_PER_PRICE, KEY_STOCK_PRICE, KEY_STOCK_DATE, KEY_STOCK_TOTAL,
+                        KEY_STOCK_STATUS}, KEY_STOCK_NAME + "=?",
+                new String[]{String.valueOf(name)}, null, null, null, null);
+        if (cursor != null)
+            cursor.moveToFirst();
+
+        Stock user = new Stock(Integer.parseInt(cursor.getString(0)),
+                cursor.getString(1), cursor.getString(2)
+                , cursor.getString(3), cursor.getString(4),
+                cursor.getString(5),
+                cursor.getString(6),
+                Integer.parseInt(cursor.getString(7)));
+        // return us
+cursor.close();
+return user;
+    }
+
+
+    public int getStocksCount() {
+        System.err.println("===== stock count=========");
+        int count;
+        String countQuery = "SELECT  * FROM " + TABLE_STOCKS;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(countQuery, null);
+        count = cursor.getCount();
+        cursor.close();
+
+        System.err.println(count);
+        // return count
+        return count;
+    }
+
+    public boolean checkStock(String stock_name) {
+        boolean isExist;
+        SQLiteDatabase db = this.getWritableDatabase();
+        System.err.println("=========== checking  stock ========");
+        System.err.println(stock_name);
+        try {
+            Cursor c = db.rawQuery("SELECT * FROM " + TABLE_STOCKS + " WHERE " + KEY_STOCK_NAME + "='" + stock_name + "'", null);
+            if (c.moveToFirst()) {
+                System.err.println("===========   stock exist========");
+                isExist = true;
+            } else {
+                System.err.println("===========   stock does not exist========");
+                isExist = false;
+            }
+            c.close();
+            return isExist;
+        } catch (SQLiteException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+
+    }
+
     public void addStock(Stock stock) {
+        System.err.println("=========== adding stock ========");
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -216,18 +297,21 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(KEY_STOCK_PER_PRICE, stock.get_unit_per_price()); // PER UNIT PRICE
         values.put(KEY_STOCK_PRICE, stock.get_price()); // STOCK PRICE
         values.put(KEY_STOCK_DATE, stock.get_date()); // STOCK PRICE
+        values.put(KEY_STOCK_TOTAL, stock.get_total_stock()); // STOCK PRICE
         values.put(KEY_STOCK_STATUS, stock.get_status()); // STOCK PRICE
 
 
         // Inserting Row
         db.insert(TABLE_STOCKS, null, values);
         db.close(); // Closing database connection
+        System.err.println(values);
+        System.err.println("===========  stock added  ========");
     }
 
     public List<Stock> getAllStocksExcept2() {
-        List<Stock> stocklist = new ArrayList<Stock>();
+        List<Stock> stocklist = new ArrayList<>();
         // Select All Query
-        String selectQuery ="SELECT * FROM " + TABLE_STOCKS + " where "
+        String selectQuery = "SELECT * FROM " + TABLE_STOCKS + " where "
                 + KEY_STOCK_STATUS + "!='" + 2 + "'";
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -236,6 +320,16 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
             do {
+                System.err.println("======cursor=====");
+                System.err.println(cursor.getString(0));
+                System.err.println(cursor.getString(1));
+                System.err.println(cursor.getString(2));
+                System.err.println(cursor.getString(3));
+                System.err.println(cursor.getString(4));
+                System.err.println(cursor.getString(5));
+                System.err.println(cursor.getString(6));
+                System.err.println(cursor.getString(7));
+
                 Stock stock = new Stock();
                 stock.set_id(Integer.parseInt(cursor.getString(0)));
                 stock.set_name(cursor.getString(1));
@@ -243,24 +337,22 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 stock.set_unit_per_price(cursor.getString(3));
                 stock.set_price(cursor.getString(4));
                 stock.set_date(cursor.getString(5));
-                stock.set_status(Integer.parseInt(cursor.getString(6)));
+                stock.set_total_stock(cursor.getString(6));
+                stock.set_status(Integer.parseInt(cursor.getString(7)));
                 // Adding user to list
                 stocklist.add(stock);
             } while (cursor.moveToNext());
         }
-
-        // return user list
+cursor.close();
         return stocklist;
     }
 
-    // Getting All Users
     public List<Stock> getAllStocks() {
-        List<Stock> stocklist = new ArrayList<Stock>();
+        List<Stock> stocklist = new ArrayList<>();
         // Select All Query
         String selectQuery = "SELECT  * FROM " + TABLE_STOCKS;
 
 
-
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
@@ -279,18 +371,16 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
 
-        // return user list
+cursor.close();
         return stocklist;
     }
 
-    // Getting All Stocks with 0
-
     public List<Stock> getAllStocksWith0() {
-        List<Stock> stocklist = new ArrayList<Stock>();
+        List<Stock> stocklist = new ArrayList<>();
         // Select All Query
 //        String selectQuery = "SELECT  * FROM " + TABLE_STOCKS;
 
-        String selectQuery ="SELECT * FROM " + TABLE_STOCKS + " where " + KEY_STOCK_STATUS + "='" + 0 + "'";
+        String selectQuery = "SELECT * FROM " + TABLE_STOCKS + " where " + KEY_STOCK_STATUS + "='" + 0 + "'";
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -305,21 +395,49 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 stock.set_unit_per_price(cursor.getString(3));
                 stock.set_price(cursor.getString(4));
                 stock.set_date(cursor.getString(5));
-                stock.set_status(Integer.parseInt(cursor.getString(6)));
+                stock.set_total_stock(cursor.getString(6));
+                stock.set_status(Integer.parseInt(cursor.getString(7)));
                 stocklist.add(stock);
             } while (cursor.moveToNext());
         }
 
-        // return user list
+cursor.close();
+        return stocklist;
+    }
+
+    public List<Stock> getAllStocksWith3() {
+        List<Stock> stocklist = new ArrayList<>();
+        // Select All Query
+//        String selectQuery = "SELECT  * FROM " + TABLE_STOCKS;
+
+        String selectQuery = "SELECT * FROM " + TABLE_STOCKS + " where " + KEY_STOCK_STATUS + "='" + 3 + "'";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                Stock stock = new Stock();
+                stock.set_id(Integer.parseInt(cursor.getString(0)));
+                stock.set_name(cursor.getString(1));
+                stock.set_qty(cursor.getString(2));
+                stock.set_unit_per_price(cursor.getString(3));
+                stock.set_price(cursor.getString(4));
+                stock.set_date(cursor.getString(5));
+                stock.set_total_stock(cursor.getString(6));
+                stock.set_status(Integer.parseInt(cursor.getString(7)));
+                stocklist.add(stock);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
         return stocklist;
     }
 
     public List<Stock> getAllStocksWith2() {
-        List<Stock> stocklist = new ArrayList<Stock>();
-        // Select All Query
-//        String selectQuery = "SELECT  * FROM " + TABLE_STOCKS;
-
-        String selectQuery ="SELECT * FROM " + TABLE_STOCKS + " where " + KEY_STOCK_STATUS + "='" + 2 + "'";
+        List<Stock> stocklist = new ArrayList<>();
+        String selectQuery = "SELECT * FROM " + TABLE_STOCKS + " where " + KEY_STOCK_STATUS + "='" + 2 + "'";
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -334,18 +452,19 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 stock.set_unit_per_price(cursor.getString(3));
                 stock.set_price(cursor.getString(4));
                 stock.set_date(cursor.getString(5));
-                stock.set_status(Integer.parseInt(cursor.getString(6)));
+                stock.set_total_stock(cursor.getString(6));
+                stock.set_status(Integer.parseInt(cursor.getString(7)));
                 stocklist.add(stock);
             } while (cursor.moveToNext());
         }
-
-        // return user list
+cursor.close();
         return stocklist;
     }
 
     //    // Updating single user
-    public int updateStock(Stock stock, String stock_id) {
+    public void updateStock(Stock stock, String stock_id) {
 
+        System.err.println("=========== updating stock ========" + stock.get_status());
         System.out.println("========== temp id ========== " + stock_id);
         System.out.println("========== server id ========== " + stock.get_id());
         SQLiteDatabase db = this.getWritableDatabase();
@@ -357,12 +476,18 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(KEY_STOCK_PER_PRICE, stock.get_unit_per_price());
         values.put(KEY_STOCK_PRICE, stock.get_price());
         values.put(KEY_STOCK_DATE, stock.get_date()); // STOCK PRICE
+        values.put(KEY_STOCK_TOTAL, stock.get_total_stock()); // STOCK PRICE
         values.put(KEY_STOCK_STATUS, stock.get_status());
 
         System.out.println("======= values ======");
         System.out.println(values);
+        System.err.println("===========  stock updated========");
         // updating row
-        return db.update(TABLE_STOCKS, values, KEY_STOCK_ID + " = ?",
+        if (stock_id.length() == 0) {
+            System.out.println("======== tempo id is unavailable======" + stock_id);
+            stock_id = String.valueOf(stock.get_id());
+        }
+        db.update(TABLE_STOCKS, values, KEY_STOCK_ID + " = ?",
                 new String[]{stock_id});
 
 
@@ -376,23 +501,58 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void deleteAllStocks()
-    {
+    public void deleteAllStocks() {
         SQLiteDatabase db = this.getWritableDatabase();
 
-        db.execSQL("delete from "+ TABLE_STOCKS);
+        db.execSQL("delete from " + TABLE_STOCKS);
 
     }
-
-
-
 
 
     /**
      * All CRUD FOR SALES (Create, Read, Update, Delete) Operations
      */
 
-    // Adding new user
+    // Adding new sale
+    public boolean checkSale(String stock_name) {
+        boolean isExist;
+        SQLiteDatabase db = this.getWritableDatabase();
+        System.err.println("=========== checking  stock ========");
+        System.err.println(stock_name);
+        try {
+            Cursor c = db.rawQuery("SELECT * FROM " + TABLE_STOCKS + " WHERE " + KEY_STOCK_NAME + "='" + stock_name + "'", null);
+            if (c.moveToFirst()) {
+                System.err.println("===========   stock exist========");
+                isExist = true;
+            } else {
+                System.err.println("===========   stock does not exist========");
+                isExist = false;
+            }
+            c.close();
+            return isExist;
+        } catch (SQLiteException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+
+    }
+
+    public int getSalesCount() {
+        System.err.println("===== stock count=========");
+        int count;
+        String countQuery = "SELECT  * FROM " + TABLE_SALES;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(countQuery, null);
+        count = cursor.getCount();
+        cursor.close();
+
+        System.err.println(count);
+        // return count
+        return count;
+    }
+
+
     public void addSales(Sales sales) {
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -402,7 +562,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(KEY_SALES_QTY, sales.get_qty()); //QTY
         values.put(KEY_SALES_PER_PRICE, sales.get_unit_per_price()); // PER UNIT PRICE
         values.put(KEY_SALES_PRICE, sales.get_price()); // STOCK PRICE
-        values.put(KEY_SALES_DATE, sales.get_price()); // STOCK PRICE
+        values.put(KEY_SALE_TYPE, sales.get_sale_type()); // STOCK PRICE
+        values.put(KEY_SALES_DATE, sales.get_date()); // STOCK PRICE
+        values.put(KEY_SALES_TOTAL, sales.get_sale_total()); // STOCK PRICE
         values.put(KEY_SALES_STATUS, sales.get_status()); // STOCK PRICE
 
         // Inserting Row
@@ -411,9 +573,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     public List<Sales> getAllSalesExcept2() {
-        List<Sales> stocklist = new ArrayList<Sales>();
+        List<Sales> stocklist = new ArrayList<>();
         // Select All Query
-        String selectQuery ="SELECT * FROM " + TABLE_SALES + " where "
+        String selectQuery = "SELECT * FROM " + TABLE_SALES + " where "
                 + KEY_SALES_STATUS + "!='" + 2 + "'";
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -428,21 +590,23 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 sales.set_qty(cursor.getString(2));
                 sales.set_unit_per_price(cursor.getString(3));
                 sales.set_price(cursor.getString(4));
-                sales.set_status(Integer.parseInt(cursor.getString(5)));
+                sales.set_sale_type(cursor.getString(5));
+                sales.set_date(cursor.getString(6));
+                sales.set_sale_total(cursor.getString(7));
+                sales.set_status(Integer.parseInt(cursor.getString(8)));
                 stocklist.add(sales);
             } while (cursor.moveToNext());
         }
 
-        // return user list
+cursor.close();
         return stocklist;
     }
 
     // Getting All Users
     public List<Sales> getAllSales() {
-        List<Sales> stocklist = new ArrayList<Sales>();
+        List<Sales> stocklist = new ArrayList<>();
         // Select All Query
         String selectQuery = "SELECT  * FROM " + TABLE_SALES;
-
 
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -455,26 +619,27 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 sales.set_id(Integer.parseInt(cursor.getString(0)));
                 sales.set_name(cursor.getString(1));
                 sales.set_qty(cursor.getString(2));
-
                 sales.set_unit_per_price(cursor.getString(3));
                 sales.set_price(cursor.getString(4));
-                sales.set_status(Integer.parseInt(cursor.getString(5)));
+                sales.set_sale_type(cursor.getString(5));
+                sales.set_date(cursor.getString(6));
+                sales.set_sale_total(cursor.getString(7));
+                sales.set_status(Integer.parseInt(cursor.getString(8)));
                 stocklist.add(sales);
             } while (cursor.moveToNext());
         }
-
-        // return user list
+        cursor.close();
         return stocklist;
     }
 
     // Getting All Stocks with 0
 
     public List<Sales> getAllSalesWith0() {
-        List<Sales> stocklist = new ArrayList<Sales>();
+        List<Sales> stocklist = new ArrayList<>();
         // Select All Query
 //        String selectQuery = "SELECT  * FROM " + TABLE_STOCKS;
 
-        String selectQuery ="SELECT * FROM " + TABLE_SALES + " where " + KEY_SALES_STATUS + "='" + 0 + "'";
+        String selectQuery = "SELECT * FROM " + TABLE_SALES + " where " + KEY_SALES_STATUS + "='" + 0 + "'";
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -486,24 +651,26 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 sales.set_id(Integer.parseInt(cursor.getString(0)));
                 sales.set_name(cursor.getString(1));
                 sales.set_qty(cursor.getString(2));
-
                 sales.set_unit_per_price(cursor.getString(3));
                 sales.set_price(cursor.getString(4));
-                sales.set_status(Integer.parseInt(cursor.getString(5)));
+                sales.set_sale_type(cursor.getString(5));
+                sales.set_date(cursor.getString(6));
+                sales.set_sale_total(cursor.getString(7));
+                sales.set_status(Integer.parseInt(cursor.getString(8)));
                 stocklist.add(sales);
             } while (cursor.moveToNext());
         }
 
-        // return user list
+        cursor.close();
         return stocklist;
     }
 
     public List<Sales> getAllSalesWith2() {
-        List<Sales> stocklist = new ArrayList<Sales>();
+        List<Sales> stocklist = new ArrayList<>();
         // Select All Query
 //        String selectQuery = "SELECT  * FROM " + TABLE_STOCKS;
 
-        String selectQuery ="SELECT * FROM " + TABLE_SALES + " where " + KEY_SALES_STATUS + "='" + 2 + "'";
+        String selectQuery = "SELECT * FROM " + TABLE_SALES + " where " + KEY_SALES_STATUS + "='" + 2 + "'";
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -515,20 +682,21 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 sales.set_id(Integer.parseInt(cursor.getString(0)));
                 sales.set_name(cursor.getString(1));
                 sales.set_qty(cursor.getString(2));
-
                 sales.set_unit_per_price(cursor.getString(3));
                 sales.set_price(cursor.getString(4));
-                sales.set_status(Integer.parseInt(cursor.getString(5)));
+                sales.set_sale_type(cursor.getString(5));
+                sales.set_date(cursor.getString(6));
+                sales.set_sale_total(cursor.getString(7));
+                sales.set_status(Integer.parseInt(cursor.getString(8)));
                 stocklist.add(sales);
             } while (cursor.moveToNext());
         }
-
-        // return user list
+        cursor.close();
         return stocklist;
     }
 
     //    // Updating single user
-    public int updateSales(Sales sales, String sales_id) {
+    public void updateSales(Sales sales, String sales_id) {
 
         System.out.println("========== temp id ========== " + sales_id);
         System.out.println("========== server id ========== " + sales.get_id());
@@ -540,12 +708,15 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(KEY_SALES_QTY, sales.get_qty());
         values.put(KEY_SALES_PER_PRICE, sales.get_unit_per_price());
         values.put(KEY_SALES_PRICE, sales.get_price());
+        values.put(KEY_SALE_TYPE, sales.get_sale_type());
+        values.put(KEY_SALES_DATE, sales.get_date());
+        values.put(KEY_SALES_TOTAL, sales.get_sale_total());
         values.put(KEY_SALES_STATUS, sales.get_status());
 
         System.out.println("======= values ======");
         System.out.println(values);
         // updating row
-        return db.update(TABLE_SALES, values, KEY_SALES_ID + " = ?",
+        db.update(TABLE_SALES, values, KEY_SALES_ID + " = ?",
                 new String[]{sales_id});
 
 
@@ -558,18 +729,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 new String[]{String.valueOf(sales.get_id())});
         db.close();
     }
-    public void deleteAllSales()
-    {
+
+    public void deleteAllSales() {
         SQLiteDatabase db = this.getWritableDatabase();
 
-        db.execSQL("delete from "+ TABLE_SALES);
+        db.execSQL("delete from " + TABLE_SALES);
 
     }
-
-
-
-
-
 
 
     /**
@@ -593,9 +759,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     public List<Expense> getAllExpenseExcept2() {
-        List<Expense> expenseList = new ArrayList<Expense>();
+        List<Expense> expenseList = new ArrayList<>();
         // Select All Query
-        String selectQuery ="SELECT * FROM " + TABLE_EXPENSE + " where "
+        String selectQuery = "SELECT * FROM " + TABLE_EXPENSE + " where "
                 + KEY_EXPENSE_STATUS + "!='" + 2 + "'";
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -614,14 +780,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 expenseList.add(expense);
             } while (cursor.moveToNext());
         }
-
-        // return user list
+        cursor.close();
         return expenseList;
     }
 
     // Getting All Users
     public List<Expense> getAllExpense() {
-        List<Expense> expenseList = new ArrayList<Expense>();
+        List<Expense> expenseList = new ArrayList<>();
         // Select All Query
         String selectQuery = "SELECT  * FROM " + TABLE_EXPENSE;
 
@@ -643,18 +808,18 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
 
-        // return user list
+        cursor.close();
         return expenseList;
     }
 
     // Getting All Stocks with 0
 
     public List<Expense> getAllExpenseWith0() {
-        List<Expense> expenseList = new ArrayList<Expense>();
+        List<Expense> expenseList = new ArrayList<>();
         // Select All Query
 //        String selectQuery = "SELECT  * FROM " + TABLE_STOCKS;
 
-        String selectQuery ="SELECT * FROM " + TABLE_EXPENSE + " where " + KEY_EXPENSE_STATUS + "='" + 0 + "'";
+        String selectQuery = "SELECT * FROM " + TABLE_EXPENSE + " where " + KEY_EXPENSE_STATUS + "='" + 0 + "'";
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -676,16 +841,16 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
 
-        // return user list
+        cursor.close();
         return expenseList;
     }
 
     public List<Expense> getAllExpenseWith2() {
-        List<Expense> expenseList = new ArrayList<Expense>();
+        List<Expense> expenseList = new ArrayList<>();
         // Select All Query
 //        String selectQuery = "SELECT  * FROM " + TABLE_STOCKS;
 
-        String selectQuery ="SELECT * FROM " + TABLE_EXPENSE + " where " + KEY_EXPENSE_ID + "='" + 2 + "'";
+        String selectQuery = "SELECT * FROM " + TABLE_EXPENSE + " where " + KEY_EXPENSE_ID + "='" + 2 + "'";
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -705,13 +870,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 expenseList.add(sales);
             } while (cursor.moveToNext());
         }
-
-        // return user list
+        cursor.close();
         return expenseList;
     }
 
     //    // Updating single user
-    public int updateExpense(Expense sales, String sales_id) {
+    public void updateExpense(Expense sales, String sales_id) {
 
         System.out.println("========== temp id ========== " + sales_id);
         System.out.println("========== server id ========== " + sales.get_id());
@@ -727,7 +891,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         System.out.println("======= values ======");
         System.out.println(values);
         // updating row
-        return db.update(TABLE_EXPENSE, values, KEY_EXPENSE_ID + " = ?",
+        db.update(TABLE_EXPENSE, values, KEY_EXPENSE_ID + " = ?",
                 new String[]{sales_id});
 
 
@@ -740,11 +904,91 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 new String[]{String.valueOf(sales.get_id())});
         db.close();
     }
-    public void deleteAllexpense()
-    {
+
+    public void deleteAllexpense() {
         SQLiteDatabase db = this.getWritableDatabase();
 
-        db.execSQL("delete from "+ TABLE_EXPENSE);
+        db.execSQL("delete from " + TABLE_EXPENSE);
+
+    }
+
+
+    public int getReportCount() {
+        System.err.println("===== stock count=========");
+        int count;
+        String countQuery = "SELECT  * FROM " + TABLE_REPORT;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(countQuery, null);
+        count = cursor.getCount();
+        cursor.close();
+
+        System.err.println(count);
+        // return count
+        return count;
+    }
+
+
+    public void addReport(Report report) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_TOTAL_SALE, report.getTotal_sale()); // ID
+        values.put(KEY_TOTAL_STOCK, report.getTotal_stock()); // ID
+        values.put(KEY_TOTAL_EXPENSE, report.getTotal_expense()); // ID
+        values.put(KEY_TOTAL_OTHER_INCOME, report.getTotal_other_serice()); // ID
+
+
+        // Inserting Row
+        db.insert(TABLE_REPORT, null, values);
+        db.close(); // Closing database connection
+    }
+
+    // Getting All Report
+    public List<Report> getAllReports() {
+        List<Report> userList = new ArrayList<>();
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + TABLE_REPORT;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                Report report = new Report();
+
+                report.setTotal_sale(cursor.getString(0));
+                report.setTotal_stock(cursor.getString(1));
+                report.setTotal_expense(cursor.getString(2));
+                report.setTotal_other_serice(cursor.getString(3));
+                // Adding user to list
+                userList.add(report);
+            } while (cursor.moveToNext());
+        }
+
+cursor.close();
+        return userList;
+    }
+
+    //    // Updating single user
+    public void updateReport(Report report) {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_TOTAL_SALE, report.getTotal_sale());
+        values.put(KEY_TOTAL_STOCK, report.getTotal_stock());
+        values.put(KEY_TOTAL_EXPENSE, report.getTotal_expense());
+        values.put(KEY_TOTAL_OTHER_INCOME, report.getTotal_other_serice());
+
+        System.out.println("======= values ======");
+        System.out.println(values);
+        // updating row
+
+        String where = "rowid=(SELECT MIN(rowid) FROM " + TABLE_REPORT + ")";
+
+        db.update(TABLE_REPORT, values, where, null);
+
 
     }
 

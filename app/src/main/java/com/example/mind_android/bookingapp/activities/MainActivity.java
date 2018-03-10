@@ -7,12 +7,9 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.mind_android.bookingapp.R;
@@ -25,8 +22,6 @@ import com.example.mind_android.bookingapp.activities.dashboard_part.StockActivi
 import com.example.mind_android.bookingapp.app.Config;
 import com.example.mind_android.bookingapp.util.NotificationUtils;
 import com.google.firebase.messaging.FirebaseMessaging;
-
-import static com.example.mind_android.bookingapp.storage.MySharedPref.saveData;
 //#if (${PACKAGE_NAME} && ${PACKAGE_NAME} != "")package ${PACKAGE_NAME};#end #parse("File Header.java") public class ${NAME} { }
 
 public class MainActivity extends BaseActivity implements View.OnClickListener {
@@ -49,14 +44,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         ImageView bankLay = findViewById(R.id.bankLay);
 
 
-       stockLay.setOnClickListener(this);
+        stockLay.setOnClickListener(this);
 
         salesLay.setOnClickListener(this);
         expenseLay.setOnClickListener(this);
         reportLay.setOnClickListener(this);
         loanLay.setOnClickListener(this);
         bankLay.setOnClickListener(this);
-
 
 
         mRegistrationBroadcastReceiver = new BroadcastReceiver() {
@@ -94,36 +88,38 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 startActivity(new Intent(getApplicationContext(), StockActivity.class));
                 break;
 
-                case R.id.salesLay:
+            case R.id.salesLay:
                 startActivity(new Intent(getApplicationContext(), SalesActivity.class));
                 break;
 
-                case R.id.expenseLay:
+            case R.id.expenseLay:
                 startActivity(new Intent(getApplicationContext(), ExpenceActivity.class));
                 break;
 
-                case R.id.reportLay:
+            case R.id.reportLay:
                 startActivity(new Intent(getApplicationContext(), ReportActivity.class));
                 break;
 
 
-                case R.id.bankLay:
+            case R.id.bankLay:
                 startActivity(new Intent(getApplicationContext(), BankActivity.class));
                 break;
 
-                case R.id.loanLay:
+            case R.id.loanLay:
                 startActivity(new Intent(getApplicationContext(), LoanActivity.class));
                 break;
         }
 
     }
+
     private void displayFirebaseRegId() {
         SharedPreferences pref = getApplicationContext().getSharedPreferences(Config.SHARED_PREF, 0);
         String regId = pref.getString("regId", null);
 
         Log.e(TAG, "Firebase reg id: " + regId);
 
-        if (!TextUtils.isEmpty(regId)){}
+//        if (!TextUtils.isEmpty(regId)) {
+//        }
 //            txtRegId.setText("Firebase Reg Id: " + regId);
 //        else{}
 //            txtRegId.setText("Firebase Reg Id is not received yet!");

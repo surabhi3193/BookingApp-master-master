@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -20,6 +21,7 @@ import android.widget.TextView;
 import com.example.mind_android.bookingapp.R;
 import com.example.mind_android.bookingapp.activities.dashboard_part.SalesActivity;
 import com.example.mind_android.bookingapp.activities.dashboard_part.StockActivity;
+import com.example.mind_android.bookingapp.storage.DatabaseHandler;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -30,6 +32,7 @@ import org.json.JSONObject;
 import cz.msebera.android.httpclient.Header;
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static com.example.mind_android.bookingapp.Constant.CheckInternetConnection.isNetworkAvailable;
 import static com.example.mind_android.bookingapp.Constant.NetWorkClass.BASE_URL_NEW;
 import static com.example.mind_android.bookingapp.storage.MySharedPref.getData;
 import static com.example.mind_android.bookingapp.storage.MySharedPref.saveData;
@@ -47,15 +50,14 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         super.setContentView(R.layout.activity_base);
-        ;
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
 
         setSupportActionBar(toolbar);
 
-        frameLayout = (FrameLayout) findViewById(R.id.content_frame);
+        frameLayout = findViewById(R.id.content_frame);
 
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawerLayout = findViewById(R.id.drawer_layout);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -64,10 +66,10 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
 
         toggle.syncState();
 
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         View hView = navigationView.getHeaderView(0);
-        nav_img = (CircleImageView) hView.findViewById(R.id.nav_img);
+        nav_img = hView.findViewById(R.id.nav_img);
 
         TextView signout_btn = findViewById(R.id.signout_btn);
 
@@ -81,7 +83,7 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
                 finishAffinity();
             }
         });
-
+        image = getData(BaseActivity.this, "user_image", "");
         if (image.length() > 5)
             Picasso.with(BaseActivity.this).load(image).placeholder(R.drawable.profile).into(nav_img);
         else
@@ -98,12 +100,12 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
 
 //        //to prevent current item select over and over
         if (item.isChecked()) {
-            if (item.getItemId()!=R.id.reset) {
+            if (item.getItemId() != R.id.reset) {
                 drawerLayout.closeDrawer(GravityCompat.START);
                 return false;
             }
@@ -120,27 +122,18 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
             startActivity(new Intent(getApplicationContext(), StockActivity.class));
         } else if (id == R.id.reset) {
             resetAllWarning();
-        }
-        else if (id == R.id.about) {
+        } else if (id == R.id.about) {
             startActivity(new Intent(getApplicationContext(), HTmlActivity.class)
-                    .putExtra("name","About Us"));
-        }
-
-        else if (id == R.id.terms) {
+                    .putExtra("name", "About Us"));
+        } else if (id == R.id.terms) {
             startActivity(new Intent(getApplicationContext(), HTmlActivity.class)
-                    .putExtra("name","Terms & Conditions"));
-        }
-
-        else if (id == R.id.privacy) {
+                    .putExtra("name", "Terms & Conditions"));
+        } else if (id == R.id.privacy) {
             startActivity(new Intent(getApplicationContext(), HTmlActivity.class)
-                    .putExtra("name","Privacy Policy"));
-        }
-
-        else if (id == R.id.chat) {
+                    .putExtra("name", "Privacy Policy"));
+        } else if (id == R.id.chat) {
             startActivity(new Intent(getApplicationContext(), LiveChatActivity.class));
-        }
-        else if (id == R.id.sharing)
-        {
+        } else if (id == R.id.sharing) {
             try {
                 Intent i = new Intent(Intent.ACTION_SEND);
                 i.setType("text/plain");
@@ -167,7 +160,14 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
         ab.setNegativeButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                resetAll();
+                if (isNetworkAvailable(BaseActivity.this))
+                    resetAll();
+                else {
+                    DatabaseHandler db = new DatabaseHandler(BaseActivity.this);
+
+                    db.deleteAllStocks();
+                    db.deleteAllSales();
+                }
 
 //                Toast.makeText(BaseActivity.this,"Under Development",Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
