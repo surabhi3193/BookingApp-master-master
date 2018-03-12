@@ -12,16 +12,16 @@
         android:id="@+id/sr_notv"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="0.8"
+        android:layout_weight="1"
         android:gravity="center"
-        android:text="Sr No"
+        android:text="1"
         android:textColor="@color/colorAccent" />
 
     <TextView
         android:id="@+id/nameTv"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1"
+        android:layout_weight="1.5"
         android:gravity="center"
         android:text="Name"
         android:textColor="@color/colorAccent"
@@ -33,7 +33,7 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="Quantity"
+        android:text="syz"
         android:textColor="@color/colorAccent"
         android:textSize="12sp" />
 
@@ -43,7 +43,7 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="Amount"
+        android:text="12,000.00"
         android:textColor="@color/colorAccent"
         android:textSize="12sp" />
     <LinearLayout

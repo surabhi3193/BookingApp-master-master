@@ -72,18 +72,6 @@
                 android:layout_height="50dp"
                 android:hint="Expense Descriptions"/>
 
-            <TextView
-                android:id="@+id/dateTV"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/grey_rect_btn"
-                android:drawableRight="@drawable/dropdown_icon10"
-                android:gravity="center_vertical"
-                android:hint="Expense Date"
-                android:paddingLeft="10dp"
-                android:paddingRight="20dp"
-                android:textColor="@color/black" />
 
             <EditText
                 android:background="@drawable/grey_rect_btn"
@@ -97,6 +85,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:hint="Expense Amount (* Enter Only Number *)"/>
+
+
+            <TextView
+                android:id="@+id/dateTV"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/grey_rect_btn"
+                android:drawableRight="@drawable/dropdown_icon10"
+                android:gravity="center_vertical"
+                android:hint="Expense Date"
+                android:paddingLeft="10dp"
+                android:paddingRight="20dp"
+                android:textColor="@color/black" />
+
         </LinearLayout>
 
         <Button

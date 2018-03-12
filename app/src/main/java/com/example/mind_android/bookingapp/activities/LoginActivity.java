@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.mind_android.bookingapp.R;
+import com.example.mind_android.bookingapp.beans.ExpenseCat;
 import com.example.mind_android.bookingapp.beans.User;
 import com.example.mind_android.bookingapp.smsPack.Sms;
 import com.example.mind_android.bookingapp.storage.DatabaseHandler;
@@ -25,6 +26,7 @@ import com.loopj.android.http.RequestParams;
 import com.mukesh.countrypicker.fragments.CountryPicker;
 import com.mukesh.countrypicker.interfaces.CountryPickerListener;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import cz.msebera.android.httpclient.Header;
@@ -235,6 +237,14 @@ client.setConnectTimeout(30000);
 
                         Log.d("Insert: ", "Inserting ..");
                         db.addUser(new User(user_id,name,phone,user_image,bus_name,bus_loc,bus_type,bus_email));
+                        db.addExpenseCat(new ExpenseCat("RENT",1));
+                        db.addExpenseCat(new ExpenseCat("TRANSPORT",1));
+                        db.addExpenseCat(new ExpenseCat("FOOD",1));
+                        db.addExpenseCat(new ExpenseCat("SALARY",1));
+                        db.addExpenseCat(new ExpenseCat("ELECTRICITY",1));
+                        db.addExpenseCat(new ExpenseCat("WATER",1));
+                        db.addExpenseCat(new ExpenseCat("INSURANCE",1));
+                        db.addExpenseCat(new ExpenseCat("FUEL",1));
 
                         startActivity(new Intent(getApplicationContext(), MainActivity.class));
                         finish();

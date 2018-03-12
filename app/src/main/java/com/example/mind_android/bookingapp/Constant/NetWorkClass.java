@@ -142,10 +142,10 @@ public class NetWorkClass extends AppCompatActivity {
         ringProgressDialog.setCancelable(false);
 
         params.put("bk_userid", bk_userid);
-        params.put("expanse_name", stock_name);
+        params.put("expanse_name",expanse_type );
         params.put("expanse_amout", stock_price);
         params.put("expanse_id", expense_id);
-        params.put("expanse_type", expanse_type);
+        params.put("expanse_type", stock_name);
         params.put("expense_desc", expense_desc);
         params.put("expense_date", expense_date);
         params.put("method_type", method_type);

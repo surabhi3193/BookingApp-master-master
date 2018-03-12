@@ -35,6 +35,7 @@ import cz.msebera.android.httpclient.Header;
 
 import static com.example.mind_android.bookingapp.Constant.CheckInternetConnection.isNetworkAvailable;
 import static com.example.mind_android.bookingapp.Constant.NetWorkClass.BASE_URL_NEW;
+import static com.example.mind_android.bookingapp.Constant.NetWorkClass.addExpense;
 import static com.example.mind_android.bookingapp.Constant.NetWorkClass.deleteExpense;
 import static com.example.mind_android.bookingapp.storage.MySharedPref.getData;
 import static com.example.mind_android.bookingapp.storage.MySharedPref.saveData;
@@ -117,7 +118,13 @@ public class ExpenceActivity extends BaseActivity {
         ab.setNegativeButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+
+                if (isNetworkAvailable(ExpenceActivity.this))
                 resetExpanse();
+                else
+                {
+                    db.deleteAllexpense();
+                }
                 dialog.dismiss();
             }
         });
@@ -173,6 +180,7 @@ public class ExpenceActivity extends BaseActivity {
                         JSONArray jArray = response.getJSONArray("expanses");
                         StockAdapter stockListAdapter = new StockAdapter(ExpenceActivity.this, jArray, "expense");
                         stocklist.setAdapter(stockListAdapter);
+                        stockListAdapter.notifyDataSetChanged();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -207,7 +215,7 @@ public class ExpenceActivity extends BaseActivity {
         client.post(BASE_URL_NEW + "clear_expenses", params, new JsonHttpResponseHandler() {
 
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                System.out.println(" ************* show stock  response ***");
+                System.out.println(" ************* clear expense response ***");
                 System.out.println(response);
                 ringProgressDialog.dismiss();
                 try {
@@ -218,6 +226,7 @@ public class ExpenceActivity extends BaseActivity {
 //                        Toast.makeText(StockActivity.this, response.getString("message"), Toast.LENGTH_SHORT).show();
                     } else {
                         stocklist.setVisibility(View.INVISIBLE);
+                        db.deleteAllexpense();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -257,9 +266,19 @@ public class ExpenceActivity extends BaseActivity {
     public void showAllExpense() {
         if (isNetworkAvailable(ExpenceActivity.this)) {
 
-            addUnregisteredExpense();
-            deleteExpenseFromServer();
-            showExpense();
+            int count = db.getExpensesCount();
+            if (count==0)
+            {
+                resetExpanse();
+                showExpense();
+
+            }
+            else {
+
+                addUnregisteredExpense();
+                deleteExpenseFromServer();
+                showExpense();
+            }
 
         } else {
             showExpenseFronLocal();
@@ -299,6 +318,9 @@ public class ExpenceActivity extends BaseActivity {
                     " ,price : " + cn.get_price();
             // Writing Contacts to log
             Log.d("Name: ", log);
+
+            addExpense(ExpenceActivity.this,user_id,cn.get_name(),cn.get_name(),
+                    cn.get_name(), cn.get_date(),cn.get_price(), "1", String.valueOf(cn.get_id()), "local");
 //            addExpense(ExpenceActivity.this,user_id,cn.get_name(),cn.get_price(),"1",
 //                    String.valueOf(cn.get_id()),"local");
         }

@@ -278,7 +278,9 @@ public class StockActivity extends BaseActivity {
 
             addStock(StockActivity.this, user_id, cn.get_name(), cn.get_qty(), cn.get_price(), "1", cn.get_unit_per_price(), String.valueOf(cn.get_id()), "local");
         }
-    }    private void updateregisteredStock() {
+    }
+
+    private void updateregisteredStock() {
         stocks = db.getAllStocksWith3();
         System.out.println("================ stocks with 0 status ========");
         System.out.println(stocks);
@@ -324,6 +326,7 @@ public class StockActivity extends BaseActivity {
                 jobj.put("stock_qty", cn.get_qty());
                 jobj.put("stock_per_price", cn.get_unit_per_price());
                 jobj.put("stock_price", cn.get_price());
+                jobj.put("stock_date", cn.get_date());
                 if (!cn.get_qty().equalsIgnoreCase("0")) {
                     jArray.put(jobj);
                     double price = Double.parseDouble(cn.get_price());

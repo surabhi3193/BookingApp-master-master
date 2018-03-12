@@ -13,11 +13,47 @@
     android:layout_height="wrap_content">
     <include layout="@layout/toolbar_item" />
 </LinearLayout>
+    <RelativeLayout
+        android:layout_below="@+id/toolbar"
+        android:background="@color/colorAccent"
+        android:id="@+id/bottom_lay"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+        <ImageView
+            android:id="@+id/back_btn"
+            android:layout_alignParentLeft="true"
+            android:padding="15dp"
+            android:background="@color/trans"
+            android:src="@drawable/back"
+            android:layout_width="50dp"
+            android:layout_height="match_parent" />
 
+        <TextView
+            android:layout_toLeftOf="@+id/total_amtTv"
+            android:textStyle="bold"
+            android:padding="10dp"
+            android:gravity="center"
+            android:text="Total Amount : "
+            android:textColor="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:id="@+id/total_amtTv"
+            android:layout_alignParentRight="true"
+            android:textStyle="bold"
+            android:padding="10dp"
+            android:gravity="center"
+            android:text="0"
+            android:textColor="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+    </RelativeLayout>
 
     <LinearLayout
+        android:layout_below="@+id/bottom_lay"
+
         android:layout_above="@+id/reset_lay"
-        android:layout_below="@+id/toolbar"
         android:id="@+id/listLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -227,48 +263,13 @@ android:visibility="gone"
     <Button
         android:text="Reset"
         android:textColor="@color/white"
-        android:layout_marginBottom="5dp"
         android:background="@color/Crimson"
         android:id="@+id/reset_lay"
-        android:layout_above="@+id/bottom_lay"
+
+android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="50dp"/>
 
-    <RelativeLayout
-        android:background="@color/colorAccent"
-        android:id="@+id/bottom_lay"
-        android:layout_alignParentBottom="true"
-        android:layout_width="match_parent"
-        android:layout_height="50dp">
-        <ImageView
-            android:id="@+id/back_btn"
-            android:layout_alignParentLeft="true"
-            android:padding="15dp"
-            android:background="@color/trans"
-            android:src="@drawable/back"
-            android:layout_width="50dp"
-            android:layout_height="match_parent" />
 
-        <TextView
-android:layout_toLeftOf="@+id/total_amtTv"
-            android:textStyle="bold"
-            android:padding="10dp"
-            android:gravity="center"
-            android:text="Total Amount : "
-            android:textColor="@color/white"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent" />
-
-        <TextView
-            android:id="@+id/total_amtTv"
-            android:layout_alignParentRight="true"
-            android:textStyle="bold"
-            android:padding="10dp"
-            android:gravity="center"
-            android:text="0"
-            android:textColor="@color/white"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent" />
-    </RelativeLayout>
 
 </RelativeLayout>

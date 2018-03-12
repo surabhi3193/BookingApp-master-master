@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.example.mind_android.bookingapp.beans.Expense;
+import com.example.mind_android.bookingapp.beans.ExpenseCat;
 import com.example.mind_android.bookingapp.beans.Report;
 import com.example.mind_android.bookingapp.beans.Sales;
 import com.example.mind_android.bookingapp.beans.Stock;
@@ -20,7 +21,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     // All Static variables
     // Database Version
-    private static final int DATABASE_VERSION = 11;
+    private static final int DATABASE_VERSION = 13;
 
     // Database Name
     private static final String DATABASE_NAME = "usersManager";
@@ -30,6 +31,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String TABLE_SALES = "sales";
     private static final String TABLE_EXPENSE = "expense";
     private static final String TABLE_REPORT = "report";
+    private static final String TABLE_EXPENSE_CAT = "TABLE_EXPENSE_CAT";
+    private static final String TABLE_LENDER_NAME = "TABLE_LENDER_NAME";
+    private static final String TABLE_BANK_NAME = "TABLE_BANK_NAME";
 
     // Users Table Columns names
     private static final String KEY_ID = "id";
@@ -75,6 +79,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_TOTAL_EXPENSE = "t_exp";
     private static final String KEY_TOTAL_OTHER_INCOME = "t_other";
 
+    // Expense Categaory Table Columns names
+    private static final String EXPENSE_CAT_NAME = "exp_cat_name";
+    private static final String EXPENSE_CAT_STATUS = "exp_cat_status";
+    private static final String LENDER_NAME = "lender";
+    private static final String LENDER_NAME_STATUS = "lender_status";
+    private static final String BANk_NAME = "bank_name";
+    private static final String BANk_NAME_STATUS = "bank_name_status";
+
 
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -89,12 +101,18 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String CREATE_SALES_TABLE = "CREATE TABLE " + TABLE_SALES + "(" + KEY_SALES_ID + " INTEGER PRIMARY KEY," + KEY_SALES_NAME + " TEXT," + KEY_SALES_QTY + " TEXT," + KEY_SALES_PER_PRICE + " TEXT," + KEY_SALES_PRICE + " TEXT," + KEY_SALE_TYPE + " TEXT," + KEY_SALES_DATE + " TEXT," + KEY_SALES_TOTAL + " TEXT," + KEY_SALES_STATUS + " INTEGER" + ")";
         String CREATE_EXPENSE_TABLE = "CREATE TABLE " + TABLE_EXPENSE + "(" + KEY_EXPENSE_ID + " INTEGER PRIMARY KEY," + KEY_EXPENSE_NAME + " TEXT," + KEY_EXPENSE_DATE + " TEXT," + KEY_EXPENSE_PRICE + " TEXT," + KEY_EXPENSE_STATUS + " INTEGER" + ")";
         String CREATE_REPORT_TABLE = "CREATE TABLE " + TABLE_REPORT + "(" + KEY_TOTAL_SALE + " TEXT," + KEY_TOTAL_STOCK + " TEXT," + KEY_TOTAL_EXPENSE + " TEXT," + KEY_TOTAL_OTHER_INCOME + " TEXT" + ")";
+        String CREATE_EXPENSE_CAT_TABLE = "CREATE TABLE " + TABLE_EXPENSE_CAT + "(" + EXPENSE_CAT_NAME + " TEXT PRIMARY KEY,"+ EXPENSE_CAT_STATUS + " INTEGER"+ ")";
+        String CREATE_LENDER_NAME_TABLE = "CREATE TABLE " + TABLE_LENDER_NAME + "(" + LENDER_NAME + " TEXT PRIMARY KEY"+ ")";
+        String CREATE_BANK_NAME_TABLE = "CREATE TABLE " + TABLE_BANK_NAME + "(" + BANk_NAME + " TEXT PRIMARY KEY"+ ")";
 
         db.execSQL(CREATE_USERS_TABLE);
         db.execSQL(CREATE_STOCK_TABLE);
         db.execSQL(CREATE_SALES_TABLE);
         db.execSQL(CREATE_EXPENSE_TABLE);
         db.execSQL(CREATE_REPORT_TABLE);
+        db.execSQL(CREATE_EXPENSE_CAT_TABLE);
+        db.execSQL(CREATE_LENDER_NAME_TABLE);
+        db.execSQL(CREATE_BANK_NAME_TABLE);
 
     }
 
@@ -107,12 +125,106 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_SALES);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_EXPENSE);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_REPORT);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_EXPENSE_CAT);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_LENDER_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_BANK_NAME);
 
         // Create tables again
         onCreate(db);
     }
 
-    /**
+    /*
+     * All CRUD FOR USER (Create, Read, Update, Delete) Operations
+     */
+    public void addExpenseCat(ExpenseCat expense_cat) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(EXPENSE_CAT_NAME, expense_cat.get_name()); // User id
+        values.put(EXPENSE_CAT_STATUS, expense_cat.get_status()); // User Name
+
+
+        // Inserting Row
+        db.insert(TABLE_EXPENSE_CAT, null, values);
+
+        System.err.println(values);
+        System.err.println("============== added cat =========");
+        db.close(); // Closing database connection
+
+    }
+    public List<ExpenseCat> getAllExpenseCat() {
+        List<ExpenseCat> expenseCats = new ArrayList<>();
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + TABLE_EXPENSE_CAT;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                ExpenseCat user = new ExpenseCat();
+                user.set_name(cursor.getString(0));
+                user.set_status(Integer.parseInt(cursor.getString(1)));
+
+                // Adding user to list
+                expenseCats.add(user);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        return expenseCats;
+    }
+    public List<ExpenseCat> getAllExpense_CatsWith0() {
+        List<ExpenseCat> stocklist = new ArrayList<>();
+        // Select All Query
+//        String selectQuery = "SELECT  * FROM " + TABLE_STOCKS;
+
+        String selectQuery = "SELECT * FROM " + TABLE_EXPENSE_CAT + " where " + EXPENSE_CAT_STATUS + "='" + 0 + "'";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                ExpenseCat stock = new ExpenseCat();
+                stock.set_name(cursor.getString(0));
+                stock.set_status(Integer.parseInt(cursor.getString(1)));
+
+                stocklist.add(stock);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        return stocklist;
+    }
+
+    public boolean checkExpenseCat(String cat_name) {
+        boolean isExist;
+        SQLiteDatabase db = this.getWritableDatabase();
+        System.err.println("=========== checking  cat_name ========");
+        System.err.println(cat_name);
+        try {
+            Cursor c = db.rawQuery("SELECT * FROM " + TABLE_EXPENSE_CAT + " WHERE " + EXPENSE_CAT_NAME + "='" + cat_name + "'", null);
+            if (c.moveToFirst()) {
+                System.err.println("===========   stock exist========");
+                isExist = true;
+            } else {
+                System.err.println("===========   stock does not exist========");
+                isExist = false;
+            }
+            c.close();
+            return isExist;
+        } catch (SQLiteException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+
+    }
+
+/*
      * All CRUD FOR USER (Create, Read, Update, Delete) Operations
      */
 
@@ -246,7 +358,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 cursor.close();
 return user;
     }
-
 
     public int getStocksCount() {
         System.err.println("===== stock count=========");
@@ -783,7 +894,19 @@ cursor.close();
         cursor.close();
         return expenseList;
     }
+    public int getExpensesCount() {
+        System.err.println("===== stock count=========");
+        int count;
+        String countQuery = "SELECT  * FROM " + TABLE_EXPENSE;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(countQuery, null);
+        count = cursor.getCount();
+        cursor.close();
 
+        System.err.println(count);
+        // return count
+        return count;
+    }
     // Getting All Users
     public List<Expense> getAllExpense() {
         List<Expense> expenseList = new ArrayList<>();

@@ -72,11 +72,7 @@ public class LoanActivity extends BaseActivity {
                 );
             }
         });
-
-
     }
-
-
     private void getLoan(final String user_id) {
 
         final AsyncHttpClient client = new AsyncHttpClient();
@@ -160,12 +156,10 @@ public class LoanActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         String user_id = getData(LoanActivity.this, "user_id", "");
-
         if (summaryList.size() > 0)
             summaryList.clear();
         getLoan(user_id);
     }
-
     @Override
     public void onBackPressed() {
         finish();

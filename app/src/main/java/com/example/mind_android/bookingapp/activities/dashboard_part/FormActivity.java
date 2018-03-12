@@ -2,6 +2,7 @@ package com.example.mind_android.bookingapp.activities.dashboard_part;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -16,6 +17,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -35,7 +37,9 @@ import org.json.JSONObject;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -49,7 +53,7 @@ public class FormActivity extends AppCompatActivity {
     public static String sale_stock = "", sale_item_id = "";
     String price_unit = "0", method_type = "0", stock_id = "";
     private EditText item_nameEt, item_qtEt, itemUnitPriceEt, sale_unit, sale_item_qty;
-    private TextView itemPriceEt;
+    private TextView itemPriceEt,dateTV;
     private TextView sale_item_price;
     private int count;
 
@@ -170,31 +174,6 @@ public class FormActivity extends AppCompatActivity {
         });
     }
 
-    public static void addsaleToLocal(Activity activity, final String stock_name,
-                                      final String stock_qty, final
-                                      String stock_amount, final String stock_per_price, final String sale_type) {
-        DatabaseHandler db = new DatabaseHandler(activity);
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-        String currentDateandTime = sdf.format(new Date());
-
-        Log.d("Insert: ", "Inserting .. Sale");
-        Long tsLong = System.currentTimeMillis() / 1000;
-        int id = Integer.parseInt(tsLong.toString());
-
-        db.addSales(new Sales(id, stock_name, stock_qty, stock_per_price, stock_amount, sale_type, currentDateandTime, "", 0));
-
-        if (sale_type.equalsIgnoreCase("2")) {
-            Stock stock = db.getStock(stock_name);
-            String qty = String.valueOf(Integer.parseInt(stock.get_qty()) - Integer.parseInt(stock_qty));
-
-            System.out.println("====== qty====" + qty);
-            System.out.println("====== qty/price====" + stock.get_unit_per_price());
-            String amnt = String.valueOf(Integer.parseInt(qty) * Double.parseDouble(stock.get_unit_per_price()));
-            db.updateStock(new Stock(Integer.parseInt(sale_item_id), stock_name, qty, stock_per_price, amnt, currentDateandTime, "", 0), sale_item_id);
-        }
-        activity.onBackPressed();
-
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -212,13 +191,40 @@ public class FormActivity extends AppCompatActivity {
         item_qtEt = findViewById(R.id.itemQuant_TV);
         itemPriceEt = findViewById(R.id.item_price_tv);
         itemUnitPriceEt = findViewById(R.id.item_price_unit);
+        dateTV = findViewById(R.id.dateTV);
+
 
         sale_unit = findViewById(R.id.sale_unit);
         sale_item_name = findViewById(R.id.sale_item_name);
         sale_item_price = findViewById(R.id.sale_item_price);
         sale_item_qty = findViewById(R.id.sale_item_qty);
 
+        final Calendar myCalendar = Calendar.getInstance();
 
+        final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear,
+                                  int dayOfMonth) {
+                // TODO Auto-generated method stub
+                myCalendar.set(Calendar.YEAR, year);
+                myCalendar.set(Calendar.MONTH, monthOfYear);
+                myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                updateLabel(dateTV, myCalendar);
+            }
+
+        };
+
+        dateTV.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                new DatePickerDialog(FormActivity.this, date, myCalendar
+                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                        myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+            }
+        });
         final FragmentManager fm = getFragmentManager();
         final SaletemFragment p = new SaletemFragment();
 
@@ -543,7 +549,8 @@ public class FormActivity extends AppCompatActivity {
             int id = Integer.parseInt(tsLong.toString());
 
             boolean isExist = db.checkStock(stock_name);
-            if (isExist) {
+            if (isExist)
+            {
 
                 Stock stock = db.getStock(stock_name);
 
@@ -555,14 +562,25 @@ public class FormActivity extends AppCompatActivity {
 
                 db.updateStock(new Stock(id, name, qty, per_price, total_amount, currentDateandTime, "", 3), stock_id);
 
-            } else
+            }
+            else
                 db.addStock(new Stock(id, stock_name, stock_qty, stock_per_price, stock_amount, currentDateandTime, "", 0));
 
             onBackPressed();
-        } else if (method_type.equals("2")) {
+        }
+
+        else if (method_type.equals("2")) {
             int id = Integer.parseInt(stock_id);
+            Stock stock = db.getStock(stock_name);
+            int status = stock.get_status();
+
             Log.d("Update: ", "Updating .. Stock");
-            db.updateStock(new Stock(id, stock_name, stock_qty, stock_per_price, stock_amount, currentDateandTime, "", 3), stock_id);
+            if (status==0)
+            db.updateStock(new Stock(id, stock_name, stock_qty, stock_per_price, stock_amount, currentDateandTime, "", 0), stock_id);
+
+
+            if (status==0)
+                db.updateStock(new Stock(id, stock_name, stock_qty, stock_per_price, stock_amount, currentDateandTime, "", 3), stock_id);
             onBackPressed();
         }
     }
@@ -572,6 +590,7 @@ public class FormActivity extends AppCompatActivity {
         String name = sale_item_name.getText().toString();
         String qty = sale_item_qty.getText().toString();
         String price = sale_item_price.getText().toString();
+        String date = dateTV.getText().toString();
 
         if (name.length() == 0)
             sale_item_name.setError("Stock name required");
@@ -583,6 +602,9 @@ public class FormActivity extends AppCompatActivity {
             sale_unit.setError("Stock unit  required");
         if (price.length() == 0 || price.equalsIgnoreCase("0.0"))
             sale_item_price.setError("Price required");
+        if (date.length() == 0)
+            Toast.makeText(FormActivity.this,"Select Date",Toast.LENGTH_SHORT).show();
+
 
         System.out.println(" ========= params  for enter sale =========");
         System.out.println(name);
@@ -596,15 +618,19 @@ public class FormActivity extends AppCompatActivity {
             if (name.length() > 0 && qty.length() > 0
                     && price.length() > 0
                     && unit.length() > 0
+                    && date.length() > 0
                     && !qty.equalsIgnoreCase("0")
-                    && !unit.equalsIgnoreCase("0")) {
+                    && !unit.equalsIgnoreCase("0")
+                    ) {
                 String user_id = getData(FormActivity.this, "user_id", "");
 
                 if (isNetworkAvailable(FormActivity.this))
                     addsale(FormActivity.this, user_id, unit, qty, price, sale_item_id, "", "2", "");
 
                 else {
-                    addsaleToLocal(FormActivity.this, name, qty, price, unit, "2");
+                    Toast.makeText(FormActivity.this,"Internet Connection Unavailable, Try Again ",Toast.LENGTH_SHORT).show();
+
+//                    addsaleToLocal(FormActivity.this, name, qty, price, unit, "2");
                 }
             }
         }
@@ -638,4 +664,12 @@ public class FormActivity extends AppCompatActivity {
 
         }
     }
+
+    private void updateLabel(TextView textEdit, Calendar myCalendar) {
+        String myFormat = "dd-MM-yyyy"; //In which you need put here
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+
+        textEdit.setText(sdf.format(myCalendar.getTime()));
+    }
+
 }

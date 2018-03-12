@@ -17,6 +17,8 @@ import android.widget.Toast;
 
 import com.example.mind_android.bookingapp.R;
 import com.example.mind_android.bookingapp.beans.Expense;
+import com.example.mind_android.bookingapp.beans.ExpenseCat;
+import com.example.mind_android.bookingapp.beans.Stock;
 import com.example.mind_android.bookingapp.storage.DatabaseHandler;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -36,6 +38,7 @@ import cz.msebera.android.httpclient.Header;
 import static com.example.mind_android.bookingapp.Constant.CheckInternetConnection.isNetworkAvailable;
 import static com.example.mind_android.bookingapp.Constant.NetWorkClass.BASE_URL_NEW;
 import static com.example.mind_android.bookingapp.Constant.NetWorkClass.addExpense;
+import static com.example.mind_android.bookingapp.Constant.NetWorkClass.addStock;
 import static com.example.mind_android.bookingapp.storage.MySharedPref.getData;
 
 public class ExpenseForm_Activity extends AppCompatActivity {
@@ -92,16 +95,39 @@ public class ExpenseForm_Activity extends AppCompatActivity {
         if (bundle != null) {
 
             method_type = bundle.getString("method_type");
-            assert method_type != null;
-            if (method_type.equals("2")) {
-                expense_id = bundle.getString("expanse_id");
 
+            assert method_type != null;
+            if (method_type.equals("2"))
+            {
+                expense_id = bundle.getString("expanse_id");
+               String expense_desc = bundle.getString("expense_desc");
+               String expanse_date = bundle.getString("expanse_date");
+
+                descET.setText(expense_desc);
+                dateTV.setText(expanse_date);
                 priceEt.setText(bundle.getString("expanse_amount"));
                 add_btn.setText(R.string.save);
-                getExpenseType(2, bundle.getString("expanse_name"));
-            } else {
+
+                if (isNetworkAvailable(ExpenseForm_Activity.this))
+                    getExpenseType(2, bundle.getString("expanse_name"));
+                else
+                    getExpenseTypeFromLocal(2, bundle.getString("expanse_name"));
+            }
+
+
+            else {
                 add_btn.setText(R.string.addexpense);
-                getExpenseType(1, "");
+
+                if (isNetworkAvailable(ExpenseForm_Activity.this)) {
+//                    addUnregisterCat();
+                    getExpenseType(1, "");
+                }
+                else {
+                    getExpenseTypeFromLocal(1, "");
+
+                }
+
+
 
             }
 
@@ -181,6 +207,8 @@ public class ExpenseForm_Activity extends AppCompatActivity {
 
                         else {
 
+                            cat=expType.toUpperCase();
+                            cat=cat.toUpperCase();
                             addExpenseinLocal(cat, date, price, method_type, expense_id);
 
                         }
@@ -194,7 +222,7 @@ public class ExpenseForm_Activity extends AppCompatActivity {
                         String user_id = getData(ExpenseForm_Activity.this, "user_id", "");
 
                         if (isNetworkAvailable(ExpenseForm_Activity.this))
-                            addExpense(ExpenseForm_Activity.this, user_id, cat, expType, desc, date,
+                            addExpense(ExpenseForm_Activity.this, user_id, expType, cat, desc, date,
                                     price, method_type, expense_id, "");
 
                         else {
@@ -208,6 +236,70 @@ public class ExpenseForm_Activity extends AppCompatActivity {
 
             }
         });
+    }
+
+//    private void addUnregisterCat() {
+//        List<Expense> stocks ;
+//        DatabaseHandler db = new DatabaseHandler(ExpenseForm_Activity.this);
+//        stocks = db.getAllExpenseWith0();
+//        System.out.println("================ cat with 0 status ========");
+//        System.out.println(stocks);
+//        String user_id = getData(ExpenseForm_Activity.this,"user_id","");
+//        for (Expense cn : stocks)
+//        {
+//            String log = "Name: " + cn.get_name() +
+//                    " ,status : " + cn.get_status() ;
+//
+//            // Writing Contacts to log
+//            Log.d("ExpenseCat: ", log);
+//
+//
+//        }
+//    }
+
+    private void getExpenseTypeFromLocal(int s, String expanse_name) {
+        categList = new ArrayList<>();
+        if (s == 2) {
+            categList.add(expanse_name);
+            otherET.setVisibility(View.GONE);
+        }
+        else {
+            DatabaseHandler db = new DatabaseHandler(ExpenseForm_Activity.this);
+
+
+            Log.d("Reading: ", "Reading all EXPENSE CAT..");
+            List<ExpenseCat> stocks = db.getAllExpenseCat();
+            JSONArray jArray = new JSONArray();
+            try {
+                for (ExpenseCat cn : stocks) {
+                    JSONObject jobj = new JSONObject();
+                    String log = " ,Name: " + cn.get_name() +
+                            " ,status : " + cn.get_status();
+                    // Writing Contacts to log
+                    Log.d("Name: ", log);
+
+                    jobj.put("expenses_name", cn.get_name());
+                    jArray.put(jobj);
+                }
+
+                categList.add("Select Category");
+                for (int i = 0; i < jArray.length(); i++) {
+                    String expenses_name = jArray.getJSONObject(i).getString("expenses_name");
+
+                    categList.add(expenses_name);
+                }
+                categList.add("OTHER");
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        final ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(
+                ExpenseForm_Activity.this, R.layout.spinner_item, categList);
+
+        spinnerArrayAdapter.setDropDownViewResource(R.layout.spinner_item);
+        spinner.setAdapter(spinnerArrayAdapter);
+
     }
 
     private void updateLabel(TextView textEdit, Calendar myCalendar) {
@@ -240,7 +332,8 @@ public class ExpenseForm_Activity extends AppCompatActivity {
                         if (s == 2) {
                             categList.add(expanse_name);
                             otherET.setVisibility(View.GONE);
-                        } else {
+                        }
+                        else {
                             JSONArray jArray = response.getJSONArray("expenses");
                             categList.add("Select Category");
                             for (int i = 0; i < jArray.length(); i++) {
@@ -283,8 +376,15 @@ public class ExpenseForm_Activity extends AppCompatActivity {
             Long tsLong = System.currentTimeMillis() / 1000;
             int id = Integer.parseInt(tsLong.toString());
 
+            boolean isExist = db.checkExpenseCat(stock_name);
+
+            if (!isExist)
+                db.addExpenseCat(new ExpenseCat(stock_name.toUpperCase(),0));
+
+
             db.addExpense(new Expense(id, stock_name, date, stock_amount, 0));
             onBackPressed();
+
         } else if (method_type.equals("2")) {
             int id = Integer.parseInt(stock_id);
             Log.d("Update: ", "Updating .. Stock");

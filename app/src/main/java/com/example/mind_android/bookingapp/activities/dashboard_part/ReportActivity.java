@@ -191,8 +191,9 @@ public class ReportActivity extends BaseActivity {
                             profile_lay.setBackgroundColor(getResources().getColor(R.color.colorAccent));
                         } else {
 
+
+                            proftv.setText("("+response.getString("total_profit")+")");
                             profitTV.setText(response.getString("total_profit"));
-                            proftv.setText(response.getString("total_profit"));
                             plIcon.setImageResource(R.drawable.loss);
                             proftv.setTextColor(getResources().getColor(R.color.Red));
 
@@ -355,6 +356,7 @@ public class ReportActivity extends BaseActivity {
         int totalWidth = z.getChildAt(0).getWidth();
 
         Bitmap b = getBitmapFromView(u, totalHeight, totalWidth);
+        try {
         MediaStore.Images.Media.insertImage(getContentResolver(), b, "Screen", "screen");
 
 
@@ -362,18 +364,13 @@ public class ReportActivity extends BaseActivity {
                 File.separator + "image.jpg");
 
         FileOutputStream fos;
-        try {
+
             fos = new FileOutputStream(f);
             b.compress(Bitmap.CompressFormat.JPEG, 100, fos);
             fos.flush();
             fos.close();
-        } catch (FileNotFoundException e) {
-            Toast.makeText(ReportActivity.this, "Not able to take screenshot file", Toast.LENGTH_SHORT).show();
-            e.printStackTrace();
-            print_btn.setVisibility(View.VISIBLE);
-            summary_btn.setVisibility(View.VISIBLE);
-        } catch (Exception e) {
-            Toast.makeText(ReportActivity.this, "Not able to take screenshot io", Toast.LENGTH_SHORT).show();
+        }  catch (Exception e) {
+            Toast.makeText(ReportActivity.this, "Please Allow Storage Permission From Settings ", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
             print_btn.setVisibility(View.VISIBLE);
             summary_btn.setVisibility(View.VISIBLE);

@@ -2,6 +2,7 @@ package com.example.mind_android.bookingapp.adapter;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
@@ -9,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,6 +27,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.NumberFormat;
+
 import static com.example.mind_android.bookingapp.Constant.CheckInternetConnection.isNetworkAvailable;
 import static com.example.mind_android.bookingapp.Constant.NetWorkClass.deleteExpense;
 import static com.example.mind_android.bookingapp.Constant.NetWorkClass.deleteStock;
@@ -35,6 +39,7 @@ public class StockAdapter extends BaseAdapter {
     private JSONArray jobj;
     private Activity context;
     private String act_name;
+    String stock_name,stock_qty,stock_price;
 
 
     public StockAdapter(Activity context, JSONArray jobj, String act_name) {
@@ -74,9 +79,9 @@ public class StockAdapter extends BaseAdapter {
             responseobj = jobj.getJSONObject(position);
             if (act_name.equals("expense")) {
                 String stock_id = responseobj.getString("expanse_id");
-                String stock_name = responseobj.getString("expanse_name");
-                String stock_qty = responseobj.getString("expanse_date");
-                String stock_price = responseobj.getString("expanse_amount");
+                 stock_name = responseobj.getString("expanse_name");
+                 stock_qty = responseobj.getString("expanse_date");
+                 stock_price = responseobj.getString("expanse_amount");
 
                 System.out.println("********** item position *******");
                 System.out.println(position);
@@ -101,6 +106,7 @@ public class StockAdapter extends BaseAdapter {
                 System.out.println(stock_id);
 
                 int x = position + 1;
+                NumberFormat format = NumberFormat.getCurrencyInstance();
                 holder.serialno.setText(String.valueOf(x));
                 holder.stock_name.setText(stock_name);
                 holder.stock_qty.setText(stock_qty);
@@ -111,13 +117,27 @@ public class StockAdapter extends BaseAdapter {
             e.printStackTrace();
         }
         final JSONObject finalResponseobj1 = responseobj;
+
+
         holder.delete_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                        deleteAlertDialog(context, finalResponseobj1,act_name);
+                deleteAlertDialog(context, finalResponseobj1, act_name);
 
             }
         });
+
+        holder.serialno.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (act_name.equalsIgnoreCase("expense"))
+                openDescriptionDialogForExpense(finalResponseobj1);
+                else
+                    openDescriptionDialog(finalResponseobj1);
+            }
+        });
+
 
 
         holder.edit_btn.setOnClickListener(new View.OnClickListener() {
@@ -125,27 +145,25 @@ public class StockAdapter extends BaseAdapter {
             public void onClick(View view) {
                 try {
 
-                    if (act_name.equals("expense"))
-                    {
+                    if (act_name.equals("expense")) {
 
                         String stock_id = finalResponseobj1.getString("expanse_id");
                         String stock_name = finalResponseobj1.getString("expanse_name");
                         String expanse_amount = finalResponseobj1.getString("expanse_amount");
                         String expanse_date = finalResponseobj1.getString("expanse_date");
+                        String expense_desc = finalResponseobj1.getString("expense_desc");
                         context.startActivity(new Intent(context, ExpenseForm_Activity.class)
                                 .putExtra("method_type", "2")
                                 .putExtra("expanse_id", stock_id)
                                 .putExtra("expanse_name", stock_name)
                                 .putExtra("expanse_amount", expanse_amount)
                                 .putExtra("expanse_date", expanse_date)
+                                .putExtra("expense_desc", expense_desc)
 
                         );
 
 
-                    }
-
-
-                    else {
+                    } else {
                         String stock_id = finalResponseobj1.getString("stock_id");
                         String stock_name = finalResponseobj1.getString("stock_name");
                         String stock_qty = finalResponseobj1.getString("stock_qty");
@@ -173,6 +191,79 @@ public class StockAdapter extends BaseAdapter {
         return rowView;
     }
 
+    private void openDescriptionDialog(JSONObject finalResponseobj1) {
+        // custom dialog
+        try {
+            final Dialog dialog = new Dialog(context);
+            dialog.setContentView(R.layout.custom_popup);
+            dialog.setTitle(finalResponseobj1.getString("stock_name"));
+
+            // set the custom dialog components - text, image and button
+            TextView title = dialog.findViewById(R.id.title);
+            TextView qty = dialog.findViewById(R.id.qty);
+            TextView perunit = dialog.findViewById(R.id.perunit);
+            TextView value = dialog.findViewById(R.id.value);
+            TextView date = dialog.findViewById(R.id.date);
+
+            title.setText(finalResponseobj1.getString("stock_name"));
+            qty.setText(finalResponseobj1.getString("stock_qty"));
+            perunit.setText(finalResponseobj1.getString("stock_per_price"));
+            value.setText(finalResponseobj1.getString("stock_price"));
+            date.setText(finalResponseobj1.getString("stock_date"));
+
+
+            Button dialogButton =dialog.findViewById(R.id.dialogButtonOK);
+            // if button is clicked, close the custom dialog
+            dialogButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                }
+            });
+
+            dialog.show();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+    }
+    private void openDescriptionDialogForExpense(JSONObject finalResponseobj1) {
+        // custom dialog
+        try {
+            final Dialog dialog = new Dialog(context);
+            dialog.setContentView(R.layout.custom_popup_exp);
+            dialog.setTitle(finalResponseobj1.getString("expanse_name"));
+
+            // set the custom dialog components - text, image and button
+            TextView title = dialog.findViewById(R.id.title);
+            TextView desc = dialog.findViewById(R.id.desc);
+            TextView value = dialog.findViewById(R.id.value);
+            TextView date = dialog.findViewById(R.id.date);
+
+            title.setText(finalResponseobj1.getString("expanse_name"));
+            desc.setText(finalResponseobj1.getString("expense_desc"));
+            value.setText(finalResponseobj1.getString("expanse_amount"));
+            date.setText(finalResponseobj1.getString("expanse_date"));
+
+
+            Button dialogButton =dialog.findViewById(R.id.dialogButtonOK);
+            // if button is clicked, close the custom dialog
+            dialogButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                }
+            });
+
+            dialog.show();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+    }
+
     private void deleteAlertDialog(final Activity activity, final JSONObject jobj, final String act_name) {
         AlertDialog.Builder ab = new AlertDialog.Builder(activity, R.style.MyAlertDialogStyle1);
         ab.setTitle("Delete");
@@ -181,11 +272,9 @@ public class StockAdapter extends BaseAdapter {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 try {
-                    if (!isNetworkAvailable(activity))
-                    {
+                    if (!isNetworkAvailable(activity)) {
 
-                        if (act_name.equals("expense"))
-                        {
+                        if (act_name.equals("expense")) {
                             Expense expense = new Expense();
                             int id = Integer.parseInt(jobj.getString("expanse_id"));
                             expense.set_id(id);
@@ -201,10 +290,7 @@ public class StockAdapter extends BaseAdapter {
                             if (activity instanceof ExpenceActivity) {
                                 ((ExpenceActivity) activity).showAllExpense();
                             }
-                        }
-
-                        else
-                        {
+                        } else {
 
                             Stock stock = new Stock();
                             int id = Integer.parseInt(jobj.getString("stock_id"));
@@ -225,11 +311,9 @@ public class StockAdapter extends BaseAdapter {
                         }
 
 
-                    }
-                    else {
+                    } else {
 
-                        if (act_name.equals("expense"))
-                        {
+                        if (act_name.equals("expense")) {
                             Expense expense = new Expense();
                             int id = Integer.parseInt(jobj.getString("expanse_id"));
                             expense.set_id(id);
@@ -238,10 +322,9 @@ public class StockAdapter extends BaseAdapter {
                             expense.set_date(jobj.getString("expanse_date"));
                             expense.set_price(jobj.getString("expanse_amount"));
 
-                            deleteExpense(activity,expense);
+                            deleteExpense(activity, expense);
 
-                        }
-                        else {
+                        } else {
 
                             Stock stock = new Stock();
                             int id = Integer.parseInt(jobj.getString("stock_id"));
@@ -253,7 +336,6 @@ public class StockAdapter extends BaseAdapter {
                             stock.set_price(jobj.getString("stock_price"));
                             deleteStock(activity, stock);
                         }
-
 
 
                     }

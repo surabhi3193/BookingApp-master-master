@@ -1,6 +1,7 @@
 package com.example.mind_android.bookingapp.activities.dashboard_part;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -9,6 +10,7 @@ import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -31,7 +33,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -42,7 +47,7 @@ import static com.example.mind_android.bookingapp.storage.MySharedPref.saveData;
 
 public class SalesActivity extends BaseActivity {
 
-    private  TextView total_amtTv;
+    private  TextView total_amtTv,dateTV;
     ListView stocklist;
     DatabaseHandler db;
     List<Sales> sales;
@@ -62,6 +67,7 @@ public class SalesActivity extends BaseActivity {
         bottom_lay = findViewById(R.id.bottom_lay);
         stocklist = findViewById(R.id.stocklist);
         income_formLay = findViewById(R.id.income_formLay);
+        dateTV = findViewById(R.id.dateTV);
 
         TextView signout_btn = findViewById(R.id.signout_btn);
         TextView addServiceTV = findViewById(R.id.addServiceTV);
@@ -74,6 +80,33 @@ public class SalesActivity extends BaseActivity {
         income_formLay.setVisibility(View.GONE);
         reset_lay = findViewById(R.id.reset_lay);
 
+
+        final Calendar myCalendar = Calendar.getInstance();
+
+        final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear,
+                                  int dayOfMonth) {
+                // TODO Auto-generated method stub
+                myCalendar.set(Calendar.YEAR, year);
+                myCalendar.set(Calendar.MONTH, monthOfYear);
+                myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                updateLabel(dateTV, myCalendar);
+            }
+
+        };
+
+        dateTV.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                new DatePickerDialog(SalesActivity.this, date, myCalendar
+                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                        myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+            }
+        });
         saleTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -114,6 +147,7 @@ public class SalesActivity extends BaseActivity {
             public void onClick(View view) {
                 String servicename = nameEt.getText().toString();
                 String service_amt = priceEt.getText().toString();
+                String date = dateTV.getText().toString();
 
                 if (servicename.length() == 0) {
                     nameEt.setError("Field required");
@@ -122,14 +156,17 @@ public class SalesActivity extends BaseActivity {
                 if (service_amt.length() == 0) {
                     priceEt.setError("Field required");
                 }
+                if (date.length() == 0) {
+             Toast.makeText(SalesActivity.this,"Select Date",Toast.LENGTH_SHORT).show();                }
 
-                if (servicename.length() > 0 && service_amt.length() > 0) {
+                if (servicename.length() > 0 && service_amt.length() > 0 && date.length()>0) {
 
                     if (isNetworkAvailable(SalesActivity.this)) {
                         FormActivity.addsale(SalesActivity.this, user_id, "", "", service_amt,
                                 "", servicename, "1", "");
                     } else {
-                        FormActivity.addsaleToLocal(SalesActivity.this, servicename, "", service_amt, "", "1");
+                        Toast.makeText(SalesActivity.this,"Internet Connection Unavailable, Try Again ",Toast.LENGTH_SHORT).show();
+//                        FormActivity.addsaleToLocal(SalesActivity.this, servicename, "", service_amt, "", "1");
                     }
                     showAllSales();
                 }
@@ -407,6 +444,13 @@ public class SalesActivity extends BaseActivity {
 
         }
 
+    }
+
+    private void updateLabel(TextView textEdit, Calendar myCalendar) {
+        String myFormat = "dd-MM-yyyy"; //In which you need put here
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+
+        textEdit.setText(sdf.format(myCalendar.getTime()));
     }
 
 }

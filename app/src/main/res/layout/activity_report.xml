@@ -55,7 +55,7 @@
     <RelativeLayout
         android:layout_marginTop="10dp"
         android:layout_width="match_parent"
-        android:layout_height="50dp">
+        android:layout_height="wrap_content">
 
         <TextView
             android:layout_width="wrap_content"
@@ -76,20 +76,17 @@
             android:gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:textColor="@color/Red"
+            android:textColor="@color/black"
             android:textSize="15sp"
             android:textStyle="bold"
             android:text="0.00"/>
 
-        <View
-            android:layout_alignParentBottom="true"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/colorAccent"/>
+
     </RelativeLayout>
     <RelativeLayout
+        android:layout_marginTop="5dp"
         android:layout_width="match_parent"
-        android:layout_height="50dp">
+        android:layout_height="wrap_content">
 
         <TextView
             android:layout_width="wrap_content"
@@ -109,20 +106,17 @@
             android:gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:textColor="@color/Red"
+            android:textColor="@color/black"
             android:textSize="15sp"
             android:textStyle="bold"
             android:text="0.00"/>
 
-        <View
-            android:layout_alignParentBottom="true"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/colorAccent"/>
     </RelativeLayout>
     <RelativeLayout
+        android:paddingTop="5dp"
+        android:layout_marginTop="5dp"
         android:layout_width="match_parent"
-        android:layout_height="50dp">
+        android:layout_height="wrap_content">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -146,15 +140,10 @@
             android:textStyle="bold"
             android:text="0.00"/>
 
-        <View
-            android:layout_alignParentBottom="true"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/colorAccent"/>
     </RelativeLayout>
 
     <TextView
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         android:gravity="left"
         android:layout_gravity="center"
         android:layout_width="match_parent"
@@ -167,7 +156,7 @@
     <RelativeLayout
         android:layout_marginTop="10dp"
         android:layout_width="match_parent"
-        android:layout_height="50dp">
+        android:layout_height="wrap_content">
 
         <TextView
             android:layout_alignParentLeft="true"
@@ -177,7 +166,7 @@
             android:textColor="@color/colorAccent"
             android:textSize="15sp"
             android:textStyle="bold"
-            android:text="Stock"/>
+            android:text="Cost Of Stock"/>
 
         <TextView
             android:id="@+id/stocktv"
@@ -186,21 +175,18 @@
             android:gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:textColor="@color/Red"
+            android:textColor="@color/black"
             android:textSize="15sp"
             android:textStyle="bold"
             android:text="0.00"/>
 
-        <View
-            android:layout_alignParentBottom="true"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/colorAccent"/>
     </RelativeLayout>
 
     <RelativeLayout
+        android:layout_marginTop="5dp"
+
         android:layout_width="match_parent"
-        android:layout_height="50dp">
+        android:layout_height="wrap_content">
 
         <TextView
             android:layout_alignParentLeft="true"
@@ -219,20 +205,17 @@
             android:gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:textColor="@color/Red"
+            android:textColor="@color/black"
             android:textSize="15sp"
             android:textStyle="bold"
             android:text="0.00"/>
 
-        <View
-            android:layout_alignParentBottom="true"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/colorAccent"/>
     </RelativeLayout>
     <RelativeLayout
+        android:layout_marginTop="5dp"
+
         android:layout_width="match_parent"
-        android:layout_height="50dp">
+        android:layout_height="wrap_content">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -256,15 +239,10 @@
             android:textStyle="bold"
             android:text="0.00"/>
 
-        <View
-            android:layout_alignParentBottom="true"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/colorAccent"/>
     </RelativeLayout>
 
     <TextView
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         android:gravity="left"
         android:layout_gravity="center"
         android:layout_width="match_parent"
@@ -277,7 +255,7 @@
     <RelativeLayout
         android:layout_marginTop="10dp"
         android:layout_width="match_parent"
-        android:layout_height="50dp">
+        android:layout_height="wrap_content">
 
         <TextView
             android:layout_alignParentLeft="true"
@@ -296,16 +274,11 @@
             android:gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:textColor="@color/Red"
+            android:textColor="@color/black"
             android:textSize="15sp"
             android:textStyle="bold"
             android:text="0.00"/>
 
-        <View
-            android:layout_alignParentBottom="true"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/colorAccent"/>
     </RelativeLayout>
 
     <Button
