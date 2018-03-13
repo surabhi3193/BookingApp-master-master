@@ -369,13 +369,13 @@ public class ReportActivity extends BaseActivity {
             b.compress(Bitmap.CompressFormat.JPEG, 100, fos);
             fos.flush();
             fos.close();
-        }  catch (Exception e) {
+        }
+        catch (Exception e) {
             Toast.makeText(ReportActivity.this, "Please Allow Storage Permission From Settings ", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
             print_btn.setVisibility(View.VISIBLE);
             summary_btn.setVisibility(View.VISIBLE);
         }
-
     }
 
     private Bitmap getBitmapFromView(View view, int totalHeight, int totalWidth) {
