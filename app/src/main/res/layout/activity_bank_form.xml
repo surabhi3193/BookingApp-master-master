@@ -121,6 +121,7 @@
                 android:gravity="center"/>
 
             <EditText
+                android:singleLine="true"
                 android:imeOptions="actionDone"
                 android:id="@+id/bank_nameEt"
                 android:textSize="15sp"

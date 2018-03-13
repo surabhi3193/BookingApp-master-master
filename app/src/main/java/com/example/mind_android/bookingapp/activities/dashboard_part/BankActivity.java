@@ -49,7 +49,6 @@ public class BankActivity extends BaseActivity {
          recyclerView = findViewById(R.id.transection_LV);
         TextView addTv = findViewById(R.id.addTv);
 
-
         mAdapter = new SummaryAdapter(summaryList, "bank");
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
@@ -69,8 +68,6 @@ public class BankActivity extends BaseActivity {
                 resetBankWarning();
             }
         });
-
-
 
         back_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,16 +94,14 @@ public class BankActivity extends BaseActivity {
     public void resetBankWarning() {
         AlertDialog.Builder ab = new AlertDialog.Builder
                 (BankActivity.this, R.style.MyAlertDialogStyle1);
-        ab.setTitle("Reset").setIcon(R.drawable.reset);
-        ab.setMessage("Are you sure ? ");
-        ab.setNegativeButton("Yes", new DialogInterface.OnClickListener() {
+        ab.setTitle("Delete").setIcon(R.drawable.reset);
+        ab.setMessage("If you want to delete any particular transaction login to website http://oneplusoneafrica.org/#1 Or if you want to reset bank. Click Reset");
+        ab.setNegativeButton("Reset", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
                 if (isNetworkAvailable(BankActivity.this))
                     resetBank();
-
-
                 dialog.dismiss();
             }
         });

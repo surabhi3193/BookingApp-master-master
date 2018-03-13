@@ -87,15 +87,14 @@ public class SummaryAdapter extends RecyclerView.Adapter<SummaryAdapter.MyViewHo
         else if (intent_name.equals("bank")) {
 
             holder.type.setText("Closing Balance");
-            holder.image.setVisibility(View.INVISIBLE);
-            holder.qty.setVisibility(View.INVISIBLE);
-            holder.per_unit.setVisibility(View.INVISIBLE);
-            holder.date.setVisibility(View.INVISIBLE);
-            holder.multiply.setVisibility(View.INVISIBLE);
-            holder.type.setVisibility(View.INVISIBLE);
+            holder.image.setVisibility(View.GONE);
+            holder.qty.setVisibility(View.GONE);
+            holder.per_unit.setVisibility(View.GONE);
+            holder.date.setVisibility(View.GONE);
+            holder.multiply.setVisibility(View.GONE);
+            holder.type.setVisibility(View.GONE);
         }
     }
-
     @Override
     public int getItemCount() {
         return summaryList.size();
@@ -118,4 +117,5 @@ public class SummaryAdapter extends RecyclerView.Adapter<SummaryAdapter.MyViewHo
             image = (ImageView) view.findViewById(R.id.image);
         }
     }
+
 }

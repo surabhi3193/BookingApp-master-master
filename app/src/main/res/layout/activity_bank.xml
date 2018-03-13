@@ -97,15 +97,14 @@
 
 
         <TextView
+            android:paddingLeft="10dp"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center"
+            android:gravity="start|center_vertical"
             android:text="Bank Name"
             android:textColor="@color/white"
             android:textSize="12sp" />
-
-
 
         <TextView
             android:paddingRight="10dp"
@@ -118,7 +117,6 @@
             android:textSize="12sp" />
 
     </LinearLayout>
-
     <android.support.v7.widget.RecyclerView
         android:layout_above="@id/reset_lay"
         android:layout_below="@+id/table_head"
@@ -129,9 +127,10 @@
         android:layout_height="match_parent">
     </android.support.v7.widget.RecyclerView>
 
+
     <Button
         android:layout_alignParentBottom="true"
-        android:text="Reset"
+        android:text="Delete"
         android:textColor="@color/white"
         android:background="@color/Crimson"
         android:id="@+id/reset_lay"

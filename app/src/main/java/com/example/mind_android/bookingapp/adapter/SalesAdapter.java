@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,24 +12,17 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.mind_android.bookingapp.R;
-import com.example.mind_android.bookingapp.activities.dashboard_part.ExpenceActivity;
-import com.example.mind_android.bookingapp.activities.dashboard_part.FormActivity;
-import com.example.mind_android.bookingapp.activities.dashboard_part.StockActivity;
-import com.example.mind_android.bookingapp.beans.Expense;
-import com.example.mind_android.bookingapp.beans.Stock;
-import com.example.mind_android.bookingapp.storage.DatabaseHandler;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import static com.example.mind_android.bookingapp.Constant.CheckInternetConnection.isNetworkAvailable;
-import static com.example.mind_android.bookingapp.Constant.NetWorkClass.deleteExpense;
 import static com.example.mind_android.bookingapp.Constant.NetWorkClass.deleteSale;
-import static com.example.mind_android.bookingapp.Constant.NetWorkClass.deleteStock;
 
 public class SalesAdapter extends BaseAdapter {
     private JSONArray jobj;
@@ -80,7 +72,7 @@ public class SalesAdapter extends BaseAdapter {
             String stock_name = responseobj.getString("sale_stock_name");
             String stock_qty = responseobj.getString("sale_stock_qty");
             String stock_price = responseobj.getString("sale_price");
-         String sale_type = responseobj.getString("stock_type");
+            String sale_type = responseobj.getString("stock_type");
             String cdate = responseobj.getString("sale_date");
 
             System.out.println("********** item position *******");
@@ -119,15 +111,6 @@ public class SalesAdapter extends BaseAdapter {
         return rowView;
     }
 
-
-    class ViewHolder {
-        TextView serialno, stock_name, stock_qty, stock_amount,dateTV;
-        LinearLayout descLay;
-        ImageView delete_btn;
-
-
-    }
-
     private void deleteAlertDialog(final Activity activity, final JSONObject jobj) {
         AlertDialog.Builder ab = new AlertDialog.Builder(activity, R.style.MyAlertDialogStyle1);
         ab.setTitle("Delete");
@@ -139,7 +122,7 @@ public class SalesAdapter extends BaseAdapter {
                     if (isNetworkAvailable(activity)) {
 
                         String sale_id = jobj.getString("sale_id");
-                            deleteSale(activity, sale_id);
+                        deleteSale(activity, sale_id);
 
                     }
                 } catch (JSONException e) {
@@ -158,8 +141,8 @@ public class SalesAdapter extends BaseAdapter {
         ab.show();
     }
 
-
     private void openDescriptionDialog(JSONObject finalResponseobj1) {
+        System.out.println("========= view details sales=========");
         // custom dialog
         try {
             final Dialog dialog = new Dialog(context);
@@ -172,14 +155,31 @@ public class SalesAdapter extends BaseAdapter {
             TextView perunit = dialog.findViewById(R.id.perunit);
             TextView value = dialog.findViewById(R.id.value);
             TextView date = dialog.findViewById(R.id.date);
+            TextView value_head = dialog.findViewById(R.id.value_head);
+            RelativeLayout qtylay = dialog.findViewById(R.id.qtylay);
+            RelativeLayout perpriceLay = dialog.findViewById(R.id.p_pricelay);
+            String type = finalResponseobj1.getString("stock_type");
 
-            title.setText(finalResponseobj1.getString("sale_stock_name") + "(" +finalResponseobj1.getString("stock_type")+")");
+            if (!type.equalsIgnoreCase("Stocks")) {
+                qtylay.setVisibility(View.GONE);
+                perpriceLay.setVisibility(View.GONE);
+                value_head.setText("Service Value ");
+            }
+            else
+            {
+                qtylay.setVisibility(View.VISIBLE);
+                perpriceLay.setVisibility(View.VISIBLE);
+                value_head.setText("Sale Value ");
+
+            }
+
+            title.setText(finalResponseobj1.getString("sale_stock_name") + "(" + type + ")");
             qty.setText(finalResponseobj1.getString("sale_stock_qty"));
             perunit.setText(finalResponseobj1.getString("sell_unit_price"));
             value.setText(finalResponseobj1.getString("sale_price"));
             date.setText(finalResponseobj1.getString("sale_date"));
 
-            Button dialogButton =dialog.findViewById(R.id.dialogButtonOK);
+            Button dialogButton = dialog.findViewById(R.id.dialogButtonOK);
             // if button is clicked, close the custom dialog
             dialogButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -189,10 +189,17 @@ public class SalesAdapter extends BaseAdapter {
             });
 
             dialog.show();
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
+
+    }
+
+    class ViewHolder {
+        TextView serialno, stock_name, stock_qty, stock_amount, dateTV;
+        LinearLayout descLay;
+        ImageView delete_btn;
+
 
     }
 

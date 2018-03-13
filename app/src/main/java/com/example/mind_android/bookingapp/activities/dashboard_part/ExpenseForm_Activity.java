@@ -219,6 +219,9 @@ public class ExpenseForm_Activity extends AppCompatActivity {
                             && date.length() != 0
                             && !cat.equalsIgnoreCase("Select Category")
                             ) {
+                        dateTV.setError(null);
+                        descET.setError(null);
+                        priceEt.setError(null);
                         String user_id = getData(ExpenseForm_Activity.this, "user_id", "");
 
                         if (isNetworkAvailable(ExpenseForm_Activity.this))

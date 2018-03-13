@@ -2,6 +2,7 @@ package com.example.mind_android.bookingapp.activities.dashboard_part;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -9,6 +10,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -21,6 +23,9 @@ import android.widget.Toast;
 
 import com.example.mind_android.bookingapp.R;
 import com.example.mind_android.bookingapp.activities.BaseActivity;
+import com.example.mind_android.bookingapp.activities.LoginActivity;
+import com.example.mind_android.bookingapp.activities.SplashActivity;
+import com.example.mind_android.bookingapp.activities.Utility;
 import com.example.mind_android.bookingapp.beans.Expense;
 import com.example.mind_android.bookingapp.beans.Report;
 import com.example.mind_android.bookingapp.beans.Sales;
@@ -45,6 +50,9 @@ import cz.msebera.android.httpclient.Header;
 
 import static com.example.mind_android.bookingapp.Constant.CheckInternetConnection.isNetworkAvailable;
 import static com.example.mind_android.bookingapp.Constant.NetWorkClass.BASE_URL_NEW;
+import static com.example.mind_android.bookingapp.activities.Utility.checkReadStoragePermission;
+import static com.example.mind_android.bookingapp.activities.Utility.checkSMSPermission;
+import static com.example.mind_android.bookingapp.activities.Utility.checkWriteStoragePermission;
 import static com.example.mind_android.bookingapp.storage.MySharedPref.getData;
 
 public class ReportActivity extends BaseActivity {
@@ -109,10 +117,19 @@ public class ReportActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
 
-                print_btn.setVisibility(View.GONE);
-                summary_btn.setVisibility(View.GONE);
-                takeScreenShot();
-                imageToPDF();
+
+                boolean per2 = checkWriteStoragePermission(ReportActivity.this);
+                System.out.println("========= permission print ======= ");
+                System.out.println(per2);
+                if (per2)
+                {
+                    print_btn.setVisibility(View.GONE);
+                    summary_btn.setVisibility(View.GONE);
+                    takeScreenShot();
+                    imageToPDF();
+                }
+//                boolean per = checkReadStoragePermission(ReportActivity.this);
+
 
             }
         });
@@ -393,5 +410,44 @@ public class ReportActivity extends BaseActivity {
         return bitmap;
 
 
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String[] permissions, int[] grantResults) {
+
+        System.out.println("requestCode " +requestCode );
+        System.out.println("permissions " +permissions.toString() );
+        System.out.println("grantResults " + grantResults.length + " ///// "+grantResults.toString() );
+
+        switch (requestCode) {
+            case Utility.MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE:
+                if (grantResults.length > 0 && grantResults[0] ==
+                        PackageManager.PERMISSION_GRANTED) {
+                    print_btn.setVisibility(View.GONE);
+                    summary_btn.setVisibility(View.GONE);
+                    takeScreenShot();
+                    imageToPDF();
+
+                }
+                else
+                {
+                    Toast.makeText(ReportActivity.this," Allow Permission To Continue",Toast.LENGTH_LONG).show();
+                }
+                break;
+
+            case Utility.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE:
+                if (grantResults.length > 0 && grantResults[0] ==
+                        PackageManager.PERMISSION_GRANTED) {
+                    takeScreenShot();
+                    imageToPDF();
+
+                }
+                else
+                {
+                    Toast.makeText(ReportActivity.this," Allow Permission To Continue",Toast.LENGTH_LONG).show();
+                }
+                break;
+        }
     }
 }

@@ -107,7 +107,7 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-             Utility.checkPermission(ProfileActivity.this);
+             Utility.checkCameraPermission(ProfileActivity.this);
                 selectImage();
 
             }
@@ -331,13 +331,23 @@ public class ProfileActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String[] permissions, int[] grantResults) {
+
+        System.out.println("requestCode " +requestCode );
+        System.out.println("permissions " +permissions.toString() );
+        System.out.println("grantResults " + grantResults.length + " ///// "+grantResults.toString() );
         switch (requestCode) {
             case Utility.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.length > 1 && grantResults[0] ==
+                        PackageManager.PERMISSION_GRANTED) {
                     if (userChoosenTask.equals("Take Photo"))
                         cameraIntent();
                     else if (userChoosenTask.equals("Choose from Library"))
                         galleryIntent();
+                }
+                else
+                {
+                    Toast.makeText(ProfileActivity.this," Allow Permission To Continue",Toast.LENGTH_LONG).show();
+
                 }
                 break;
         }
@@ -352,7 +362,7 @@ public class ProfileActivity extends AppCompatActivity {
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int item) {
-                boolean result = Utility.checkPermission(ProfileActivity.this);
+                boolean result = Utility.checkCameraPermission(ProfileActivity.this);
 
                 if (items[item].equals("Take Photo")) {
                     userChoosenTask = "Take Photo";
