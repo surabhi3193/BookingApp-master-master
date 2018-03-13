@@ -163,7 +163,7 @@ public class SalesActivity extends BaseActivity {
 
                     if (isNetworkAvailable(SalesActivity.this)) {
                         FormActivity.addsale(SalesActivity.this, user_id, "", "", service_amt,
-                                "", servicename, "1", "");
+                                "", servicename, "1", "",date);
                     } else {
                         Toast.makeText(SalesActivity.this,"Internet Connection Unavailable, Try Again ",Toast.LENGTH_SHORT).show();
 //                        FormActivity.addsaleToLocal(SalesActivity.this, servicename, "", service_amt, "", "1");
@@ -391,7 +391,7 @@ public class SalesActivity extends BaseActivity {
             Log.d("Name: ", log);
             FormActivity.addsale(SalesActivity.this, user_id, cn.get_unit_per_price(),
                     cn.get_qty(), cn.get_price(),
-                    String.valueOf(cn.get_id()), cn.get_name(), cn.get_sale_type(), "local");
+                    String.valueOf(cn.get_id()), cn.get_name(), cn.get_sale_type(), "local",cn.get_date());
 
         }
     }

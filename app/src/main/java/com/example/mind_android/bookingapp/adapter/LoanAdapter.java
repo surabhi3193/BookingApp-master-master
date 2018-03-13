@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.example.mind_android.bookingapp.R;
 import com.example.mind_android.bookingapp.activities.dashboard_part.LoanActivity;
 import com.example.mind_android.bookingapp.activities.dashboard_part.LoanFormActivity;
+import com.example.mind_android.bookingapp.activities.dashboard_part.SalesActivity;
 import com.example.mind_android.bookingapp.beans.LoanSummary;
 
 import java.util.List;
@@ -82,6 +83,16 @@ public class LoanAdapter extends RecyclerView.Adapter<LoanAdapter.MyViewHolder> 
                 );
             }
         });
+
+        holder.delete_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (context instanceof  LoanActivity)
+                {
+                    ((LoanActivity) context).resetLoanWarning(trans.getLender_id());
+                }
+            }
+        });
     }
 
     @Override
@@ -90,7 +101,7 @@ public class LoanAdapter extends RecyclerView.Adapter<LoanAdapter.MyViewHolder> 
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView title, monthTV, remainTV, date, total_amt, type,paidLenderTV,interest,payTV;
+        public TextView delete_btn,title, monthTV, remainTV, date, total_amt, type,paidLenderTV,interest,payTV;
         ImageView image;
 
         public MyViewHolder(View view) {
@@ -104,6 +115,7 @@ public class LoanAdapter extends RecyclerView.Adapter<LoanAdapter.MyViewHolder> 
             date = (TextView) view.findViewById(R.id.dateTV);
             type = (TextView) view.findViewById(R.id.typeTV);
             payTV = (TextView) view.findViewById(R.id.payTV);
+            delete_btn = (TextView) view.findViewById(R.id.delete_btn);
 
         }
     }

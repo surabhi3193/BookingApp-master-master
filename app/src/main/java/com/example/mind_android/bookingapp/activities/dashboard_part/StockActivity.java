@@ -276,7 +276,7 @@ public class StockActivity extends BaseActivity {
             // Writing Contacts to log
             Log.d("Name: ", log);
 
-            addStock(StockActivity.this, user_id, cn.get_name(), cn.get_qty(), cn.get_price(), "1", cn.get_unit_per_price(), String.valueOf(cn.get_id()), "local");
+            addStock(StockActivity.this, user_id, cn.get_name(), cn.get_qty(), cn.get_price(), "1", cn.get_unit_per_price(), String.valueOf(cn.get_id()), "local",cn.get_date());
         }
     }
 
@@ -296,7 +296,7 @@ public class StockActivity extends BaseActivity {
             // Writing Contacts to log
             Log.d("Name: ", log);
 
-            addStock(StockActivity.this, user_id, cn.get_name(), cn.get_qty(), cn.get_price(), "2", cn.get_unit_per_price(), String.valueOf(cn.get_id()), "local");
+            addStock(StockActivity.this, user_id, cn.get_name(), cn.get_qty(), cn.get_price(), "2", cn.get_unit_per_price(), String.valueOf(cn.get_id()), "local",cn.get_date());
         }
     }
 

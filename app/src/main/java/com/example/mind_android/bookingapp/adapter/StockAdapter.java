@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.mind_android.bookingapp.R;
@@ -70,6 +71,7 @@ public class StockAdapter extends BaseAdapter {
         final ViewHolder holder = new ViewHolder();
         JSONObject responseobj = new JSONObject();
         holder.stock_amount = (TextView) rowView.findViewById(R.id.amtTv);
+        holder.desclay = (LinearLayout) rowView.findViewById(R.id.desclay);
         holder.stock_name = (TextView) rowView.findViewById(R.id.nameTv);
         holder.stock_qty = (TextView) rowView.findViewById(R.id.qtyTv);
         holder.serialno = (TextView) rowView.findViewById(R.id.sr_notv);
@@ -91,7 +93,7 @@ public class StockAdapter extends BaseAdapter {
                 int x = position + 1;
                 holder.serialno.setText(String.valueOf(x));
                 holder.stock_name.setText(stock_name);
-                holder.stock_qty.setText(stock_qty);
+                holder.stock_qty.setVisibility(View.GONE);
                 holder.stock_amount.setText(stock_price);
 
             } else {
@@ -127,7 +129,7 @@ public class StockAdapter extends BaseAdapter {
             }
         });
 
-        holder.serialno.setOnClickListener(new View.OnClickListener() {
+        holder.desclay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -169,6 +171,7 @@ public class StockAdapter extends BaseAdapter {
                         String stock_qty = finalResponseobj1.getString("stock_qty");
                         String stock_price = finalResponseobj1.getString("stock_price");
                         String stock_per_price = finalResponseobj1.getString("stock_per_price");
+                        String stock_date = finalResponseobj1.getString("stock_date");
                         context.startActivity(new Intent(context, FormActivity.class)
                                 .putExtra("Activity", "editStocks")
                                 .putExtra("stock_id", stock_id)
@@ -176,6 +179,7 @@ public class StockAdapter extends BaseAdapter {
                                 .putExtra("stock_qty", stock_qty)
                                 .putExtra("stock_price", stock_price)
                                 .putExtra("stock_per_price", stock_per_price)
+                                .putExtra("stock_date", stock_date)
 
                         );
                     }
@@ -358,6 +362,7 @@ public class StockAdapter extends BaseAdapter {
     class ViewHolder {
         public TextView serialno, stock_name, stock_qty, stock_amount;
         public ImageView edit_btn, delete_btn;
+        LinearLayout desclay;
 
     }
 }

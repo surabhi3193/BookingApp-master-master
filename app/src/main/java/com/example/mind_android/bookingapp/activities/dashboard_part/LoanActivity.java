@@ -1,15 +1,19 @@
 package com.example.mind_android.bookingapp.activities.dashboard_part;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.mind_android.bookingapp.R;
 import com.example.mind_android.bookingapp.activities.BaseActivity;
@@ -27,6 +31,7 @@ import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 
+import static com.example.mind_android.bookingapp.Constant.CheckInternetConnection.isNetworkAvailable;
 import static com.example.mind_android.bookingapp.Constant.NetWorkClass.BASE_URL_NEW;
 import static com.example.mind_android.bookingapp.storage.MySharedPref.getData;
 
@@ -34,6 +39,7 @@ public class LoanActivity extends BaseActivity {
 
     private List<LoanSummary> summaryList = new ArrayList<>();
     private LoanAdapter mAdapter;
+    private RecyclerView recyclerView;
 
 
     @Override
@@ -41,7 +47,7 @@ public class LoanActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         getLayoutInflater().inflate(R.layout.activity_loan, frameLayout);
 
-        RecyclerView recyclerView = findViewById(R.id.transection_LV);
+         recyclerView = findViewById(R.id.transection_LV);
         TextView addTv = findViewById(R.id.addTv);
 
         mAdapter = new LoanAdapter(summaryList, "loan", LoanActivity.this);
@@ -53,6 +59,17 @@ public class LoanActivity extends BaseActivity {
         recyclerView.setAdapter(mAdapter);
 
         ImageView back_btn = findViewById(R.id.back_btn);
+
+        Button reset_lay = findViewById(R.id.reset_lay);
+
+        reset_lay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                resetLoanWarning("");
+            }
+        });
+
 
         back_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,6 +89,33 @@ public class LoanActivity extends BaseActivity {
                 );
             }
         });
+    }
+
+    public void resetLoanWarning(final String loan_id) {
+        AlertDialog.Builder ab = new AlertDialog.Builder
+                (LoanActivity.this, R.style.MyAlertDialogStyle1);
+        ab.setTitle("Reset").setIcon(R.drawable.reset);
+        ab.setMessage("Are you sure ? ");
+        ab.setNegativeButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                if (isNetworkAvailable(LoanActivity.this))
+                resetLoan(loan_id);
+
+
+                dialog.dismiss();
+            }
+        });
+
+        ab.setPositiveButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        ab.show();
+
     }
     private void getLoan(final String user_id) {
 
@@ -151,6 +195,57 @@ public class LoanActivity extends BaseActivity {
             }
         });
     }
+    public void resetLoan(String lender_id) {
+        final AsyncHttpClient client = new AsyncHttpClient();
+        final RequestParams params = new RequestParams();
+        final ProgressDialog ringProgressDialog;
+        ringProgressDialog = ProgressDialog.show(LoanActivity.this, "Please wait ...",
+                "", true);
+        ringProgressDialog.setCancelable(false);
+
+        String user_id= getData(LoanActivity.this,"user_id","");
+        params.put("bk_userid", user_id);
+
+        if (lender_id.length()>0)
+            params.put("loan_id", lender_id);
+
+        System.out.println(params);
+
+        client.post(BASE_URL_NEW + "clear_loans", params, new JsonHttpResponseHandler() {
+
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                System.out.println(" ************* show loan clear   response ***");
+                System.out.println(response);
+                ringProgressDialog.dismiss();
+                try {
+
+                    if (response.getString("status").equals("0")) {
+//                         recyclerView.setVisibility(View.GONE);
+
+                    Toast.makeText(LoanActivity.this, response.getString("message"), Toast.LENGTH_SHORT).show();
+                    } else {
+//                        db.deleteAllStocks();
+//                        recyclerView.setVisibility(View.GONE);
+                        mAdapter.notifyDataSetChanged();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                ringProgressDialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                ringProgressDialog.dismiss();
+                System.out.println(responseString);
+            }
+        });
+    }
+    
+    
 
     @Override
     protected void onResume() {

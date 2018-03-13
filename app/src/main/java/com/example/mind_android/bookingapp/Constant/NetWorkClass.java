@@ -7,6 +7,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.mind_android.bookingapp.activities.dashboard_part.ExpenceActivity;
+import com.example.mind_android.bookingapp.activities.dashboard_part.SalesActivity;
 import com.example.mind_android.bookingapp.activities.dashboard_part.StockActivity;
 import com.example.mind_android.bookingapp.beans.Expense;
 import com.example.mind_android.bookingapp.beans.Stock;
@@ -36,7 +37,7 @@ public class NetWorkClass extends AppCompatActivity {
 
     public static void addStock(final Activity context, final String bk_userid, final String stock_name, final String stock_qty, final
     String stock_amount, final String method_type, final String stock_per_price,
-                                final String stock_id, final String local) {
+                                final String stock_id, final String local,final  String date) {
         final AsyncHttpClient client = new AsyncHttpClient();
         final RequestParams params = new RequestParams();
 
@@ -52,6 +53,7 @@ public class NetWorkClass extends AppCompatActivity {
         params.put("method_type", method_type);
         params.put("stock_per_price", stock_per_price);
         params.put("stock_id", stock_id);
+        params.put("stock_date", date);
 
         System.out.println(params);
 
@@ -76,9 +78,8 @@ public class NetWorkClass extends AppCompatActivity {
                         String unit_price = obj.getString("stock_per_price");
                         String price = obj.getString("stock_price");
                         String total = obj.getString("stock_price");
+                        String currentDateandTime = obj.getString("stock_date");
                         int status = 1;
-                        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-                        String currentDateandTime = sdf.format(new Date());
 
                         if (method_type.equals("1")) {
                             Log.d("Updating: ", "Updating .. Stock");
@@ -231,6 +232,46 @@ public class NetWorkClass extends AppCompatActivity {
                         if (activity instanceof StockActivity) {
                             System.out.println("=== back to show ");
                             ((StockActivity) activity).showAllStocks();
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+            }
+
+        });
+    }
+
+
+    public static void deleteSale(final Activity activity, final String sale_id) {
+        final AsyncHttpClient client = new AsyncHttpClient();
+        final RequestParams params = new RequestParams();
+
+        final String bk_userid = getData(activity, "user_id", "");
+        params.put("bk_userid", bk_userid);
+        params.put("sale_id", sale_id);
+
+        System.out.println(params);
+
+        client.post(BASE_URL_NEW + "delete_sale_records", params, new JsonHttpResponseHandler() {
+
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                System.out.println(" ************* delete sale response ***");
+                System.out.println(response);
+                try {
+
+                    if (response.getString("status").equals("0")) {
+
+                    } else {
+
+                       Toast.makeText(activity, "Deleted Successfully", Toast.LENGTH_SHORT).show();
+                        if (activity instanceof SalesActivity) {
+                            System.out.println("=== back to show ");
+                            ((SalesActivity) activity).showAllSales();
                         }
                     }
                 } catch (Exception e) {

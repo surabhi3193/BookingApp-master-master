@@ -3,20 +3,34 @@ package com.example.mind_android.bookingapp.adapter;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.mind_android.bookingapp.R;
+import com.example.mind_android.bookingapp.activities.dashboard_part.ExpenceActivity;
 import com.example.mind_android.bookingapp.activities.dashboard_part.FormActivity;
+import com.example.mind_android.bookingapp.activities.dashboard_part.StockActivity;
+import com.example.mind_android.bookingapp.beans.Expense;
+import com.example.mind_android.bookingapp.beans.Stock;
+import com.example.mind_android.bookingapp.storage.DatabaseHandler;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import static com.example.mind_android.bookingapp.Constant.CheckInternetConnection.isNetworkAvailable;
+import static com.example.mind_android.bookingapp.Constant.NetWorkClass.deleteExpense;
+import static com.example.mind_android.bookingapp.Constant.NetWorkClass.deleteSale;
+import static com.example.mind_android.bookingapp.Constant.NetWorkClass.deleteStock;
 
 public class SalesAdapter extends BaseAdapter {
     private JSONArray jobj;
@@ -55,6 +69,9 @@ public class SalesAdapter extends BaseAdapter {
         holder.stock_qty = (TextView) rowView.findViewById(R.id.qtyTv);
         holder.serialno = (TextView) rowView.findViewById(R.id.sr_notv);
         holder.dateTV = (TextView) rowView.findViewById(R.id.datetv);
+        holder.dateTV = (TextView) rowView.findViewById(R.id.datetv);
+        holder.delete_btn = (ImageView) rowView.findViewById(R.id.delete_btn);
+        holder.descLay = rowView.findViewById(R.id.descLay);
 
 
         try {
@@ -83,11 +100,20 @@ public class SalesAdapter extends BaseAdapter {
         }
 
         final JSONObject finalResponseobj = responseobj;
-        holder.serialno.setOnClickListener(new View.OnClickListener() {
+        holder.descLay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 openDescriptionDialog(finalResponseobj);
+            }
+        });
+
+        final JSONObject finalResponseobj1 = responseobj;
+        holder.delete_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                deleteAlertDialog(context, finalResponseobj1);
+
             }
         });
         return rowView;
@@ -96,9 +122,43 @@ public class SalesAdapter extends BaseAdapter {
 
     class ViewHolder {
         TextView serialno, stock_name, stock_qty, stock_amount,dateTV;
+        LinearLayout descLay;
+        ImageView delete_btn;
 
 
     }
+
+    private void deleteAlertDialog(final Activity activity, final JSONObject jobj) {
+        AlertDialog.Builder ab = new AlertDialog.Builder(activity, R.style.MyAlertDialogStyle1);
+        ab.setTitle("Delete");
+        ab.setMessage("Are you sure , you want to delete ");
+        ab.setNegativeButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                try {
+                    if (isNetworkAvailable(activity)) {
+
+                        String sale_id = jobj.getString("sale_id");
+                            deleteSale(activity, sale_id);
+
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+
+                }
+
+            }
+        });
+        ab.setPositiveButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        ab.show();
+    }
+
+
     private void openDescriptionDialog(JSONObject finalResponseobj1) {
         // custom dialog
         try {

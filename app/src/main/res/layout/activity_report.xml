@@ -29,12 +29,23 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <TextView
+        android:id="@+id/company_nameTv"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:padding="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textColor="@color/colorAccent"
+        android:textStyle="bold"
+        android:textSize="20sp"/>
 
 
     <TextView
         android:gravity="center"
         android:layout_gravity="center"
-        android:padding="15dp"
+        android:padding="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Report"
@@ -44,6 +55,7 @@
 
 
     <TextView
+        android:visibility="gone"
         android:gravity="left"
         android:layout_gravity="center"
         android:layout_width="match_parent"
@@ -59,7 +71,7 @@
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
@@ -71,11 +83,10 @@
 
         <TextView
             android:id="@+id/saleTV"
-
             android:layout_alignParentRight="true"
             android:gravity="center"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:textColor="@color/black"
             android:textSize="15sp"
             android:textStyle="bold"
@@ -90,7 +101,7 @@
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
@@ -105,21 +116,26 @@
             android:layout_alignParentRight="true"
             android:gravity="center"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:textColor="@color/black"
             android:textSize="15sp"
             android:textStyle="bold"
             android:text="0.00"/>
 
     </RelativeLayout>
+    <View
+        android:layout_gravity="end"
+        android:layout_marginTop="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/black"/>
     <RelativeLayout
         android:paddingTop="5dp"
-        android:layout_marginTop="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
@@ -134,15 +150,21 @@
             android:layout_alignParentRight="true"
             android:gravity="center"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:textColor="@color/black"
             android:textSize="15sp"
             android:textStyle="bold"
             android:text="0.00"/>
 
     </RelativeLayout>
-
+    <View
+        android:layout_gravity="end"
+        android:layout_marginTop="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/black"/>
     <TextView
+        android:visibility="gone"
         android:layout_marginTop="20dp"
         android:gravity="left"
         android:layout_gravity="center"
@@ -162,7 +184,7 @@
             android:layout_alignParentLeft="true"
             android:gravity="center"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:textColor="@color/colorAccent"
             android:textSize="15sp"
             android:textStyle="bold"
@@ -174,7 +196,7 @@
             android:layout_alignParentRight="true"
             android:gravity="center"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:textColor="@color/black"
             android:textSize="15sp"
             android:textStyle="bold"
@@ -192,7 +214,7 @@
             android:layout_alignParentLeft="true"
             android:gravity="center"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:textColor="@color/colorAccent"
             android:textSize="15sp"
             android:textStyle="bold"
@@ -204,13 +226,18 @@
             android:layout_alignParentRight="true"
             android:gravity="center"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:textColor="@color/black"
             android:textSize="15sp"
             android:textStyle="bold"
             android:text="0.00"/>
 
     </RelativeLayout>
+    <View
+        android:layout_marginTop="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/black"/>
     <RelativeLayout
         android:layout_marginTop="5dp"
 
@@ -218,7 +245,7 @@
         android:layout_height="wrap_content">
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
@@ -233,7 +260,7 @@
             android:layout_alignParentRight="true"
             android:gravity="center"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:textColor="@color/black"
             android:textSize="15sp"
             android:textStyle="bold"
@@ -241,16 +268,12 @@
 
     </RelativeLayout>
 
-    <TextView
-        android:layout_marginTop="20dp"
-        android:gravity="left"
-        android:layout_gravity="center"
+    <View
+        android:layout_gravity="end"
+        android:layout_marginTop="5dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Profit/(Loss)"
-        android:textColor="@color/black"
-        android:textStyle="bold"
-        android:textSize="20sp"/>
+        android:layout_height="1dp"
+        android:background="@color/black"/>
 
     <RelativeLayout
         android:layout_marginTop="10dp"
@@ -261,7 +284,7 @@
             android:layout_alignParentLeft="true"
             android:gravity="center"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:textColor="@color/colorAccent"
             android:textSize="15sp"
             android:textStyle="bold"
@@ -273,7 +296,7 @@
             android:layout_alignParentRight="true"
             android:gravity="center"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:textColor="@color/black"
             android:textSize="15sp"
             android:textStyle="bold"
@@ -286,7 +309,7 @@
         android:textAllCaps="true"
         android:textColor="@color/white"
         android:text="Show Details"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="20dp"
         android:layout_width="match_parent"
         android:layout_height="35dp"
         android:background="@drawable/blue_rect_btn"/>

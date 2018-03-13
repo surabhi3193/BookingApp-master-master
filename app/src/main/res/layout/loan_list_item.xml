@@ -150,8 +150,22 @@ android:layout_marginTop="10dp"
 
 
     <TextView
+        android:layout_below="@+id/dateTV"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:background="@drawable/red_rect_btn"
+        android:id="@+id/delete_btn"
+        android:layout_width="80dp"
+        android:layout_height="25dp"
+        android:text="Delete"
+        android:textColor="@color/white"
+        android:textSize="13sp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:layout_below="@+id/dateTV"
         android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
         android:layout_marginTop="10dp"
         android:gravity="center"
         android:background="@drawable/green_rect_btn"

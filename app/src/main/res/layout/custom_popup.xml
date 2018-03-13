@@ -82,7 +82,7 @@
         <TextView
             android:layout_alignParentLeft="true"
             android:padding="5dp"
-            android:text="Added Date"
+            android:text="Transaction Date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/colorPrimaryDark"/>

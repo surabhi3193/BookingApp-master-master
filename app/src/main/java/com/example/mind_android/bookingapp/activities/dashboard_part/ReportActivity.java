@@ -57,7 +57,7 @@ public class ReportActivity extends BaseActivity {
     private Button print_btn, summary_btn;
     private View u;
     private String user_id;
-    private TextView stock_saletv, other_incometv, proftv, total_Saletv, profitTV, stocktv, expensetv, total_stock;
+    private TextView company_nameTv,stock_saletv, other_incometv, proftv, total_Saletv, profitTV, stocktv, expensetv, total_stock;
     private RelativeLayout profile_lay;
     private ImageView plIcon;
 
@@ -77,6 +77,7 @@ public class ReportActivity extends BaseActivity {
         expensetv = findViewById(R.id.expensetv);
         total_stock = findViewById(R.id.total_stock);
         profitTV = findViewById(R.id.profitTv);
+        company_nameTv = findViewById(R.id.company_nameTv);
 
 
         profile_lay = findViewById(R.id.profile_lay);
@@ -95,7 +96,6 @@ public class ReportActivity extends BaseActivity {
                 finish();
             }
         });
-
         summary_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -104,7 +104,6 @@ public class ReportActivity extends BaseActivity {
 
             }
         });
-
 
         print_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,7 +116,6 @@ public class ReportActivity extends BaseActivity {
 
             }
         });
-
     }
 
     private void imageToPDF() {
@@ -204,6 +202,7 @@ public class ReportActivity extends BaseActivity {
                         other_incometv.setText(response.getString("service_sale"));
                         total_Saletv.setText(response.getString("total_sale"));
                         stocktv.setText(response.getString("stock_purches"));
+                        company_nameTv.setText(response.getString("businessname").toUpperCase());
 
                         expensetv.setText(response.getString("expenses"));
                         total_stock.setText(response.getString("cost_of_sale"));
@@ -228,7 +227,6 @@ public class ReportActivity extends BaseActivity {
             }
         });
     }
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -349,7 +347,6 @@ public class ReportActivity extends BaseActivity {
         double total2 = total_expense_price + total_stock_price;
         total_stock.setText(String.valueOf(total2));
     }
-
 
     private void takeScreenShot() {
         int totalHeight = z.getChildAt(0).getHeight();

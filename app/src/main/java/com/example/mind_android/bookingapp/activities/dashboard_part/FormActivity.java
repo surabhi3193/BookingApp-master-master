@@ -53,14 +53,15 @@ public class FormActivity extends AppCompatActivity {
     public static String sale_stock = "", sale_item_id = "";
     String price_unit = "0", method_type = "0", stock_id = "";
     private EditText item_nameEt, item_qtEt, itemUnitPriceEt, sale_unit, sale_item_qty;
-    private TextView itemPriceEt,dateTV;
+    private TextView itemPriceEt,dateTV,dateTVStock;
     private TextView sale_item_price;
     private int count;
 
     public static void addsale(final Activity context, final String bk_userid,
                                final String unit, final String stock_qty, final
                                String stock_amount, final String stock_id, final String
-                                       stock_name, final String sale_type, final String local) {
+                                       stock_name, final String sale_type, final String local,final String date)
+    {
         final AsyncHttpClient client = new AsyncHttpClient();
         final RequestParams params = new RequestParams();
 
@@ -75,6 +76,7 @@ public class FormActivity extends AppCompatActivity {
         params.put("sell_price", stock_amount);
         params.put("method_type", 1);
         params.put("sale_type", sale_type);
+        params.put("sale_date", date);
         if (sale_type.equals("1"))
             params.put("stock_name", stock_name);
 
@@ -192,6 +194,7 @@ public class FormActivity extends AppCompatActivity {
         itemPriceEt = findViewById(R.id.item_price_tv);
         itemUnitPriceEt = findViewById(R.id.item_price_unit);
         dateTV = findViewById(R.id.dateTV);
+        dateTVStock = findViewById(R.id.dateTVStock);
 
 
         sale_unit = findViewById(R.id.sale_unit);
@@ -210,7 +213,25 @@ public class FormActivity extends AppCompatActivity {
                 myCalendar.set(Calendar.YEAR, year);
                 myCalendar.set(Calendar.MONTH, monthOfYear);
                 myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
                 updateLabel(dateTV, myCalendar);
+
+
+            }
+
+        };
+     final DatePickerDialog.OnDateSetListener datestock = new DatePickerDialog.OnDateSetListener() {
+
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear,
+                                  int dayOfMonth) {
+                // TODO Auto-generated method stub
+                myCalendar.set(Calendar.YEAR, year);
+                myCalendar.set(Calendar.MONTH, monthOfYear);
+                myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+                    updateLabel(dateTVStock, myCalendar);
+
             }
 
         };
@@ -225,6 +246,18 @@ public class FormActivity extends AppCompatActivity {
                         myCalendar.get(Calendar.DAY_OF_MONTH)).show();
             }
         });
+
+        dateTVStock.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                new DatePickerDialog(FormActivity.this, datestock, myCalendar
+                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                        myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+            }
+        });
+
         final FragmentManager fm = getFragmentManager();
         final SaletemFragment p = new SaletemFragment();
 
@@ -255,6 +288,7 @@ public class FormActivity extends AppCompatActivity {
             String stock_price = bundle.getString("stock_price");
             String stock_qty = bundle.getString("stock_qty");
             String stock_per_price = bundle.getString("stock_per_price");
+            String stock_date = bundle.getString("stock_date");
 
             assert act != null;
             switch (act) {
@@ -288,6 +322,7 @@ public class FormActivity extends AppCompatActivity {
                     itemPriceEt.setText(stock_price);
                     itemUnitPriceEt.setText(stock_per_price);
                     item_qtEt.setText(stock_qty);
+                    dateTVStock.setText(stock_date);
 
 
                     item_nameEt.setCursorVisible(false);
@@ -625,7 +660,7 @@ public class FormActivity extends AppCompatActivity {
                 String user_id = getData(FormActivity.this, "user_id", "");
 
                 if (isNetworkAvailable(FormActivity.this))
-                    addsale(FormActivity.this, user_id, unit, qty, price, sale_item_id, "", "2", "");
+                    addsale(FormActivity.this, user_id, unit, qty, price, sale_item_id, "", "2", "",date);
 
                 else {
                     Toast.makeText(FormActivity.this,"Internet Connection Unavailable, Try Again ",Toast.LENGTH_SHORT).show();
@@ -640,6 +675,8 @@ public class FormActivity extends AppCompatActivity {
         String name = item_nameEt.getText().toString().toUpperCase();
         String qty = item_qtEt.getText().toString();
         String price = itemPriceEt.getText().toString();
+        String date = dateTVStock.getText().toString();
+
 
         if (name.length() == 0)
             item_nameEt.setError("Stock name required");
@@ -650,8 +687,13 @@ public class FormActivity extends AppCompatActivity {
         if (price.length() == 0 || price.equals("0.0"))
             itemUnitPriceEt.setError("Price required");
 
+        if (date.length() == 0)
+            Toast.makeText(FormActivity.this,"Select Date",Toast.LENGTH_SHORT).show();
 
-        if (name.length() > 0 && qty.length() > 0 && price.length() > 0 && !price.equalsIgnoreCase("0.0")) {
+        if (name.length() > 0 && qty.length() > 0
+                && price.length() > 0
+                && date.length()>0
+                && !price.equalsIgnoreCase("0.0")) {
             String user_id = getData(FormActivity.this, "user_id", "");
             price_unit = itemUnitPriceEt.getText().toString();
 
@@ -659,7 +701,7 @@ public class FormActivity extends AppCompatActivity {
                 addStockinLocal(name, qty, price, method_type, price_unit, stock_id);
 
             } else {
-                addStock(FormActivity.this, user_id, name, qty, price, method_type, price_unit, stock_id, "");
+                addStock(FormActivity.this, user_id, name, qty, price, method_type, price_unit, stock_id, "",date);
             }
 
         }
