@@ -268,7 +268,8 @@ public class StockAdapter extends BaseAdapter {
 
     }
 
-    private void deleteAlertDialog(final Activity activity, final JSONObject jobj, final String act_name) {
+    private void deleteAlertDialog(final Activity activity, final JSONObject jobj,
+                                   final String act_name) {
         AlertDialog.Builder ab = new AlertDialog.Builder(activity, R.style.MyAlertDialogStyle1);
         ab.setTitle("Delete");
         ab.setMessage("Are you sure , you want to delete ");

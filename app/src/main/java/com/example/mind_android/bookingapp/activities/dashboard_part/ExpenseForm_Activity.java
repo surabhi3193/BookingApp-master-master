@@ -39,6 +39,7 @@ import static com.example.mind_android.bookingapp.Constant.CheckInternetConnecti
 import static com.example.mind_android.bookingapp.Constant.NetWorkClass.BASE_URL_NEW;
 import static com.example.mind_android.bookingapp.Constant.NetWorkClass.addExpense;
 import static com.example.mind_android.bookingapp.Constant.NetWorkClass.addStock;
+import static com.example.mind_android.bookingapp.Constant.NetWorkClass.updateLabel;
 import static com.example.mind_android.bookingapp.storage.MySharedPref.getData;
 
 public class ExpenseForm_Activity extends AppCompatActivity {
@@ -84,9 +85,12 @@ public class ExpenseForm_Activity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // TODO Auto-generated method stub
-                new DatePickerDialog(ExpenseForm_Activity.this, date, myCalendar
+               DatePickerDialog d= new DatePickerDialog(ExpenseForm_Activity.this, date, myCalendar
                         .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
-                        myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+                        myCalendar.get(Calendar.DAY_OF_MONTH));
+                d.getDatePicker()
+                        .setMaxDate(System.currentTimeMillis());
+                d.show();
             }
         });
 
@@ -305,12 +309,6 @@ public class ExpenseForm_Activity extends AppCompatActivity {
 
     }
 
-    private void updateLabel(TextView textEdit, Calendar myCalendar) {
-        String myFormat = "dd-MM-yyyy"; //In which you need put here
-        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
-
-        textEdit.setText(sdf.format(myCalendar.getTime()));
-    }
 
     private void getExpenseType(final int s, final String expanse_name) {
 

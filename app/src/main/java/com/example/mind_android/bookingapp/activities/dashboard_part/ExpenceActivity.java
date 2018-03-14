@@ -49,7 +49,6 @@ public class ExpenceActivity extends BaseActivity {
     private ScrollView scrollview;
     private String user_id = "";
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -139,7 +138,6 @@ public class ExpenceActivity extends BaseActivity {
 
     }
 
-
     public void showExpense() {
         final AsyncHttpClient client = new AsyncHttpClient();
         final RequestParams params = new RequestParams();
@@ -199,7 +197,6 @@ public class ExpenceActivity extends BaseActivity {
         });
     }
 
-
     private void resetExpanse() {
         final AsyncHttpClient client = new AsyncHttpClient();
         final RequestParams params = new RequestParams();
@@ -244,13 +241,11 @@ public class ExpenceActivity extends BaseActivity {
             }
         });
     }
-
     @Override
     protected void onResume() {
         super.onResume();
         showAllExpense();
     }
-
     @Override
     public void onBackPressed() {
         if (scrollview.getVisibility() == View.VISIBLE) {
@@ -261,7 +256,6 @@ public class ExpenceActivity extends BaseActivity {
             finish();
         }
     }
-
 
     public void showAllExpense() {
         if (isNetworkAvailable(ExpenceActivity.this)) {
@@ -371,6 +365,5 @@ public class ExpenceActivity extends BaseActivity {
         }
 
     }
-
 
 }

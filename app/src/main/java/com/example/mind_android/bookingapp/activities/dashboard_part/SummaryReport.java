@@ -34,6 +34,7 @@ import java.util.Locale;
 import cz.msebera.android.httpclient.Header;
 
 import static com.example.mind_android.bookingapp.Constant.NetWorkClass.BASE_URL_NEW;
+import static com.example.mind_android.bookingapp.Constant.NetWorkClass.updateLabel;
 import static com.example.mind_android.bookingapp.storage.MySharedPref.getData;
 
 public class SummaryReport extends AppCompatActivity {
@@ -79,7 +80,7 @@ public class SummaryReport extends AppCompatActivity {
 
         spinnerArrayAdapter.setDropDownViewResource(R.layout.spinner_item);
         spinner.setAdapter(spinnerArrayAdapter);
-        mAdapter = new SummaryAdapter(summaryList, "summary");
+        mAdapter = new SummaryAdapter(summaryList, "summary",SummaryReport.this);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -121,9 +122,14 @@ public class SummaryReport extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                new DatePickerDialog(SummaryReport.this, date, myCalendar
+             DatePickerDialog d=  new DatePickerDialog(SummaryReport.this, date, myCalendar
                         .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
-                        myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+                        myCalendar.get(Calendar.DAY_OF_MONTH));
+             d.getDatePicker()
+                        .setMaxDate(System.currentTimeMillis());
+             d.show();
+
+
             }
         });
 
@@ -131,9 +137,13 @@ public class SummaryReport extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                new DatePickerDialog(SummaryReport.this, todate, myCalendar
+
+              DatePickerDialog d=  new DatePickerDialog(SummaryReport.this, todate, myCalendar
                         .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
-                        myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+                        myCalendar.get(Calendar.DAY_OF_MONTH));
+                d.getDatePicker()
+                        .setMaxDate(System.currentTimeMillis());
+                d.show();
             }
         });
 
@@ -251,13 +261,6 @@ public class SummaryReport extends AppCompatActivity {
                 ringProgressDialog.dismiss();
             }
         });
-    }
-
-    private void updateLabel(TextView textEdit, Calendar myCalendar) {
-        String myFormat = "yyyy-MM-dd"; //In which you need put here
-        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
-
-        textEdit.setText(sdf.format(myCalendar.getTime()));
     }
 
 }

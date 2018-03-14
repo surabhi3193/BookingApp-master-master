@@ -9,7 +9,6 @@
 
     <ScrollView
         android:id="@+id/scroll"
-
         android:layout_marginTop="70dp"
         android:fillViewport="true"
         android:scrollbars="vertical"
@@ -324,8 +323,63 @@
         android:layout_width="match_parent"
         android:layout_height="35dp"
         android:background="@drawable/grey_rect_btn"/>
+    <LinearLayout
+        android:gravity="center"
+        android:padding="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_weight="1"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:hint="From"
+            android:textColorHint="@color/white"
+            android:textColor="@color/white"
+            android:background="@drawable/green_rect_btn"
+            android:id="@+id/fromTV"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            />
+
+
+        <TextView
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_toRightOf="@id/fromTV"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:hint="To"
+            android:textColorHint="@color/white"
+            android:textColor="@color/white"
+            android:background="@drawable/green_rect_btn"
+            android:id="@+id/toTv"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            />
+        <TextView
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:text="Apply"
+            android:id="@+id/filter_btn"
+            android:layout_weight="0.5"
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:background="@drawable/blue_rect_btn"/>
+
+
+
+
+    </LinearLayout>
+
+
 </LinearLayout>
     </ScrollView>
+
+
     <RelativeLayout
         android:id="@+id/profile_lay"
         android:layout_alignParentBottom="true"

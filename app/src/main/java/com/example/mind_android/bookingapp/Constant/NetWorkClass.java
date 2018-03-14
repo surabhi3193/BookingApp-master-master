@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.mind_android.bookingapp.activities.dashboard_part.ExpenceActivity;
@@ -19,7 +20,9 @@ import com.loopj.android.http.RequestParams;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -323,6 +326,13 @@ public class NetWorkClass extends AppCompatActivity {
             }
 
         });
+    }
+
+    public static void updateLabel(TextView textEdit, Calendar myCalendar) {
+        String myFormat = "yyyy-MM-dd"; //In which you need put here
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+
+        textEdit.setText(sdf.format(myCalendar.getTime()));
     }
 
 }

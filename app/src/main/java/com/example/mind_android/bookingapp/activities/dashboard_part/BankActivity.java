@@ -1,5 +1,6 @@
 package com.example.mind_android.bookingapp.activities.dashboard_part;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 
 import com.example.mind_android.bookingapp.R;
 import com.example.mind_android.bookingapp.activities.BaseActivity;
+import com.example.mind_android.bookingapp.adapter.BankSummaryAdapter;
 import com.example.mind_android.bookingapp.adapter.SummaryAdapter;
 import com.example.mind_android.bookingapp.beans.TransectionSummary;
 import com.loopj.android.http.AsyncHttpClient;
@@ -38,7 +40,7 @@ import static com.example.mind_android.bookingapp.storage.MySharedPref.getData;
 public class BankActivity extends BaseActivity {
 
     private List<TransectionSummary> summaryList = new ArrayList<>();
-    private SummaryAdapter mAdapter;
+    private  SummaryAdapter mAdapter;
     private  RecyclerView recyclerView;
 
     @Override
@@ -49,7 +51,7 @@ public class BankActivity extends BaseActivity {
          recyclerView = findViewById(R.id.transection_LV);
         TextView addTv = findViewById(R.id.addTv);
 
-        mAdapter = new SummaryAdapter(summaryList, "bank");
+        mAdapter = new SummaryAdapter(summaryList, "bank",BankActivity.this);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -88,10 +90,10 @@ public class BankActivity extends BaseActivity {
                 );
             }
         });
-        
+
     }
 
-    public void resetBankWarning() {
+    private void resetBankWarning() {
         AlertDialog.Builder ab = new AlertDialog.Builder
                 (BankActivity.this, R.style.MyAlertDialogStyle1);
         ab.setTitle("Delete").setIcon(R.drawable.reset);
@@ -101,7 +103,8 @@ public class BankActivity extends BaseActivity {
             public void onClick(DialogInterface dialog, int which) {
 
                 if (isNetworkAvailable(BankActivity.this))
-                    resetBank();
+                    resetBank(BankActivity.this);
+                mAdapter.notifyDataSetChanged();
                 dialog.dismiss();
             }
         });
@@ -115,7 +118,7 @@ public class BankActivity extends BaseActivity {
         ab.show();
 
     }
-    
+
     private void getTransections(final String user_id) {
 
         final AsyncHttpClient client = new AsyncHttpClient();
@@ -140,6 +143,9 @@ public class BankActivity extends BaseActivity {
                 ringProgressDialog.dismiss();
                 try {
 
+                    if (summaryList.size()>0)
+                        summaryList.clear();
+
                     if (response.getString("status").equals("1")) {
                         JSONArray jArray;
 
@@ -158,10 +164,13 @@ public class BankActivity extends BaseActivity {
                                 summary = new TransectionSummary(name, "", "", amount, type, "", date);
                                 summaryList.add(summary);
                             }
-                            mAdapter.notifyDataSetChanged();
 
                         }
+
+
                     }
+                    mAdapter.notifyDataSetChanged();
+
 
 
                 } catch (Exception e) {
@@ -182,14 +191,15 @@ public class BankActivity extends BaseActivity {
         });
     }
 
-    private void resetBank() {
+
+    private   void resetBank( final Activity activity) {
         final AsyncHttpClient client = new AsyncHttpClient();
         final RequestParams params = new RequestParams();
         final ProgressDialog ringProgressDialog;
-        ringProgressDialog = ProgressDialog.show(BankActivity.this, "Please wait ...",
+        ringProgressDialog = ProgressDialog.show(activity, "Please wait ...",
                 "", true);
         ringProgressDialog.setCancelable(false);
-        String user_id= getData(BankActivity.this,"user_id","");
+        final String user_id= getData(activity,"user_id","");
 
         params.put("bk_userid", user_id);
         System.out.println(params);
@@ -205,11 +215,11 @@ public class BankActivity extends BaseActivity {
                     if (response.getString("status").equals("0")) {
 //                         recyclerView.setVisibility(View.GONE);
 
-                        Toast.makeText(BankActivity.this, response.getString("message"), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(activity, response.getString("message"), Toast.LENGTH_SHORT).show();
                     } else {
 //                        db.deleteAllStocks();
-                        recyclerView.setVisibility(View.GONE);
                         mAdapter.notifyDataSetChanged();
+                        getTransections(user_id);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

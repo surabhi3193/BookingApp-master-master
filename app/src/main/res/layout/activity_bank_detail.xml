@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.example.mind_android.bookingapp.activities.dashboard_part.BankDetailActivity">
+
+    <include layout="@layout/back_toolbar" />
+    <TextView
+        android:textAllCaps="true"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:textSize="22sp"
+        android:id="@+id/headtv"
+        android:textColor="@color/colorAccent"
+        android:padding="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:id="@+id/table_head"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@+id/topbar"
+        android:background="@color/colorAccent">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:paddingRight="10dp"
+            android:text="Amount"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:paddingRight="10dp"
+            android:text="Tr. Type"
+            android:textColor="@color/white"
+            android:textSize="10sp" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.5"
+            android:gravity="center"
+            android:paddingRight="10dp"
+            android:text="Date"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:paddingRight="10dp"
+            android:text="Closing Amount"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.8"
+            android:gravity="center"
+            android:paddingRight="10dp"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
+
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/transection_LV"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/reset_lay"
+        android:layout_below="@+id/table_head"
+        android:layout_marginTop="10dp"
+        android:padding="10dp"></android.support.v7.widget.RecyclerView>
+
+</LinearLayout>

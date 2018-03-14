@@ -142,7 +142,6 @@ public class Utility {
         }
     }
 
-
     public static boolean checkSMSPermission(final Context context)
     {
         int currentAPIVersion = Build.VERSION.SDK_INT;
@@ -156,7 +155,7 @@ public class Utility {
                     AlertDialog.Builder alertBuilder = new AlertDialog.Builder(context);
                     alertBuilder.setCancelable(true);
                     alertBuilder.setTitle("Permission necessary");
-                    alertBuilder.setMessage("Storage permission is necessary");
+                    alertBuilder.setMessage("SMS permission is necessary");
                     alertBuilder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
                         public void onClick(DialogInterface dialog, int which) {
@@ -183,4 +182,6 @@ public class Utility {
             return true;
         }
     }
+
+
 }

@@ -1,5 +1,6 @@
 package com.example.mind_android.bookingapp.activities.dashboard_part;
 
+import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -15,6 +16,7 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -44,12 +46,14 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.util.Calendar;
 import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 
 import static com.example.mind_android.bookingapp.Constant.CheckInternetConnection.isNetworkAvailable;
 import static com.example.mind_android.bookingapp.Constant.NetWorkClass.BASE_URL_NEW;
+import static com.example.mind_android.bookingapp.Constant.NetWorkClass.updateLabel;
 import static com.example.mind_android.bookingapp.activities.Utility.checkReadStoragePermission;
 import static com.example.mind_android.bookingapp.activities.Utility.checkSMSPermission;
 import static com.example.mind_android.bookingapp.activities.Utility.checkWriteStoragePermission;
@@ -68,6 +72,7 @@ public class ReportActivity extends BaseActivity {
     private TextView company_nameTv,stock_saletv, other_incometv, proftv, total_Saletv, profitTV, stocktv, expensetv, total_stock;
     private RelativeLayout profile_lay;
     private ImageView plIcon;
+    private TextView fromTV,toTV,filter_btn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,7 +91,9 @@ public class ReportActivity extends BaseActivity {
         total_stock = findViewById(R.id.total_stock);
         profitTV = findViewById(R.id.profitTv);
         company_nameTv = findViewById(R.id.company_nameTv);
-
+      filter_btn = findViewById(R.id.filter_btn);
+        fromTV = findViewById(R.id.fromTV);
+        toTV = findViewById(R.id.toTv);
 
         profile_lay = findViewById(R.id.profile_lay);
         plIcon = findViewById(R.id.plIcon);
@@ -96,6 +103,94 @@ public class ReportActivity extends BaseActivity {
         ImageView back_btn = findViewById(R.id.back_btn);
         print_btn.setVisibility(View.VISIBLE);
         summary_btn.setVisibility(View.VISIBLE);
+
+
+
+
+        final Calendar myCalendar = Calendar.getInstance();
+
+        final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear,
+                                  int dayOfMonth) {
+                // TODO Auto-generated method stub
+                myCalendar.set(Calendar.YEAR, year);
+                myCalendar.set(Calendar.MONTH, monthOfYear);
+                myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                updateLabel(fromTV, myCalendar);
+            }
+
+        };
+        final DatePickerDialog.OnDateSetListener todate = new DatePickerDialog.OnDateSetListener() {
+
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear,
+                                  int dayOfMonth) {
+                // TODO Auto-generated method stub
+                myCalendar.set(Calendar.YEAR, year);
+                myCalendar.set(Calendar.MONTH, monthOfYear);
+                myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                updateLabel(toTV, myCalendar);
+            }
+
+        };
+
+        fromTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+fromTV.setError(null);
+               DatePickerDialog d= new DatePickerDialog(ReportActivity.this, date, myCalendar
+                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                        myCalendar.get(Calendar.DAY_OF_MONTH));
+                d.getDatePicker()
+                        .setMaxDate(System.currentTimeMillis());
+                d.show();
+            }
+        });
+
+        toTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                toTV.setError(null);
+              DatePickerDialog d=  new DatePickerDialog(ReportActivity.this, todate, myCalendar
+                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                        myCalendar.get(Calendar.DAY_OF_MONTH));
+
+                d.getDatePicker()
+                        .setMaxDate(System.currentTimeMillis());
+                d.show();
+            }
+        });
+
+
+        filter_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.err.println("= apply filter on report =======");
+
+                String start = fromTV.getText().toString();
+                String end = toTV.getText().toString();
+                System.out.println(start +" ::: start ");
+                System.out.println(end + " ::: end ");
+
+                if (start.length()==0)
+                    fromTV.setError("Select start date");
+                if (end.length()==0)
+                    toTV.setError("Select end date");
+
+                if (start.length()>0
+                        && end.length()>0)
+                {
+                    fromTV.setError(null);
+                    toTV.setError(null);
+                    getReport(user_id,start,end);
+                }
+
+            }
+        });
+
 
         back_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,8 +211,6 @@ public class ReportActivity extends BaseActivity {
         print_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
                 boolean per2 = checkWriteStoragePermission(ReportActivity.this);
                 System.out.println("========= permission print ======= ");
                 System.out.println(per2);
@@ -125,12 +218,10 @@ public class ReportActivity extends BaseActivity {
                 {
                     print_btn.setVisibility(View.GONE);
                     summary_btn.setVisibility(View.GONE);
+                    filter_btn.setVisibility(View.GONE);
                     takeScreenShot();
                     imageToPDF();
                 }
-//                boolean per = checkReadStoragePermission(ReportActivity.this);
-
-
             }
         });
     }
@@ -173,7 +264,8 @@ public class ReportActivity extends BaseActivity {
         }
     }
 
-    private void getReport(final String user_id) {
+    private void getReport(final String user_id, String start_date, final String end_date)
+    {
 
         final AsyncHttpClient client = new AsyncHttpClient();
         final RequestParams params = new RequestParams();
@@ -185,6 +277,8 @@ public class ReportActivity extends BaseActivity {
 
 
         params.put("bk_userid", user_id);
+        params.put("start_date", start_date);
+        params.put("end_date", end_date);
 
         System.out.println(params);
         client.setConnectTimeout(10000);
@@ -249,9 +343,10 @@ public class ReportActivity extends BaseActivity {
         super.onResume();
         print_btn.setVisibility(View.VISIBLE);
         summary_btn.setVisibility(View.VISIBLE);
+        filter_btn.setVisibility(View.VISIBLE);
 
         if (isNetworkAvailable(ReportActivity.this))
-            getReport(user_id);
+            getReport(user_id,"","");
 
         else
             getReportFromLocal();
@@ -426,6 +521,8 @@ public class ReportActivity extends BaseActivity {
                         PackageManager.PERMISSION_GRANTED) {
                     print_btn.setVisibility(View.GONE);
                     summary_btn.setVisibility(View.GONE);
+                    filter_btn.setVisibility(View.GONE);
+
                     takeScreenShot();
                     imageToPDF();
 

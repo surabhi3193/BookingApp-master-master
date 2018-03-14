@@ -1,13 +1,17 @@
 package com.example.mind_android.bookingapp.adapter;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.mind_android.bookingapp.R;
+import com.example.mind_android.bookingapp.activities.dashboard_part.BankDetailActivity;
 import com.example.mind_android.bookingapp.beans.TransectionSummary;
 
 import java.util.List;
@@ -16,10 +20,12 @@ public class SummaryAdapter extends RecyclerView.Adapter<SummaryAdapter.MyViewHo
 
     private List<TransectionSummary> summaryList;
     private String intent_name;
+    private Activity activity;
 
-    public SummaryAdapter(List<TransectionSummary> summaryList, String intent_name) {
+    public SummaryAdapter(List<TransectionSummary> summaryList, String intent_name, Activity activity) {
         this.summaryList = summaryList;
         this.intent_name = intent_name;
+        this.activity = activity;
     }
 
     @Override
@@ -33,8 +39,9 @@ public class SummaryAdapter extends RecyclerView.Adapter<SummaryAdapter.MyViewHo
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
 
-        TransectionSummary trans = summaryList.get(position);
+        final TransectionSummary trans = summaryList.get(position);
         holder.title.setText(trans.getTitle());
+
         holder.per_unit.setText(trans.getPer_unit());
         holder.qty.setText(trans.getQty());
         holder.total_amt.setText(trans.getTotal_amt());
@@ -93,7 +100,17 @@ public class SummaryAdapter extends RecyclerView.Adapter<SummaryAdapter.MyViewHo
             holder.date.setVisibility(View.GONE);
             holder.multiply.setVisibility(View.GONE);
             holder.type.setVisibility(View.GONE);
+
+            holder.mainlay.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    activity.startActivity(new Intent(activity, BankDetailActivity.class)
+                            .putExtra("bank_name",trans.getTitle()));
+                }
+            });
         }
+
+
     }
     @Override
     public int getItemCount() {
@@ -103,6 +120,7 @@ public class SummaryAdapter extends RecyclerView.Adapter<SummaryAdapter.MyViewHo
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView title, qty, per_unit, date, total_amt, type,multiply;
         ImageView image;
+        private RelativeLayout mainlay;
 
         public MyViewHolder(View view) {
             super(view);
@@ -115,6 +133,7 @@ public class SummaryAdapter extends RecyclerView.Adapter<SummaryAdapter.MyViewHo
             type = (TextView) view.findViewById(R.id.typeTV);
             type = (TextView) view.findViewById(R.id.typeTV);
             image = (ImageView) view.findViewById(R.id.image);
+            mainlay =view.findViewById(R.id.mainlay);
         }
     }
 
