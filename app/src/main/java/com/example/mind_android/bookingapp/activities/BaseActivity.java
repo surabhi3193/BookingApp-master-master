@@ -162,6 +162,7 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
 
                     db.deleteAllStocks();
                     db.deleteAllSales();
+                    db.deleteAllexpense();
                 }
 
 //                Toast.makeText(BaseActivity.this,"Under Development",Toast.LENGTH_SHORT).show();

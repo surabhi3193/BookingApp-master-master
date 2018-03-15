@@ -201,9 +201,12 @@ public class ProfileActivity extends AppCompatActivity {
                         bus_nameTV.setText(bus_name);
                         emailTV.setText(email);
                         phoneTV.setText(phone);
-                        if (image.length() > 3)
+                        if (image.length() > 3) {
+                            saveData(ProfileActivity.this,"user_image",image);
+
                             Picasso.with(ProfileActivity.this).load(image).placeholder(R.drawable.profile).into(user_pic);
-                        else
+
+                        }  else
                             user_pic.setImageResource(R.drawable.profile);
 
 
@@ -320,6 +323,7 @@ public class ProfileActivity extends AppCompatActivity {
         emailTV.setText(email);
         phoneTV.setText(phone);
         if (image_user.length() > 3) {
+            saveData(ProfileActivity.this,"user_image",image_user);
             Picasso.with(ProfileActivity.this).load(image_user).placeholder(R.drawable.profile).into(user_pic);
             Picasso.with(ProfileActivity.this).load(image_user).placeholder(R.drawable.profile).into(nav_img);
 

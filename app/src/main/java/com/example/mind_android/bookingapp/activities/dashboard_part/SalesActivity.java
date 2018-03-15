@@ -181,7 +181,13 @@ public class SalesActivity extends BaseActivity {
         reset_lay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (isNetworkAvailable(SalesActivity.this))
                 resetSaleWarning();
+                else
+                {
+                    Toast.makeText(SalesActivity.this,"Intenet Connection Unavailable", Toast.LENGTH_LONG).show();
+
+                }
             }
         });
 
@@ -219,7 +225,10 @@ public class SalesActivity extends BaseActivity {
                 if (isNetworkAvailable(SalesActivity.this))
                     resetSale();
                 else
-                    db.deleteAllSales();
+                {
+                    Toast.makeText(SalesActivity.this,"Intenet Connection Unavailable", Toast.LENGTH_LONG).show();
+                }
+//                    db.deleteAllSales();
                 dialog.dismiss();
             }
         });
@@ -345,13 +354,13 @@ public class SalesActivity extends BaseActivity {
 
         if (isNetworkAvailable(SalesActivity.this)) {
 
-            int count = db.getSalesCount();
-            if (count == 0) {
-                resetSale();
-            } else {
-                addUnregisteredSale();
-                deleteStockFromServer();
-            }
+//            int count = db.getSalesCount();
+//            if (count == 0) {
+//                resetSale();
+//            } else {
+//                addUnregisteredSale();
+//                deleteStockFromServer();
+//            }
             showSale(SalesActivity.this, user_id);
 
         } else {
