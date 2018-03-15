@@ -429,7 +429,7 @@ public class SalesActivity extends BaseActivity {
 
                 jobj.put("sale_price", cn.get_price());
                 jArray.put(jobj);
-                double price = Double.parseDouble(cn.get_price());
+                double price = Double.parseDouble(cn.get_price().replace(",",""));
 
                 total = total + price;
             }

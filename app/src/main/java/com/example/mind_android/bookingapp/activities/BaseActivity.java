@@ -3,6 +3,7 @@ package com.example.mind_android.bookingapp.activities;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -19,8 +20,6 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.example.mind_android.bookingapp.R;
-import com.example.mind_android.bookingapp.activities.dashboard_part.SalesActivity;
-import com.example.mind_android.bookingapp.activities.dashboard_part.StockActivity;
 import com.example.mind_android.bookingapp.storage.DatabaseHandler;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -116,10 +115,6 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
             finishAffinity();
         } else if (id == R.id.profile) {
             startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
-        } else if (id == R.id.sales) {
-            startActivity(new Intent(getApplicationContext(), SalesActivity.class));
-        } else if (id == R.id.inventory) {
-            startActivity(new Intent(getApplicationContext(), StockActivity.class));
         } else if (id == R.id.reset) {
             resetAllWarning();
         } else if (id == R.id.about) {
@@ -133,6 +128,9 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
                     .putExtra("name", "Privacy Policy"));
         } else if (id == R.id.chat) {
             startActivity(new Intent(getApplicationContext(), LiveChatActivity.class));
+        } else if (id == R.id.visit) {
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://18.218.89.83/BookKeeping/"));
+            startActivity(browserIntent);
         } else if (id == R.id.sharing) {
             try {
                 Intent i = new Intent(Intent.ACTION_SEND);

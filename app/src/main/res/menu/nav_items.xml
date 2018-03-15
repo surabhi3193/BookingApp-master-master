@@ -8,17 +8,10 @@
         <item
             android:id="@+id/profile"
             android:title="Profile" />
-        <item
-            android:id="@+id/inventory"
-            android:title="Inventory" />
-
-        <item
-            android:id="@+id/sales"
-            android:title="Sales" />
 
         <item
             android:id="@+id/chat"
-            android:title="Chat" />
+            android:title="Contact Us" />
 
         <item
             android:id="@+id/about"
@@ -35,6 +28,10 @@
         <item
             android:id="@+id/sharing"
             android:title="Share the App" />
+
+        <item
+            android:id="@+id/visit"
+            android:title="Visit Our Website" />
 
         <item
             android:id="@+id/reset"

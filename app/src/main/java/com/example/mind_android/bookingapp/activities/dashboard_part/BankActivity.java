@@ -42,6 +42,8 @@ public class BankActivity extends BaseActivity {
     private List<TransectionSummary> summaryList = new ArrayList<>();
     private  SummaryAdapter mAdapter;
     private  RecyclerView recyclerView;
+    private  TextView total_amtTv;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,9 +98,9 @@ public class BankActivity extends BaseActivity {
     private void resetBankWarning() {
         AlertDialog.Builder ab = new AlertDialog.Builder
                 (BankActivity.this, R.style.MyAlertDialogStyle1);
-        ab.setTitle("Delete").setIcon(R.drawable.reset);
-        ab.setMessage("If you want to delete any particular transaction login to website http://oneplusoneafrica.org/#1 Or if you want to reset bank. Click Reset");
-        ab.setNegativeButton("Reset", new DialogInterface.OnClickListener() {
+        ab.setTitle("Reset").setIcon(R.drawable.reset);
+        ab.setMessage("Are you sure ?");
+        ab.setNegativeButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
@@ -151,6 +153,10 @@ public class BankActivity extends BaseActivity {
 
                         jArray = response.getJSONArray("banks");
 
+                        String total = response.getString("total");
+
+                        total_amtTv.setText(total);
+
                         if (jArray.length() > 0) {
                             TransectionSummary summary;
                             for (int i = 0; i < jArray.length(); i++) {
@@ -168,6 +174,10 @@ public class BankActivity extends BaseActivity {
                         }
 
 
+                    }
+                    else
+                    {
+                        total_amtTv.setText(R.string.zerodouble);
                     }
                     mAdapter.notifyDataSetChanged();
 

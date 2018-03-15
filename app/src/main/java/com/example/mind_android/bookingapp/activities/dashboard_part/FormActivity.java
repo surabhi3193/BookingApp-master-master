@@ -103,13 +103,14 @@ public class FormActivity extends AppCompatActivity {
                         String currentDateandTime = sdf.format(new Date());
                         if (sale_type.equals("2")) {
                             String id = response.getString("stock_id");
+                            String sale_id = response.getString("sale_id");
                             String name = response.getString("stock_name");
                             String qty = response.getString("sell_quantity");
                             String per_price = response.getString("sell_unit_price");
                             String price = response.getString("sell_price");
 
                             Sales sales = new Sales();
-                            sales.set_id(Integer.parseInt(id));
+                            sales.set_id(Integer.parseInt(sale_id));
                             sales.set_name(name);
                             sales.set_qty(qty);
                             sales.set_unit_per_price(per_price);

@@ -10,6 +10,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.mind_android.bookingapp.R;
@@ -35,13 +36,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         getLayoutInflater().inflate(R.layout.activity_main, frameLayout);
 
-
         ImageView stockLay = findViewById(R.id.stockLay);
         ImageView salesLay = findViewById(R.id.salesLay);
         ImageView expenseLay = findViewById(R.id.expenseLay);
         ImageView reportLay = findViewById(R.id.reportLay);
         ImageView loanLay = findViewById(R.id.loanLay);
         ImageView bankLay = findViewById(R.id.bankLay);
+        TextView headtitleTv=findViewById(R.id.headtitleTv);
+        headtitleTv.setVisibility(View.VISIBLE);
+        headtitleTv.setText(R.string.oneplusoneafrica);
 
 
         stockLay.setOnClickListener(this);

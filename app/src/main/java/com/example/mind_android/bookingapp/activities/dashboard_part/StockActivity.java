@@ -285,7 +285,6 @@ public class StockActivity extends BaseActivity {
         System.out.println("================ stocks with 0 status ========");
         System.out.println(stocks);
         for (Stock cn : stocks)
-
         {
             String log = "Id: " + cn.get_id() +
                     " ,Name: " + cn.get_name() +
@@ -296,7 +295,10 @@ public class StockActivity extends BaseActivity {
             // Writing Contacts to log
             Log.d("Name: ", log);
 
-            addStock(StockActivity.this, user_id, cn.get_name(), cn.get_qty(), cn.get_price(), "2", cn.get_unit_per_price(), String.valueOf(cn.get_id()), "local",cn.get_date());
+            String log1 = cn.get_price().replace(",","");
+            System.out.println(log1);
+
+            addStock(StockActivity.this, user_id, cn.get_name(), cn.get_qty(),log1, "2", cn.get_unit_per_price(), String.valueOf(cn.get_id()), "local",cn.get_date());
         }
     }
 
@@ -329,7 +331,8 @@ public class StockActivity extends BaseActivity {
                 jobj.put("stock_date", cn.get_date());
                 if (!cn.get_qty().equalsIgnoreCase("0")) {
                     jArray.put(jobj);
-                    double price = Double.parseDouble(cn.get_price());
+
+                    double price = Double.parseDouble(cn.get_price().replace(",",""));
 
                     total = total + price;
                 }

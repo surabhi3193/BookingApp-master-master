@@ -346,7 +346,7 @@ public class ExpenceActivity extends BaseActivity {
                 jobj.put("expanse_amount", cn.get_price());
 
                 jArray.put(jobj);
-                double price = Double.parseDouble(cn.get_price());
+                double price = Double.parseDouble(cn.get_price().replace(",",""));
 
                 total = total + price;
             }
