@@ -44,7 +44,6 @@ public class BankActivity extends BaseActivity {
     private  RecyclerView recyclerView;
     private  TextView total_amtTv;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +51,7 @@ public class BankActivity extends BaseActivity {
 
          recyclerView = findViewById(R.id.transection_LV);
         TextView addTv = findViewById(R.id.addTv);
+        total_amtTv = findViewById(R.id.total_amtTv);
 
         mAdapter = new SummaryAdapter(summaryList, "bank",BankActivity.this);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
@@ -173,7 +173,6 @@ public class BankActivity extends BaseActivity {
 
                         }
 
-
                     }
                     else
                     {
@@ -256,7 +255,8 @@ public class BankActivity extends BaseActivity {
         if (summaryList.size() > 0)
             summaryList.clear();
 
-        getTransections(user_id);
+        if (isNetworkAvailable(BankActivity.this))
+            getTransections( user_id);
     }
 
     @Override

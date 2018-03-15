@@ -76,10 +76,7 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
         signout_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                saveData(getApplicationContext(), "login", "0");
-
-                startActivity(new Intent(BaseActivity.this, LoginActivity.class));
-                finishAffinity();
+              logoutWarning();
             }
         });
         image = getData(BaseActivity.this, "user_image", "");
@@ -180,6 +177,29 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
         });
         ab.show();
 
+    }
+
+    public void logoutWarning() {
+        AlertDialog.Builder ab = new AlertDialog.Builder
+                (BaseActivity.this, R.style.MyAlertDialogStyle1);
+        ab.setTitle("Logout").setIcon(R.drawable.reset);
+        ab.setMessage("Are you sure ? ");
+        ab.setNegativeButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                    saveData(getApplicationContext(), "login", "0");
+                startActivity(new Intent(BaseActivity.this, LoginActivity.class));
+                finishAffinity();
+                dialog.dismiss();
+            }
+        });
+        ab.setPositiveButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        ab.show();
     }
 
     private void resetAll() {

@@ -253,6 +253,7 @@ public class LoanActivity extends BaseActivity {
         String user_id = getData(LoanActivity.this, "user_id", "");
         if (summaryList.size() > 0)
             summaryList.clear();
+        if (isNetworkAvailable(LoanActivity.this))
         getLoan(user_id);
     }
     @Override
